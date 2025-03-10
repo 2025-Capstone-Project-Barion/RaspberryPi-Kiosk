@@ -1,14 +1,15 @@
 import React from 'react';
 import { HashRouter, Route, Routes } from 'react-router-dom';
-import Front from '../pages/Front';
+import FrontPage from '../pages/FrontPage';
+import MenuPage from '../pages/MenuPage';
 
 const Router = () => {
     return (
         <HashRouter>
             <Routes>
-                <Route path="/" element={<Front />} />
-                {/* <Route path="/menu" component={Menu} />
-                <Route path="/payment" component={Payment} /> */}
+                <Route path="/" element={<FrontPage />} />
+                <Route path="/MenuPage" component={<MenuPage />} />
+                {/* <Route path="/payment" component={Payment} /> */}
             </Routes>
         </HashRouter>
     );

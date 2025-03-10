@@ -1,7 +1,7 @@
 import React from 'react';
-import '../styles/Front/front.css';
+import '../styles/Front/frontPage.css';
 
-const Front = () => {
+const FrontPage = () => {
     return (
         <div className="container">
             <div className="welcome-text">
@@ -18,4 +18,4 @@ const Front = () => {
     );
 }
 
-export default Front;
+export default FrontPage;
