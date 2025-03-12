@@ -64,7 +64,7 @@ npm start
 2. Electron을 패키징하여 실행 파일을 생성합니다.
 
 ```sh
-npm run build && npm run dist
+npm run build; npm run dist
 ```
 
 > 🔧 아래와 같이 `package.json`에서 `build:dist` 스크립트를 등록하면 더 간편하게 실행할 수 있음. 
