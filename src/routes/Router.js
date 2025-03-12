@@ -8,7 +8,7 @@ const Router = () => {
         <HashRouter>
             <Routes>
                 <Route path="/" element={<FrontPage />} />
-                <Route path="/MenuPage" component={<MenuPage />} />
+                <Route path="/MenuPage" element={<MenuPage />} />
                 {/* <Route path="/payment" component={Payment} /> */}
             </Routes>
         </HashRouter>
