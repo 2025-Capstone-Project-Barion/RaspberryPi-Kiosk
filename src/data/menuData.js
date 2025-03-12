@@ -1,9 +1,9 @@
 export const menuData = {
     coffee: [
-        { id: 1, name: "아메리카노", price: 4500, image: "/images/americano.jpg" },
-        { id: 2, name: "카푸치노", price: 5500, image: "/images/cappuccino.jpg" },
-        { id: 3, name: "녹차 라떼", price: 4500, image: "/images/greentea_latte.jpg" },
-        { id: 4, name: "바닐라 라떼", price: 5000, image: "/images/vanilla_latte.jpg" },
+        { id: 1, name: "아메리카노", price: 4500, image: "../assets/아메리카노.png" },
+        { id: 2, name: "카푸치노", price: 5500, image: "../assets/아메리카노.png" },
+        { id: 3, name: "녹차 라떼", price: 4500, image: "../assets/아메리카노.png" },
+        { id: 4, name: "바닐라 라떼", price: 5000, image: "../assets/아메리카노.png" },
     ],
     smoothies: [
         { id: 5, name: "망고 스무디", price: 6000, image: "/images/mango_smoothie.jpg" },

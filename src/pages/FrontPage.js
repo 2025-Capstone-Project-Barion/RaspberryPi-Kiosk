@@ -2,6 +2,7 @@ import React from 'react';
 import '../styles/Front/frontPage.css';
 
 import { Link } from 'react-router-dom';
+import MenuPage from './MenuPage';
 const FrontPage = () => {
     return (
         <div className="container">
@@ -15,7 +16,8 @@ const FrontPage = () => {
                 배리어프리 키오스크 플렛폼<br />
                 Barion입니다.
             </div>
-            <Link to="/MenuPage" className="menu-button">
+            {/* <Link to="/MenuPage" className="menu-button">     */}
+            <Link to="/PracMenu" className="menu-button">
                 <button>
                     주문하기
                 </button>

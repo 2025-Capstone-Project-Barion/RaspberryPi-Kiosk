@@ -9,7 +9,7 @@ const CategoryMenu = ({ selected, onCategoryChange }) => {
             {categories.map((category) => (
                 <CategoryItem
                     key={category}
-                    active={selected === category}
+                    $active={selected === category}
                     onClick={() => onCategoryChange(category)}
                 >
                     {category.toUpperCase()}
