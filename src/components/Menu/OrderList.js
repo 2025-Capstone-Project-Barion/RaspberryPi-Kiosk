@@ -34,7 +34,7 @@ const OrderList = ({ cart, setCart }) => {
             ))}
             <TotalPrice>총 결제금액: {totalPrice} 원</TotalPrice>
             <OrderButton onClick={clearCart}>전체 삭제</OrderButton>
-            <OrderButton primary>결제하기</OrderButton>
+            <OrderButton $primary>결제하기</OrderButton>
         </OrderContainer>
     );
 };

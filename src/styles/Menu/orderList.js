@@ -51,7 +51,7 @@ export const OrderButton = styled.button`
   width: 100%;
   padding: 10px;
   margin-top: 10px;
-  background: ${(props) => (props.primary ? "#0288d1" : "#f44336")};
+  background: ${({ $primary }) => ($primary ? "#0288d1" : "#f44336")};
   color: white;
   border: none;
   border-radius: 5px;
@@ -59,6 +59,6 @@ export const OrderButton = styled.button`
   font-size: 16px;
   
   &:hover {
-    background: ${(props) => (props.primary ? "#0277bd" : "#d32f2f")};
+    background: ${({ $primary }) => ($primary ? "#0277bd" : "#d32f2f")};
   }
 `;
