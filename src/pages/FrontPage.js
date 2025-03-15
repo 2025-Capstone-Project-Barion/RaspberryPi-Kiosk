@@ -6,14 +6,20 @@ import { useNavigate } from 'react-router-dom';
 // npm install react @18.2.0 react-dom@18.2.0
 // npm install @react-spring/web
 import { useTransition, animated, useSpring } from '@react-spring/web'
-import styles from '../styles/Front/frontPage.css'
+import styles from '../styles/Front/frontPage.module.css'
 import { Button } from '@mui/material';
 
+// background 이미지들
+import modernCafe from '../assets/FrontPageBackground/modernCafe.png';
+import seryenCafe from '../assets/FrontPageBackground/seryenCafe.png';
+import desert from '../assets/FrontPageBackground/desert.png';
+import cafeMood from '../assets/FrontPageBackground/cafeMood.png';
+
 const slides = [
-    'photo-1622737133809-d95047b9e673', // 모던한 카페 인테리어 이미지
-    'photo-1554118811-1e0d58224f24', // 세련된 커피 이미지
-    'photo-1495474472287-4d71bcdd2085', // 새로운 디저트 플레이팅 이미지
-    'photo-1600093463592-8e36ae95ef56', // 카페 분위기 이미지
+    modernCafe,    // 모던한 카페 인테리어 이미지
+    seryenCafe,    // 세련된 커피 이미지
+    desert,        // 새로운 디저트 플레이팅 이미지
+    cafeMood       // 카페 분위기 이미지
 ];
 
 const messages = [
@@ -94,7 +100,7 @@ const FrontPage = () => {
                     className={styles.bg}
                     style={{
                         ...style,
-                        backgroundImage: `url(https://images.unsplash.com/${slides[i]}?w=1920&q=80&auto=format&fit=crop)`,
+                        backgroundImage: `url(${slides[i]})`,
                     }}
                 />
             ))}
