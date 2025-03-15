@@ -10,10 +10,10 @@ import styles from '../styles/Front/frontPage.module.css'
 import { Button } from '@mui/material';
 
 // background 이미지들
-import modernCafe from '../assets/FrontPageBackground/modernCafe.png';
-import seryenCafe from '../assets/FrontPageBackground/seryenCafe.png';
-import desert from '../assets/FrontPageBackground/desert.png';
-import cafeMood from '../assets/FrontPageBackground/cafeMood.png';
+import modernCafe from '../assets/FrontPageBackground/디저트.jpg';
+import seryenCafe from '../assets/FrontPageBackground/세련카페.jpg';
+import desert from '../assets/FrontPageBackground/3d배경.jpg';
+import cafeMood from '../assets/FrontPageBackground/3d배경2.jpg';
 
 const slides = [
     modernCafe,    // 모던한 카페 인테리어 이미지
