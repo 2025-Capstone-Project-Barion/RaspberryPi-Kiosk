@@ -1,16 +1,16 @@
 import React from "react";
-import { ItemContainer, ItemImage, ItemInfo, OrderButton } from "../../styles/Menu/menuItem";
+import { MenuItemContainer, ItemImage, ItemInfo, ItemName, ItemPrice, AddButton } from "../../styles/Menu/menuItem";
 
 const MenuItem = ({ item, onAddToCart }) => {
     return (
-        <ItemContainer>
+        <MenuItemContainer>
             <ItemImage src={item.image} alt={item.name} />
             <ItemInfo>
-                <h3>{item.name}</h3>
-                <p>{item.price} 원</p>
-                <OrderButton onClick={() => onAddToCart(item)}>주문하기</OrderButton>
+                <ItemName>{item.name}</ItemName>
+                <ItemPrice>{item.price} 원</ItemPrice>
             </ItemInfo>
-        </ItemContainer>
+            <AddButton onClick={() => onAddToCart(item)}>추가</AddButton>
+        </MenuItemContainer>
     );
 };
 

@@ -1,12 +1,19 @@
 import styled from "styled-components";
 
-export const ItemContainer = styled.div`
+export const MenuItemContainer = styled.div`
   width: 180px;
   padding: 15px;
   border-radius: 10px;
   background: #f9f9f9;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   text-align: center;
+  margin: 10px;
+  transition: transform 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
 `;
 
 export const ItemImage = styled.img`
@@ -18,17 +25,21 @@ export const ItemImage = styled.img`
 
 export const ItemInfo = styled.div`
   margin-top: 10px;
-  h3 {
-    font-size: 16px;
-    color: #333;
-  }
-  p {
-    font-size: 14px;
-    color: #666;
-  }
 `;
 
-export const OrderButton = styled.button`
+export const ItemName = styled.h3`
+  font-size: 16px;
+  color: #333;
+  margin: 5px 0;
+`;
+
+export const ItemPrice = styled.p`
+  font-size: 14px;
+  color: #666;
+  font-weight: bold;
+`;
+
+export const AddButton = styled.button`
   width: 100%;
   padding: 8px;
   margin-top: 10px;
