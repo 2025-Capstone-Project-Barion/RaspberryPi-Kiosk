@@ -53,7 +53,7 @@ const FrontPage = () => {
         transform: isLeaving ? 'scale(1.1)' : 'scale(1)',
         config: { tension: 280, friction: 60 },
         onRest: () => {
-            if (isLeaving) navigate('/PracMenu');
+            if (isLeaving) navigate('/MenuPage');
         },
     });
 
