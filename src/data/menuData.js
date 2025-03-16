@@ -1,3 +1,6 @@
+import americanoImg from '../assets/MenuImages/아메리카노.png';
+import berryImg from '../assets/MenuImages/베리스무디.png';
+
 export const categories = [
     {
         id: 'coffee',
@@ -25,7 +28,7 @@ export const menuItems = {
             name: '아메리카노',
             price: 2500,
             description: '깊은 풍미의 에스프레소와 물의 조화',
-            image: '/images/menu/americano.jpg',
+            image: americanoImg,
             category: 'coffee',
             available: true
         },
@@ -34,7 +37,7 @@ export const menuItems = {
             name: '초코라떼',
             price: 4300,
             description: '달콤한 초콜릿과 에스프레소의 만남',
-            image: '/images/menu/chocolatte.jpg',
+            image: americanoImg,
             category: 'coffee',
             available: true
         }
@@ -45,7 +48,7 @@ export const menuItems = {
             name: '라벤더 아이스티',
             price: 4500,
             description: '은은한 라벤더향의 시원한 아이스티',
-            image: '/images/menu/lavender.jpg',
+            image: berryImg,
             category: 'nonCoffee',
             available: true
         }
@@ -56,7 +59,7 @@ export const menuItems = {
             name: '[SET] 에그 샌드위치',
             price: 5800,
             description: '신선한 계란으로 만든 클래식 샌드위치',
-            image: '/images/menu/egg-sandwich.jpg',
+            image: berryImg,
             category: 'dessert',
             available: true
         },
@@ -65,7 +68,7 @@ export const menuItems = {
             name: '[SET] 먼치킨 케이크',
             price: 5500,
             description: '달콤한 먼치킨 케이크',
-            image: '/images/menu/munchkin.jpg',
+            image: berryImg,
             category: 'dessert',
             available: true
         }
