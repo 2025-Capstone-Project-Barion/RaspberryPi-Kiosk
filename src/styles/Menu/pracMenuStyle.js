@@ -4,8 +4,11 @@
 // npm install @emotion/react @emotion/styled @mui/icons-material @mui/material
 
 // @emotion/styled은 styled-components와 비슷한 기능을 제공하는 라이브러리로, MUI와 함께 사용하기 위해 설치.
-// import styled from '@emotion/styled';
-import styled from 'styled-components';
+
+// => 2025/03/16 수정: 1. MUI 컴포넌트 커스터마이징 시 (@emotion/styled 사용) & 2. 일반 컴포넌트 스타일링 시 (styled-components 사용) 으로 구분하여 사용하기로 함.
+// 현 프로젝트의 스타일링 기조는 styled-components로 진행하기로 하였고, MUI 컴포넌트 커스터마이징시에는 MUI프레임워크의 원칙에 따라 이때만 @emotion/styled을 사용하기로 함.
+import styled from '@emotion/styled';
+//import styled from 'styled-components';
 import { Box, Button } from '@mui/material';
 
 // 기본 html 컴포넌트가 아닌 MUI 컴포넌트 커스터마이징이므로 styled.Box이 아닌, styled(Box)문법을 사용해야함.

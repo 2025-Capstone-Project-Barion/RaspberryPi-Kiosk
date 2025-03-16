@@ -10,15 +10,15 @@ import { GlobalStyles } from './styles/Menu/GlobalStyles';
 
 // reference: https://velog.io/@minju1009/Styled-Components-with-MUI
 
-import { StyledEngineProvider } from '@mui/styled-engine';
+// import { StyledEngineProvider } from '@mui/styled-engine';
 
 function App() {
   return (
     <div className="App">
-      <StyledEngineProvider injectFirst>
-        <GlobalStyles />
-        <Router />
-      </StyledEngineProvider>
+      {/* <StyledEngineProvider injectFirst> */}
+      <GlobalStyles />
+      <Router />
+      {/* </StyledEngineProvider> */}
     </div>
   );
 }
