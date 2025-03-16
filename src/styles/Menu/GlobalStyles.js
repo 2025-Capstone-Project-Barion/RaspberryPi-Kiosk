@@ -1,6 +1,15 @@
 import { createGlobalStyle } from "styled-components";
-
+import NotoSansKR from '../../assets/Font/NotoSansKR-SemiBold.ttf';
 export const GlobalStyles = createGlobalStyle`
+
+  @font-face {
+    font-family: 'Noto Sans KR';
+    font-style: normal;
+    // font-weight: 600 제거 가능 - 이미 SemiBold 폰트 파일이므로
+    src: url(${NotoSansKR}) format('truetype');
+    font-display: block;
+  }
+    
   * {
     margin: 0;
     padding: 0;

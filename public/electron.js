@@ -3,8 +3,20 @@ const path = require('path');
 
 
 // 라즈베리파이 및 rubik pi와 같은 저사양 데스크톱에서의 성능 최적화 환경설정
+{/*
 app.disableHardwareAcceleration();
 app.commandLine.appendSwitch('disable-software-rasterizer');
+*/}
+
+{/* GPU 가속 활성화 설정 <성능 오버클럭킹을 위한 설정>
+ 1. enable-gpu-rasterization: UI 요소와 이미지의 렌더링을 GPU로 처리하여 성능 향상
+ 2. enable-zero-copy: 메모리 사용을 최적화하여 부드러운 애니메이션 처리
+ 3. ignore-gpu-blacklist: 기기별 GPU 제한을 무시하고 하드웨어 가속 강제 활성화
+
+app.commandLine.appendSwitch('enable-gpu-rasterization');
+app.commandLine.appendSwitch('enable-zero-copy');
+app.commandLine.appendSwitch('ignore-gpu-blacklist');
+*/}
 
 // BrowserWindow 객체는 전역으로 관리함.
 // 전역이 아닌 경우 자바스크립트 가비지 컬렉팅 발생 시 의도치 않게 browser window가 닫힐 수 있음 
