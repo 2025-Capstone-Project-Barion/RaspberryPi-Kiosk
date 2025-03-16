@@ -11,24 +11,12 @@ import {
     CartHeader,
     CartFooter,
     PaymentButton
-} from '../styles/Menu/pracMenuStyle';
+} from '../styles/Menu/MenuStyle';
 
-// Sample data
-const menuItems = {
-    coffee: [
-        { name: '아메리카노', price: 2500 },
-        { name: '초코라떼', price: 4300 },
-    ],
-    nonCoffee: [
-        { name: '라벤더 아이스티', price: 4500 },
-    ],
-    dessert: [
-        { name: '[SET] 에그 샌드위치', price: 5800 },
-        { name: '[SET] 먼치킨 케이크', price: 5500 },
-    ]
-};
+import { categories, getMenuItems } from '../data/menuData';
 
 const MenuPage = () => {
+    // 디폴트 카테고리는 커피로 설정(메뉴페이지로 들어왔을 때 보이는 카테고리)
     const [selectedCategory, setSelectedCategory] = useState('coffee');
     const [cart, setCart] = useState([]);
 
@@ -56,24 +44,15 @@ const MenuPage = () => {
             <CategoryWrapper>
                 <img src="/logo.png" alt="logo" style={{ height: '40px' }} />
                 <Box sx={{ display: 'flex', gap: '20px' }}>
-                    <CategoryButton
-                        onClick={() => setSelectedCategory('coffee')}
-                        active={selectedCategory === 'coffee'}
-                    >
-                        Coffee
-                    </CategoryButton>
-                    <CategoryButton
-                        onClick={() => setSelectedCategory('nonCoffee')}
-                        active={selectedCategory === 'nonCoffee'}
-                    >
-                        Non Coffee
-                    </CategoryButton>
-                    <CategoryButton
-                        onClick={() => setSelectedCategory('dessert')}
-                        active={selectedCategory === 'dessert'}
-                    >
-                        Dessert
-                    </CategoryButton>
+                    {categories.map(category => (
+                        <CategoryButton
+                            key={category.id}
+                            onClick={() => setSelectedCategory(category.id)}
+                            active={selectedCategory === category.id}
+                        >
+                            {category.name}
+                        </CategoryButton>
+                    ))}
                 </Box>
             </CategoryWrapper>
 
@@ -87,9 +66,24 @@ const MenuPage = () => {
             }}>
                 {/* Menu Items */}
                 <MenuGridContainer>
-                    {menuItems[selectedCategory].map((item, index) => (
-                        <MenuCard key={index} onClick={() => handleAddToCart(item)}>
+                    {getMenuItems(selectedCategory).map((item) => (
+                        <MenuCard key={item.id} onClick={() => handleAddToCart(item)}>
+                            {item.image && (
+                                <img
+                                    src={item.image}
+                                    alt={item.name}
+                                    style={{
+                                        width: '100%',
+                                        height: '150px',
+                                        objectFit: 'cover',
+                                        borderRadius: '8px'
+                                    }}
+                                />
+                            )}
                             <Typography variant="h6">{item.name}</Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                {item.description}
+                            </Typography>
                             <Typography>{item.price.toLocaleString()}원</Typography>
                         </MenuCard>
                     ))}
