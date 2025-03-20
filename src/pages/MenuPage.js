@@ -98,6 +98,7 @@ const MenuPage = () => {
                                     <img
                                         src={item.image}
                                         alt={item.name}
+                                        //loading="lazy" // 이미지 지연 로딩으로 성능 최적화
                                     />
                                 )}
                             </MenuImageContainer>

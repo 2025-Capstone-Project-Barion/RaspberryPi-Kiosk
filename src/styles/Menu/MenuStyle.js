@@ -52,18 +52,18 @@ export const CategoryButton = styled(Button)(({ active }) => ({
   }
 }));
 
-// 메뉴 그리드 컨테이너 - 고정 열 수로 변경
+// 메뉴 그리드 컨테이너 수정 - 더 큰 높이의 그리드 셀
 export const MenuGridContainer = styled(Box)`
   flex: 1;
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(4, 1fr); // 4열로 변경
-  gap: 15px; // 간격 줄임
-  grid-auto-rows: 240px; // 더 작은 높이로 조정
+  grid-template-columns: repeat(3, 1fr); // 3열로 변경 - 각 메뉴 아이템이 더 크게 보임
+  gap: 16px; // 간격 조정
+  grid-auto-rows: 320px; // 충분한 높이 확보
   align-items: start;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-right: 10px;
+  padding-right: 12px;
   padding-bottom: 20px;
   
   /* 터치 스크롤 최적화 */
@@ -90,43 +90,46 @@ export const MenuGridContainer = styled(Box)`
   }
 `;
 
-// 메뉴 카드 - 크기 축소 및 클릭 효과 강화
+// 메뉴 카드 - 키오스크 스타일로 개선
 export const MenuCard = styled(Box)`
   background: white;
-  padding: 12px; // 패딩 축소
-  border-radius: 10px;
+  padding: 16px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.15s; // 더 빠른 전환 효과
-  height: 240px; // 더 작은 높이
+  transition: all 0.2s;
+  height: 320px; // 충분한 높이
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  border: 1px solid #f0f0f0;
   
-  // 클릭 효과 강화
+  // 클릭 효과 - 키오스크에 적합한 피드백
   &:active {
-    transform: scale(0.95); // 더 큰 스케일 감소
-    background-color: #f9f9f9; // 배경색 변경
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1); // 더 약한 그림자
+    transform: scale(0.97);
+    background-color: #fcfcfc;
+    border-color: #ff6f61;
   }
 `;
 
-
-// 이미지 컨테이너 - 비율 조정
+// 이미지 컨테이너 - 키오스크에 적합한 이미지 표시
 export const MenuImageContainer = styled(Box)`
   width: 100%;
-  height: 120px; // 더 작은 높이
-  overflow: hidden;
+  height: 180px; // 더 큰 이미지 영역
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  background-color: #f9f9f9;
   border-radius: 8px;
-  margin-bottom: 8px;
+  overflow: hidden;
   
   & img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; // 이미지 비율 유지하면서 컨테이너에 맞춤
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 180px; // 높이 제한
+    object-fit: contain; // 이미지 비율 유지하면서 온전히 표시
   }
-
 `;
 
 // 호버 효과 관련 객체 제거
@@ -136,7 +139,7 @@ export const MenuImageContainer = styled(Box)`
 //   }
 // };
 
-// 메뉴 정보 컨테이너 - 간격 조정
+// 메뉴 정보 컨테이너
 export const MenuInfo = styled(Box)`
   display: flex;
   flex-direction: column;
@@ -144,33 +147,38 @@ export const MenuInfo = styled(Box)`
   justify-content: space-between;
 `;
 
-// 메뉴 이름 - 글자 크기 조정 (더 크게)
+// 메뉴 이름 - 키오스크에 적합한 크고 명확한 글꼴
 export const MenuName = styled(Box)`
-  font-size: 1.2rem; // 글자 크기 키움
+  font-size: 1.4rem; // 더 큰 글자 크기
   font-weight: bold;
-  margin-bottom: 6px; // 간격 추가
+  margin-bottom: 8px;
+  line-height: 1.3;
+  color: #222;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 `;
 
-// 메뉴 설명 - 줄 수 제한 (글자 크기 키움)
+// 메뉴 설명
 export const MenuDescription = styled(Box)`
-  font-size: 0.9rem; // 글자 크기 키움
-  color: #666;
-  margin-bottom: 8px;
+  font-size: 0.95rem; // 적절한 크기로 조정
+  color: #555;
+  margin-bottom: 12px;
   display: -webkit-box;
-  -webkit-line-clamp: 2; // 2줄로 제한
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  line-height: 1.3;
+  line-height: 1.4;
 `;
 
-// 메뉴 가격 (더 강조)
+// 메뉴 가격 - 강조 표시
 export const MenuPrice = styled(Box)`
-  font-size: 1.1rem; // 글자 크기 키움
+  font-size: 1.25rem;
   font-weight: bold;
   color: #ff6f61;
+  padding: 5px 0;
+  border-top: 1px dashed #eee;
+  margin-top: auto; // 항상 하단에 배치
 `;
 
 // 장바구니 컨테이너
