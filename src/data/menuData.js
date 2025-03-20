@@ -1,7 +1,7 @@
-import americanoImg from '../assets/MenuImages/아메리카노.png';
-import berryImg from '../assets/MenuImages/베리스무디.png';
-import latteImg from '../assets/MenuImages/카페라떼.png';
-import honeyBreadImg from '../assets/MenuImages/허니브레드.png';
+import americanoImg from '../assets/Image/MenuImages/아메리카노.png';
+import berryImg from '../assets/Image/MenuImages/베리스무디.png';
+import latteImg from '../assets/Image/MenuImages/카페라떼.png';
+import honeyBreadImg from '../assets/Image/MenuImages/허니브레드.png';
 
 export const categories = [
     {

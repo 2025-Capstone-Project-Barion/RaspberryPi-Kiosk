@@ -20,6 +20,7 @@ import {
 } from '../styles/Menu/MenuStyle';
 
 import { categories, getMenuItems } from '../data/menuData';
+import logo from '../assets/Image/Logo/logo.jpg'; // 로고 이미지 경로
 
 const MenuPage = () => {
     // 디폴트 카테고리는 커피로 설정(메뉴페이지로 들어왔을 때 보이는 카테고리)
@@ -60,7 +61,7 @@ const MenuPage = () => {
         <AppContainer>
             {/* Logo & Categories */}
             <CategoryWrapper>
-                <img src="/logo.png" alt="logo" style={{ height: '40px' }} />
+                <img src={logo} alt="logo" style={{ height: '40px' }} />
                 <Box sx={{ display: 'flex', gap: '20px', flexWrap: 'nowrap', overflow: 'auto' }}>
                     {categories.map(category => (
                         <CategoryButton
@@ -98,7 +99,7 @@ const MenuPage = () => {
                                     <img
                                         src={item.image}
                                         alt={item.name}
-                                        //loading="lazy" // 이미지 지연 로딩으로 성능 최적화
+                                    //loading="lazy" // 이미지 지연 로딩으로 성능 최적화
                                     />
                                 )}
                             </MenuImageContainer>
