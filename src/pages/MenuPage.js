@@ -10,7 +10,8 @@ import {
     CartContainer,
     CartHeader,
     CartFooter,
-    PaymentButton
+    PaymentButton,
+    CartList
 } from '../styles/Menu/MenuStyle';
 
 import { categories, getMenuItems } from '../data/menuData';
@@ -96,7 +97,7 @@ const MenuPage = () => {
                         <Button onClick={() => setCart([])}>전체 삭제</Button>
                     </CartHeader>
 
-                    <List sx={{ overflow: 'auto', flex: 1 }}>
+                    <CartList>
                         {cart.map((item, index) => (
                             <ListItem key={index} divider>
                                 <Typography sx={{ flexGrow: 1 }}>{item.name}</Typography>
@@ -112,7 +113,7 @@ const MenuPage = () => {
                                 </IconButton>
                             </ListItem>
                         ))}
-                    </List>
+                    </CartList>
 
                     <CartFooter>
                         <Typography variant="h6">총 금액: {totalPrice.toLocaleString()}원</Typography>

@@ -9,7 +9,7 @@
 // 현 프로젝트의 스타일링 기조는 styled-components로 진행하기로 하였고, MUI 컴포넌트 커스터마이징시에는 MUI프레임워크의 원칙에 따라 이때만 @emotion/styled을 사용하기로 함.
 import styled from '@emotion/styled';
 //import styled from 'styled-components';
-import { Box, Button } from '@mui/material';
+import { Box, Button, List } from '@mui/material';
 
 // 기본 html 컴포넌트가 아닌 MUI 컴포넌트 커스터마이징이므로 styled.Box이 아닌, styled(Box)문법을 사용해야함.
 export const AppContainer = styled(Box)`
@@ -47,8 +47,32 @@ export const MenuGridContainer = styled(Box)`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   padding-right: 10px;
+  
+  /* 터치 스크롤 최적화를 위한 속성 추가 */
+  -webkit-overflow-scrolling: touch; /* iOS 부드러운 스크롤링 */
+  scroll-behavior: smooth; /* 부드러운 스크롤 효과 */
+  
+  /* 스크롤바 스타일링 */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
 `;
 
 export const MenuCard = styled.div`
@@ -103,5 +127,32 @@ export const PaymentButton = styled(Button)`
   background: #ff6f61 !important;
   &:hover {
     background: #ff4d3d !important;
+  }
+`;
+
+export const CartList = styled(List)`
+  overflow: auto;
+  flex: 1;
+  -webkit-overflow-scrolling: touch; /* iOS 부드러운 스크롤링 */
+  scroll-behavior: smooth; /* 부드러운 스크롤 효과 */
+  padding: 4px;
+
+  /* 스크롤바 스타일링 */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f5f5f5;
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
   }
 `;
