@@ -47,6 +47,8 @@ export const MenuGridContainer = styled(Box)`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
+  grid-auto-rows: 300px;  /* 각 행의 높이를 고정 */
+  align-items: start;     /* 아이템을 상단에 맞춤 */
   overflow-y: auto;
   overflow-x: hidden;
   padding-right: 10px;
