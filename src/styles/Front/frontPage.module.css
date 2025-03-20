@@ -1,0 +1,117 @@
+/* 
+첫 화면 (FrontPage) → CSS 모듈 (.module.css)
+이유:
+반복적인 애니메이션이지만 정적인 스타일 (배경 이미지 전환, 버튼 애니메이션)
+렌더링 최적화가 중요하므로 CSS 파일을 미리 로드하는 게 더 빠름
+애니메이션은 @react-spring/web 으로 관리하니, 굳이 styled-components까지 쓸 필요 없음
+👉 FrontPage는 CSS 모듈로 유지 (frontPage.module.css) 
+*/
+
+/* 
+메뉴 화면 → styled-components
+이유:
+백엔드에서 데이터를 가져와서 실시간으로 메뉴 추가/삭제/변경
+props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 할인된 메뉴는 강조)
+상태(state)에 따라 스타일이 변경됨 (ex: selected 상태에 따라 버튼 색상 변경)
+컴포넌트 기반으로 유지보수가 쉬움
+👉 메뉴 관련 컴포넌트는 styled-components로 작성 
+*/
+.container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #000;
+}
+
+.bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  will-change: opacity;
+  filter: brightness(0.6);
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+  padding: 0 2rem;
+}
+
+.messageBox {
+  max-width: 800px;
+  position: relative;
+  top: -20vh; /* 메시지 박스를 약간 위로 이동 */
+}
+
+.messageBox h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0.5rem 0;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.orderButton {
+  position: absolute;
+  bottom: 35vh;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.instructionBox {
+  position: fixed; /* fixed로 변경하여 viewport에 고정 */
+  bottom: 8vh; /* 하단에서의 거리 */
+  /* left: 50%;*/
+  transform: translateX(-50%); /* 가운데 정렬 */
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 2rem 3rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 10; /* 다른 요소들보다 위에 표시 */
+}
+
+.handwave {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  animation: wave 3s ease-in-out infinite;
+}
+
+.instructionBox p {
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+@keyframes wave {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-15deg);
+  }
+  75% {
+    transform: rotate(15deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .instructionBox {
+    padding: 1.5rem 2rem;
+  }
+}
