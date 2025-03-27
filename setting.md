@@ -7,12 +7,12 @@
 Node.js를 설치하여 프로젝트의 종속성을 관리합니다.
 
 ```sh
-NODE_VERSION=18
-curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | sudo -E bash -
+# Node.js 23.x 설치
+curl -fsSL https://deb.nodesource.com/setup_23.x | sudo -E bash -
 sudo apt install -y nodejs
 ```
 
-------
+---
 
 <br>
 
@@ -24,7 +24,7 @@ sudo apt install -y nodejs
 npm install
 ```
 
-------
+---
 
 <br>
 
@@ -38,7 +38,7 @@ npm install --save-dev electron
 
 > 📌 **Note:** Electron은 실제 배포 시 패키징되어 포함되므로, `dependencies`에 추가할 필요가 없음!
 
-------
+---
 
 <br>
 
@@ -52,7 +52,7 @@ npm start
 
 > React 앱이 먼저 실행되고, Electron이 이를 로드하는 방식입니다.
 
-------
+---
 
 <br>
 
@@ -67,7 +67,7 @@ npm start
 npm run build; npm run dist
 ```
 
-> 🔧 아래와 같이 `package.json`에서 `build:dist` 스크립트를 등록하면 더 간편하게 실행할 수 있음. 
+> 🔧 아래와 같이 `package.json`에서 `build:dist` 스크립트를 등록하면 더 간편하게 실행할 수 있음.
 
 <br>
 
@@ -77,7 +77,7 @@ npm run build; npm run dist
 }
 ```
 
-------
+---
 
 <br>
 
@@ -100,8 +100,8 @@ npm run build; npm run dist
 
 ```json
 const isDev = (await import('electron-is-dev')).default;
-const startURL = isDev 
-  ? 'http://localhost:3000' 
+const startURL = isDev
+  ? 'http://localhost:3000'
   : `file://${path.join(__dirname, '../build/index.html')}`;
 ```
 
@@ -109,8 +109,8 @@ const startURL = isDev
 
 ```json
 const isDev = process.env.NODE_ENV === 'development';
-const startURL = isDev 
-  ? 'http://localhost:3000' 
+const startURL = isDev
+  ? 'http://localhost:3000'
   : `file://${path.join(__dirname, '../build/index.html')}`;
 ```
 
@@ -129,7 +129,7 @@ const startURL = isDev
 
 이제 `npm start`를 실행하면 `NODE_ENV=development`가 자동으로 설정되어 문제 없이 개발할 수 있습니다.
 
-------
+---
 
 <br>
 
@@ -157,14 +157,14 @@ npm install --save-dev wait-on
 > 🚀 **현재 프로젝트에서는 React가 먼저 실행되므로, `wait-on` 없이도 정상 동작합니다.**
 > 하지만 환경이 변경될 경우 `wait-on`을 추가하는 것이 안정적입니다.
 
-------
+---
 
 <br>
 
 ## 📌 전체과정 요약정리
 
-| **단계**                    | **명령어**                        | **설명**                    |
-| --------------------------- | --------------------------------- | --------------------------- |
+| **단계**                     | **명령어**                        | **설명**                    |
+| ---------------------------- | --------------------------------- | --------------------------- |
 | **1️⃣ Node.js 설치**          | `sudo apt install -y nodejs`      | Node.js 환경 구축           |
 | **2️⃣ 패키지 설치**           | `npm install`                     | 프로젝트 종속성 설치        |
 | **3️⃣ Electron 설치**         | `npm install --save-dev electron` | Electron 개발 환경 구성     |
