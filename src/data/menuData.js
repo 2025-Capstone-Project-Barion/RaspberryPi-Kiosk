@@ -1,5 +1,7 @@
-import americanoImg from '../assets/MenuImages/아메리카노.png';
-import berryImg from '../assets/MenuImages/베리스무디.png';
+import americanoImg from '../assets/Image/MenuImages/아메리카노.png';
+import berryImg from '../assets/Image/MenuImages/베리스무디.png';
+import latteImg from '../assets/Image/MenuImages/카페라떼.png';
+import honeyBreadImg from '../assets/Image/MenuImages/허니브레드.png';
 
 export const categories = [
     {
@@ -248,12 +250,13 @@ export const menuItems = {
         }
     ],
     dessert: [
+        // dessert 카테고리 항목 - 카페라떼 이미지 사용
         {
             id: 'dessert-1',
             name: '티라미수',
             price: 5800,
             description: '커피 향이 가득한 이탈리안 클래식 디저트',
-            image: berryImg,
+            image: latteImg,
             category: 'dessert',
             available: true
         },
@@ -262,7 +265,7 @@ export const menuItems = {
             name: '뉴욕 치즈케이크',
             price: 5500,
             description: '부드럽고 진한 치즈의 맛이 일품인 케이크',
-            image: berryImg,
+            image: latteImg,
             category: 'dessert',
             available: true
         },
@@ -271,7 +274,7 @@ export const menuItems = {
             name: '초코 브라우니',
             price: 4800,
             description: '진한 초콜릿의 맛이 가득한 달콤한 브라우니',
-            image: berryImg,
+            image: latteImg,
             category: 'dessert',
             available: true
         },
@@ -280,7 +283,7 @@ export const menuItems = {
             name: '크로플',
             price: 4500,
             description: '크로와상과 와플의 만남, 바삭하고 달콤한 크로플',
-            image: berryImg,
+            image: latteImg,
             category: 'dessert',
             available: true
         },
@@ -289,7 +292,7 @@ export const menuItems = {
             name: '마카롱 세트',
             price: 6500,
             description: '다양한 맛의 마카롱 5개 세트',
-            image: berryImg,
+            image: latteImg,
             category: 'dessert',
             available: true
         },
@@ -298,7 +301,7 @@ export const menuItems = {
             name: '스콘',
             price: 3800,
             description: '버터의 풍미가 가득한 영국식 스콘',
-            image: berryImg,
+            image: latteImg,
             category: 'dessert',
             available: true
         },
@@ -307,7 +310,7 @@ export const menuItems = {
             name: '레드벨벳 케이크',
             price: 5500,
             description: '선명한 붉은색과 크림치즈의 조화가 매력적인 케이크',
-            image: berryImg,
+            image: latteImg,
             category: 'dessert',
             available: true
         },
@@ -316,18 +319,19 @@ export const menuItems = {
             name: '아이스크림 와플',
             price: 6000,
             description: '따뜻한 와플 위에 시원한 아이스크림을 올린 디저트',
-            image: berryImg,
+            image: latteImg,
             category: 'dessert',
             available: true
         }
     ],
     bakery: [
+        // bakery 카테고리 항목 - 허니브레드 이미지 사용
         {
             id: 'bakery-1',
             name: '크로아상',
             price: 3800,
             description: '바삭한 겉과 부드러운 속의 조화가 일품인 프랑스 빵',
-            image: berryImg,
+            image: honeyBreadImg,
             category: 'bakery',
             available: true
         },
@@ -336,7 +340,7 @@ export const menuItems = {
             name: '베이글',
             price: 3500,
             description: '쫄깃한 식감이 특징인 도넛 모양의 빵',
-            image: berryImg,
+            image: honeyBreadImg,
             category: 'bakery',
             available: true
         },
@@ -345,7 +349,7 @@ export const menuItems = {
             name: '소시지 빵',
             price: 4200,
             description: '소시지를 감싼 부드러운 빵',
-            image: berryImg,
+            image: honeyBreadImg,
             category: 'bakery',
             available: true
         },
@@ -354,7 +358,7 @@ export const menuItems = {
             name: '초코 머핀',
             price: 4000,
             description: '진한 초콜릿 맛이 가득한 머핀',
-            image: berryImg,
+            image: honeyBreadImg,
             category: 'bakery',
             available: true
         },
@@ -363,7 +367,7 @@ export const menuItems = {
             name: '블루베리 머핀',
             price: 4000,
             description: '상큼한 블루베리가 들어간 촉촉한 머핀',
-            image: berryImg,
+            image: honeyBreadImg,
             category: 'bakery',
             available: true
         },
@@ -372,7 +376,7 @@ export const menuItems = {
             name: '단팥빵',
             price: 3500,
             description: '달콤한 팥앙금이 들어간 부드러운 빵',
-            image: berryImg,
+            image: honeyBreadImg,
             category: 'bakery',
             available: true
         },
@@ -381,7 +385,7 @@ export const menuItems = {
             name: '바게트 샌드위치',
             price: 5800,
             description: '바삭한 바게트에 신선한 야채와 햄을 넣은 샌드위치',
-            image: berryImg,
+            image: honeyBreadImg,
             category: 'bakery',
             available: true
         },
@@ -390,7 +394,7 @@ export const menuItems = {
             name: '에그 샌드위치',
             price: 5500,
             description: '부드러운 계란 샐러드를 넣은 클래식 샌드위치',
-            image: berryImg,
+            image: honeyBreadImg,
             category: 'bakery',
             available: true
         }

@@ -2,6 +2,8 @@ import { createGlobalStyle } from "styled-components";
 import NotoSansKR from '../../assets/Font/NotoSansKR-SemiBold.ttf';
 export const GlobalStyles = createGlobalStyle`
 
+// 전역 폰트 설정 - 즉 html, body에 적용되는 모든 엘리먼트들의 폰트 설정임
+// MUI 컴포넌트들에 대한 폰트설정은 App.js에서 theme 객체로 진행함
   @font-face {
     font-family: 'Noto Sans KR';
     font-style: normal;
