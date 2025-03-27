@@ -51,6 +51,9 @@ git --version
 # .bash_profile은 로그인 셸에서 실행되며, .bashrc를 호출하도록 설정합니다.
 # 아래 코드는 .bash_profile을 생성하여 .bashrc를 호출하도록 설정합니다.
 
+# 실행 권한부여. 권한을 수정
+chmod +x ~/.bash_profile
+
 echo "Configuring .bash_profile..."
 if [ ! -f ~/.bash_profile ]; then
     echo 'if [ -f ~/.bashrc ]; then' > ~/.bash_profile
@@ -61,10 +64,22 @@ else
     echo ".bash_profile already exists. Skipping creation."
 fi
 
+# ============================================
+# sh 셸에서도 .bashrc 실행 설정
+# ============================================
+# sh 셸이 실행될 때 .bashrc를 자동으로 불러오도록 설정합니다.
+echo "Configuring sh shell to load .bashrc..."
+if ! grep -q 'export ENV="$HOME/.bashrc"' ~/.profile; then
+    echo 'export ENV="$HOME/.bashrc"' >> ~/.profile
+    echo ".profile updated to load .bashrc in sh shell."
+else
+    echo ".profile already configured to load .bashrc."
+fi
+
 # .bashrc와 .bash_profile 적용
 source ~/.bashrc
 source ~/.bash_profile
-
+source ~/.profile
 
 # ============================================
 # 최종 확인
@@ -77,7 +92,7 @@ git --version
 
 echo "Setup completed successfully!"
 
-# 이 setup.sh 사용방법 
+# 이 rubikSetting.sh 쉘스크립트 사용방법 
 # 이 스크립트를 실행하면 Node.js와 Git이 설치되고, 환경 변수가 설정되며, 모든 설정이 자동으로 적용됩니다.
-# 1. chmod +x setup.sh
-# 2. ./setup.sh
+# 1. chmod +x rubikSetting.sh
+# 2. ./rubikSetting.sh
