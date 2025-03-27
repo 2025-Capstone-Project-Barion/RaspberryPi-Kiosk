@@ -12,6 +12,13 @@ curl -fsSL https://deb.nodesource.com/setup_23.x | sudo -E bash -
 sudo apt install -y nodejs
 ```
 
+### npm 최신 버전 업데이트
+```sh
+sudo npm install -g npm@latest
+```
+
+> 📌 **Note:** Node.js와 npm 버전은 Windows 개발 환경과 동일하게 맞춰야 합니다.
+
 ---
 
 <br>
