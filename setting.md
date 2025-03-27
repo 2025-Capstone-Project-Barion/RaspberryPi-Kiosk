@@ -17,7 +17,7 @@ sudo apt install -y nodejs
 sudo npm install -g npm@latest
 ```
 
-> 📌 **Note:** Node.js와 npm 버전은 Windows 개발 환경과 동일하게 맞춰야 합니다.
+> 📌 **Note:** 실 배포환경인 라즈베리파이 및 Rubik pi3의 Node.js와 npm 버전은 개발환경인 Windows 데스크탑 환경과 동일하게 맞춰야 합니다.
 
 ---
 
