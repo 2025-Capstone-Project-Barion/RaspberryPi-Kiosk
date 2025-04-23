@@ -469,9 +469,9 @@ export const menuItems = {
 
         {
             id: 'dessert-5',
-            name: '모찌',
-            price: 4500,
-            description: '쫀득한 식감의 일본식 디저트',
+            name: '치즈케이크',
+            price: 5200,
+            description: '부드럽고 진한 치즈의 풍미가 일품인 클래식 디저트',
             image: latteImg,
             category: 'dessert',
             available: true
