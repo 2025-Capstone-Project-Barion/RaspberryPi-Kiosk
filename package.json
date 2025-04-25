@@ -1,11 +1,7 @@
 {
-  "name": "react_ver",
+  "name": "barion_kiosk",
   "version": "0.1.0",
   "private": true,
-  "main": "public/electron.js",
-  "author": "wjlee",
-  "description": "KioskApp",
-  "homepage": "./",
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
@@ -19,19 +15,16 @@
     "styled-components": "^6.1.15"
   },
   "scripts": {
-    "react:start": "react-scripts start",
-    "electron:start": "set NODE_ENV=development&& electron .",
-    "start": "concurrently \"npm run react:start\" \"npm run electron:start\"",
+    "start": "react-scripts start",
     "build": "react-scripts build",
-    "dist": "electron-builder",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "electron": "electron ."
+    "eject": "react-scripts eject"
   },
-  "devDependencies": {
-    "concurrently": "^9.1.2",
-    "electron": "^34.3.0",
-    "electron-builder": "^25.1.8"
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "browserslist": {
     "production": [
@@ -44,18 +37,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "build": {
-    "appId": "com.example.react_ver",
-    "productName": "ReactVerApp",
-    "files": [
-      "build/**/*"
-    ],
-    "linux": {
-      "target": "AppImage"
-    },
-    "win": {
-      "target": "nsis"
-    }
   }
 }
