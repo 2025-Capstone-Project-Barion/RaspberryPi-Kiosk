@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Router from './routes/Router';
-import { GlobalStyles } from './styles/Menu/GlobalStyles';
+import { GlobalStyles } from './styles/GlobalStyles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 // MUI v5부터는 styled component가 아닌 Emotion을 사용하여 스타일링을 해줘야하지만, 현 프로젝트의 css 프레임워크를 styled-components로 정하였으므로 @mui/styled-engine이 아닌 styled-components를 사용하고자한다.
 // MUI와 styled-components를 함께 사용할 때는 <StyledEngineProvider injectFirst>로 감싸줘야 styled-components 문법을 사용할 수 있다.
