@@ -1,5 +1,14 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# env
+.env
+
+# Picovoice model files(porcupine, rhino)
+/public/picovoice/porcupine/*.ppn
+/public/picovoice/porcupine/*.pv
+/public/picovoice/rhino/*.rhn
+/public/picovoice/rhino/*.pv
+
 # dependencies
 /node_modules
 /.pnp
