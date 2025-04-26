@@ -50,8 +50,14 @@ export const CategoryButton = styled(Button, {
   fontSize: '1.2rem',
   fontWeight: active ? 'bold' : 'normal',
   color: active ? '#ff6f61' : '#333',
-  padding: '8px 16px',
+  // 터치 영역 확보를 위해 패딩 증가
+  padding: '12px 20px', // 8px 16px에서 더 넓게 변경
   minWidth: '100px',
+
+  // 선택된 카테고리(active)에 테두리 추가
+  outline: active ? '2px solid rgba(255, 111, 97, 0.5)' : 'none',
+  outlineOffset: '2px',
+
   // 터치 피드백을 위한 활성 상태 스타일링
   '&:active': {
     backgroundColor: 'rgba(255, 111, 97, 0.15)',
@@ -60,13 +66,8 @@ export const CategoryButton = styled(Button, {
     // 버튼 크기 축소되는 애니메이션이 0.1s초 내에 수행되어 빠르게 축소 & 복구
     transition: 'transform 0.1s ease'
   },
-  // 충분한 터치 영역
-  margin: '4px',
-  // 접근성을 위한 포커스 스타일 (키보드 사용자 지원)
-  '&:focus': {
-    outline: '2px solid rgba(255, 111, 97, 0.5)',
-    outlineOffset: '2px'
-  }
+  // 버튼 간 간격을 위한 마진
+  margin: '4px'
 }));
 
 // 메뉴 그리드 컨테이너 수정 - 더 큰 높이의 그리드 셀
