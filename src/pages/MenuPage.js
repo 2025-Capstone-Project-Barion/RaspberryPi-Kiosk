@@ -16,16 +16,20 @@ import {
     CartHeader,
     CartList,
     CartFooter,
-    PaymentButton
+    PurchaseButton
 } from '../styles/Menu/MenuStyle';
 
 import { categories, getMenuItems } from '../data/menuData';
+import OrderCheckDialog from '../components/Order/OrderCheckDialog';
 import logo from '../assets/Image/Logo/logo.png'; // 로고 이미지 경로
 
 const MenuPage = () => {
     // 디폴트 카테고리는 커피로 설정(메뉴페이지로 들어왔을 때 보이는 카테고리)
     const [selectedCategory, setSelectedCategory] = useState('coffee');
     const [cart, setCart] = useState([]);
+    // 기존 state 아래에 다이얼로그 상태 추가
+    const [orderDialogOpen, setOrderDialogOpen] = useState(false);
+
 
     const handleAddToCart = (item) => {
         // 기존 로직 유지
@@ -53,6 +57,14 @@ const MenuPage = () => {
         }
 
         setCart(updatedCart);
+    };
+
+    // 결제 처리 함수
+    const handlePayment = () => {
+        console.log('결제 진행:', cart);
+        // 여기에 결제 로직 추가
+        setOrderDialogOpen(false);
+        // 결제 후 장바구니 비우기 등의 작업...
     };
 
     const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -161,15 +173,24 @@ const MenuPage = () => {
                         <Typography variant="h6" align="right">
                             총 금액: {totalPrice.toLocaleString()}원
                         </Typography>
-                        <PaymentButton
+                        {/* Cart 컨테이너 내부의 결제 버튼 부분 수정 */}
+                        <PurchaseButton
                             variant="contained"
                             disabled={cart.length === 0}
+                            onClick={() => setOrderDialogOpen(true)}
                         >
-                            결제하기 ({totalPrice.toLocaleString()}원)
-                        </PaymentButton>
+                            구매하기 ({totalPrice.toLocaleString()}원)
+                        </PurchaseButton>
                     </CartFooter>
                 </CartContainer>
             </Box>
+            {/* 주문 확인 다이얼로그 추가 */}
+            <OrderCheckDialog
+                open={orderDialogOpen}
+                cartItems={cart}
+                onClose={() => setOrderDialogOpen(false)}
+                onPayment={handlePayment}
+            />
         </AppContainer>
     );
 };

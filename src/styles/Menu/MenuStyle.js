@@ -40,7 +40,11 @@ export const CategoryWrapper = styled(Box)`
 `;
 
 // 카테고리 버튼
-export const CategoryButton = styled(Button)(({ active }) => ({
+// 애러는 아니지만 경고제거를 위해=> active prop이 DOM으로 전달되지 않도록 shouldForwardProp 적용
+// 이 코드는 active prop이 DOM 요소로 전달되는 것을 방지하면서, 스타일링에는 계속 사용할 수 있게 해줌
+export const CategoryButton = styled(Button, {
+  shouldForwardProp: (prop) => prop !== 'active'
+})(({ active }) => ({
   fontSize: '1.2rem',
   fontWeight: active ? 'bold' : 'normal',
   color: active ? '#ff6f61' : '#333',
@@ -240,8 +244,8 @@ export const CartFooter = styled(Box)`
   border-top: 2px solid #eee;
 `;
 
-// 결제 버튼
-export const PaymentButton = styled(Button)`
+// 구매 버튼
+export const PurchaseButton = styled(Button)`
   width: 100%;
   margin-top: 20px !important;
   padding: 15px !important;
