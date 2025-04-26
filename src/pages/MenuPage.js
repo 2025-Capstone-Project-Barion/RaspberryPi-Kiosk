@@ -20,7 +20,7 @@ import {
 } from '../styles/Menu/MenuStyle';
 
 import { categories, getMenuItems } from '../data/menuData';
-import logo from '../assets/Image/Logo/logo.jpg'; // 로고 이미지 경로
+import logo from '../assets/Image/Logo/logo.png'; // 로고 이미지 경로
 
 const MenuPage = () => {
     // 디폴트 카테고리는 커피로 설정(메뉴페이지로 들어왔을 때 보이는 카테고리)

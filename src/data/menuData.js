@@ -244,7 +244,7 @@ export const menuItems = {
         },
 
         {
-            id: 'non-3',
+            id: 'non-4',
             name: '생강차',
             price: 4500,
             description: '따뜻하고 건강한 생강 향의 차',
@@ -254,7 +254,7 @@ export const menuItems = {
         },
 
         {
-            id: 'non-4',
+            id: 'non-5',
             name: '라벤더 티',
             price: 4500,
             description: '은은한 라벤더 향이 가득한 허브차',
@@ -264,7 +264,7 @@ export const menuItems = {
         },
 
         {
-            id: 'non-5',
+            id: 'non-6',
             name: '유자차',
             price: 5000,
             description: '상큼한 유자 맛이 가득한 따뜻한 차',
@@ -274,7 +274,7 @@ export const menuItems = {
         },
 
         {
-            id: 'non-6',
+            id: 'non-7',
             name: '녹차 라떼',
             price: 4800,
             description: '진한 녹차와 부드러운 우유의 조합',
@@ -284,7 +284,7 @@ export const menuItems = {
         },
 
         {
-            id: 'non-7',
+            id: 'non-8',
             name: '고구마 라떼',
             price: 4700,
             description: '달콤한 고구마 맛이 듬뿍 들어간 라떼',
@@ -294,7 +294,7 @@ export const menuItems = {
         },
 
         {
-            id: 'non-8',
+            id: 'non-9',
             name: '곡물 라떼',
             price: 4500,
             description: '고소한 곡물 향이 가득한 라떼',
@@ -304,7 +304,7 @@ export const menuItems = {
         },
 
         {
-            id: 'non-9',
+            id: 'non-10',
             name: '아이스티',
             price: 4500,
             description: '향긋한 복숭아향의 시원한 아이스티',
@@ -314,7 +314,7 @@ export const menuItems = {
         },
 
         {
-            id: 'non-10',
+            id: 'non-11',
             name: '프라페',
             price: 5500,
             description: '달콤하고 시원한 초콜릿 블렌디드 음료',
@@ -324,7 +324,7 @@ export const menuItems = {
         },
 
         {
-            id: 'non-11',
+            id: 'non-12',
             name: '미숫가루',
             price: 4500,
             description: '고소한 곡물 맛이 가득한 전통 음료',
@@ -334,7 +334,7 @@ export const menuItems = {
         },
 
         {
-            id: 'non-12',
+            id: 'non-13',
             name: '딸기 스무디',
             price: 5500,
             description: '신선한 딸기의 상큼함이 가득한 스무디',
@@ -344,7 +344,7 @@ export const menuItems = {
         },
 
         {
-            id: 'non-13',
+            id: 'non-14',
             name: '망고 스무디',
             price: 5500,
             description: '달콤한 망고의 풍미가 가득한 스무디',
@@ -355,7 +355,7 @@ export const menuItems = {
 
 
         {
-            id: 'non-14',
+            id: 'non-15',
             name: '자몽 에이드',
             price: 4800,
             description: '상큼한 자몽의 맛이 가득한 시원한 에이드',
@@ -365,7 +365,7 @@ export const menuItems = {
         },
 
         {
-            id: 'non-15',
+            id: 'non-16',
             name: '레몬 에이드',
             price: 4800,
             description: '상큼한 레몬의 맛이 가득한 시원한 에이드',
@@ -375,7 +375,7 @@ export const menuItems = {
         },
 
         {
-            id: 'non-16',
+            id: 'non-17',
             name: '청포도 에이드',
             price: 4800,
             description: '상큼한 청포도의 맛이 가득한 에이드',
@@ -385,7 +385,7 @@ export const menuItems = {
         },
 
         {
-            id: 'non-17',
+            id: 'non-18',
             name: '유자 에이드',
             price: 4800,
             description: '상큼한 유자 맛이 가득한 에이드',
@@ -395,7 +395,7 @@ export const menuItems = {
         },
 
         {
-            id: 'non-18',
+            id: 'non-19',
             name: '포도 주스',
             price: 4000,
             description: '신선한 포도의 달콤함이 가득한 주스',
@@ -405,7 +405,7 @@ export const menuItems = {
         },
 
         {
-            id: 'non-19',
+            id: 'non-20',
             name: '토마토 주스',
             price: 4000,
             description: '신선한 토마토의 건강한 맛',
@@ -415,7 +415,7 @@ export const menuItems = {
         },
 
         {
-            id: 'non-20',
+            id: 'non-21',
             name: '사과 주스',
             price: 4000,
             description: '상큼한 사과의 자연스러운 달콤함',
