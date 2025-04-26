@@ -11,13 +11,7 @@ import {
     PaymentButton
 } from '../../styles/Order/OrderCheckStyle';
 
-/**
- * 주문 확인 컴포넌트
- * @param {Object} props
- * @param {Array} props.cartItems - 장바구니에 담긴 상품 목록
- * @param {Function} props.onClose - 다이얼로그 닫기 함수
- * @param {Function} props.onPayment - 결제 진행 함수
- */
+
 const OrderCheck = ({ cartItems, onClose, onPayment }) => {
     // 총 주문 수량 계산
     const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
