@@ -40,7 +40,9 @@ export const CategoryWrapper = styled(Box)`
 `;
 
 // 카테고리 버튼
-// 애러는 아니지만 경고제거를 위해=> active prop이 DOM으로 전달되지 않도록 shouldForwardProp 적용
+// 애러는 아니지만 경고제거를 위해=> active prop이 DOM으로 전달되지 않도록 shouldForwardProp를 적용함.
+// HTML 표준에는 active라는 attribute가 없음. MUI에서 이를 사용하기 위해서는 Emotion/styled에서 제공하는 shouldForwardProp을 사용하여 active prop을 DOM으로 전달하지 않도록하면서 styled 함수 안에서만 스타일 계산용으로 쓰게 만듦. 
+// 즉 active는 스타일 계산에는 쓰이고, HTML에는 안 나옴.
 // 이 코드는 active prop이 DOM 요소로 전달되는 것을 방지하면서, 스타일링에는 계속 사용할 수 있게 해줌
 export const CategoryButton = styled(Button, {
   shouldForwardProp: (prop) => prop !== 'active'
@@ -50,9 +52,20 @@ export const CategoryButton = styled(Button, {
   color: active ? '#ff6f61' : '#333',
   padding: '8px 16px',
   minWidth: '100px',
-  transition: 'all 0.2s ease',
-  '&:hover': {
-    backgroundColor: 'rgba(255, 111, 97, 0.05)'
+  // 터치 피드백을 위한 활성 상태 스타일링
+  '&:active': {
+    backgroundColor: 'rgba(255, 111, 97, 0.15)',
+    // 버튼이 눌렸을때 버튼 크기 축소하여 버튼클릭됨을 주기 위한 스타일
+    transform: 'scale(0.95)',
+    // 버튼 크기 축소되는 애니메이션이 0.1s초 내에 수행되어 빠르게 축소 & 복구
+    transition: 'transform 0.1s ease'
+  },
+  // 충분한 터치 영역
+  margin: '4px',
+  // 접근성을 위한 포커스 스타일 (키보드 사용자 지원)
+  '&:focus': {
+    outline: '2px solid rgba(255, 111, 97, 0.5)',
+    outlineOffset: '2px'
   }
 }));
 
