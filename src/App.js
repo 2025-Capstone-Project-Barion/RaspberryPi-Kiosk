@@ -3,18 +3,13 @@ import React from 'react';
 import Router from './routes/Router';
 import { GlobalStyles } from './styles/GlobalStyles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-// MUI v5부터는 styled component가 아닌 Emotion을 사용하여 스타일링을 해줘야하지만, 현 프로젝트의 css 프레임워크를 styled-components로 정하였으므로 @mui/styled-engine이 아닌 styled-components를 사용하고자한다.
-// MUI와 styled-components를 함께 사용할 때는 <StyledEngineProvider injectFirst>로 감싸줘야 styled-components 문법을 사용할 수 있다.
-
-// MUI v5는 기본적으로 @emotion을 스타일링 엔진으로 사용하지만,StyledEngineProvider를 사용하면 MUI가 styled - components를 스타일링 엔진으로 사용하도록 강제할 수 있기때문.
-
+// MUI v5부터는 기본 스타일링 엔진을 Emotion으로 지정하였기에, styled component가 아닌 Emotion을 사용하여 스타일링을 해줘야한다. 현 프로젝트의 css 프레임워크를 styled-components에서 Emotion으로 migration하고자한다.
 // reference: https://velog.io/@minju1009/Styled-Components-with-MUI
 
-// import { StyledEngineProvider } from '@mui/styled-engine';
+// FrontPage 컴포넌트: 시작화면으로, 정적 스타일 및 애니메이션 성능을 위해 CSS 모듈을 FrontPage 컴포넌트에서만 사용하기로 하자.
+// GlobalStyles.js: 전역 스타일 설정<일반 HTML 요소들의 폰트 설정> (@emotion/react의 Global 컴포넌트 사용)
+// 현재 이 App.js: MUI 컴포넌트들의 테마(폰트) 설정(Typography, Button 등)
 
-
-// GlobalStyles.js - 일반 HTML 요소들의 폰트 설정
-// App.js - MUI 컴포넌트들의 폰트 설정(Typography, Button 등)
 // MUI 컴포넌트들의 폰트
 const theme = createTheme({
   typography: {
@@ -24,14 +19,10 @@ const theme = createTheme({
 
 function App() {
   return (
-    <>
-      {/* <StyledEngineProvider injectFirst> */}
-      <ThemeProvider theme={theme}>
-        <GlobalStyles />
-        <Router />
-      </ThemeProvider>
-      {/* </StyledEngineProvider> */}
-    </>
+    <ThemeProvider theme={theme}>
+      <GlobalStyles />
+      <Router />
+    </ThemeProvider>
   );
 }
 
