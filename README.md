@@ -9,7 +9,7 @@
 |<div align="center">**Frontend Framework**</div>|<div align="center">![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)</div>|
 |<div align="center">**UI Framework**</div>|<div align="center">![MUI](https://img.shields.io/badge/MUI-%230081CB.svg?style=for-the-badge&logo=mui&logoColor=white)</div>|
 |<div align="center">**Programming Language**</div>|<div align="center">![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)</div>| 
-|<div align="center">**Styling**</div>|<div align="center">![Styled Components](https://img.shields.io/badge/styled--components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white) <img src="https://img.shields.io/badge/Spring-000000?style=for-the-badge&logo=spring_creators&logoColor=white"></div>|
+|<div align="center">**Styling**</div>|<div align="center">![Emotion](https://img.shields.io/badge/Emotion-DB7093?style=for-the-badge&logo=styled-components&logoColor=white) <img src="https://img.shields.io/badge/Spring-000000?style=for-the-badge&logo=spring_creators&logoColor=white"></div>|
 
  
 
