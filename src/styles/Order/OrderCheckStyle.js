@@ -48,6 +48,7 @@ export const OrderItem = styled(Box)({
     display: 'flex',
     alignItems: 'center',
     padding: 'clamp(10px, 2vh, 15px) clamp(15px, 5%, 25px)',
+    // 주문내역 각 항목의 경계선 밑줄 색상
     borderBottom: '1px solid #f5f5f5',
     '&:last-child': {
         borderBottom: 'none'
@@ -104,8 +105,8 @@ export const BackButton = styled(Button)({
 export const PaymentButton = styled(Button)({
     ...buttonStyle,
     color: 'white',
-    backgroundColor: '#ff6f61',
+    backgroundColor: '#2142FF',
     '&:hover': {
-        backgroundColor: '#ff5546'
+        backgroundColor: '#1935DB'
     }
 });

@@ -49,18 +49,18 @@ export const CategoryButton = styled(Button, {
 })(({ active }) => ({
   fontSize: '1.2rem',
   fontWeight: active ? 'bold' : 'normal',
-  color: active ? '#ff6f61' : '#333',
+  color: active ? '#2142FF' : '#333',
   // 터치 영역 확보를 위해 패딩 증가
   padding: '12px 20px', // 8px 16px에서 더 넓게 변경
   minWidth: '100px',
 
   // 선택된 카테고리(active)에 테두리 추가
-  outline: active ? '2px solid rgba(255, 111, 97, 0.5)' : 'none',
+  outline: active ? '2px solid rgba(33, 66, 255, 0.5)' : 'none',
   outlineOffset: '2px',
 
   // 터치 피드백을 위한 활성 상태 스타일링
   '&:active': {
-    backgroundColor: 'rgba(255, 111, 97, 0.15)',
+    backgroundColor: 'rgba(33, 66, 255, 0.15)',
     // 버튼이 눌렸을때 버튼 크기 축소하여 버튼클릭됨을 주기 위한 스타일
     transform: 'scale(0.95)',
     // 버튼 크기 축소되는 애니메이션이 0.1s초 내에 수행되어 빠르게 축소 & 복구
@@ -125,7 +125,7 @@ export const MenuCard = styled(Box)`
   &:active {
     transform: scale(0.97);
     background-color: #fcfcfc;
-    border-color: #ff6f61;
+    border-color: #2142FF;
   }
 `;
 
@@ -193,7 +193,7 @@ export const MenuDescription = styled(Box)`
 export const MenuPrice = styled(Box)`
   font-size: 1.25rem;
   font-weight: bold;
-  color: #ff6f61;
+  color: #2142FF;
   padding: 5px 0;
   border-top: 1px dashed #eee;
   margin-top: auto; // 항상 하단에 배치
@@ -264,8 +264,8 @@ export const PurchaseButton = styled(Button)`
   margin-top: 20px !important;
   padding: 15px !important;
   font-size: 1.2rem !important;
-  background-color: #ff6f61 !important;
+  background-color: #2142FF !important;
   &:hover {
-    background-color: #ff4d3d !important;
+    background-color: #1935DB !important;
   }
 `;

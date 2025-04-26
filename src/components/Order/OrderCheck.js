@@ -42,7 +42,7 @@ const OrderCheck = ({ cartItems, onClose, onPayment }) => {
                     <OrderItem key={index}>
                         <Typography sx={{ flex: 1, fontWeight: '500' }}>{item.name}</Typography>
                         <Typography sx={{ width: '80px', textAlign: 'center' }}>{item.quantity}개</Typography>
-                        <Typography sx={{ width: '120px', textAlign: 'right', color: '#ff6f61', fontWeight: 'bold' }}>
+                        <Typography sx={{ width: '120px', textAlign: 'right', color: '#2142FF', fontWeight: 'bold' }}>
                             {(item.price * item.quantity).toLocaleString()}원
                         </Typography>
                     </OrderItem>
@@ -56,7 +56,7 @@ const OrderCheck = ({ cartItems, onClose, onPayment }) => {
                     </Typography>
                 </div>
                 <div>
-                    <Typography sx={{ fontSize: '1.3rem', fontWeight: 'bold', color: '#ff6f61' }}>
+                    <Typography sx={{ fontSize: '1.3rem', fontWeight: 'bold', color: '#2142FF' }}>
                         {totalPrice.toLocaleString()} 원
                     </Typography>
                 </div>
