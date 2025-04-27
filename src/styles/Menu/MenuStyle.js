@@ -14,32 +14,39 @@ import { Box, Button, List } from '@mui/material';
 // 기본 html 컴포넌트가 아닌 MUI 컴포넌트 커스터마이징이므로 styled.Box이 아닌, styled(Box)문법을 사용해야함.
 // 메인 컨테이너 - 전체 화면 고정 레이아웃
 
-export const AppContainer = styled(Box)`
-  height: 100vh;
-  width: 100vw;
-  padding: 20px;
-  background: #f5f5f5;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  box-sizing: border-box;
-  margin: 0;
-  overflow: hidden; // 전체 스크롤 방지
-`;
+// 앱 컨테이너 - 배리어프리 개선
+export const AppContainer = styled(Box)({
+  height: '100vh',
+  width: '100vw',
+  padding: '24px',
+  background: '#f8f9fe', // 배경색 밝게 변경 - 가독성 향상
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '24px',
+  boxSizing: 'border-box',
+  margin: 0,
+  overflow: 'hidden', // 전체 스크롤 방지
+  // 배리어프리 UI를 위한 터치 최적화
+  touchAction: 'manipulation',
+  WebkitTapHighlightColor: 'transparent'
+});
 
-// 카테고리 영역
-export const CategoryWrapper = styled(Box)`
-  display: flex;
-  align-items: center;
-  gap: 40px;
-  padding: 10px 20px;
-  background: white;
-  border-radius: 10px;
-  width: 100%;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-`;
+// 카테고리 영역 - 배리어프리 UI 개선
+export const CategoryWrapper = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '32px', // 간격 확대 - 터치 정확도 향상
+  padding: '16px 24px',
+  background: 'white',
+  borderRadius: '16px', // 모서리 둥글게 - 현대적 UI
+  width: '100%',
+  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.06)',
+  // 상단 고정 효과
+  position: 'relative',
+  zIndex: 10
+});
 
-// 카테고리 버튼
+// 카테고리 버튼 - 배리어프리 UI 개선
 // 애러는 아니지만 경고제거를 위해=> active prop이 DOM으로 전달되지 않도록 shouldForwardProp를 적용함.
 // HTML 표준에는 active라는 attribute가 없음. MUI에서 이를 사용하기 위해서는 Emotion/styled에서 제공하는 shouldForwardProp을 사용하여 active prop을 DOM으로 전달하지 않도록하면서 styled 함수 안에서만 스타일 계산용으로 쓰게 만듦. 
 // 즉 active는 스타일 계산에는 쓰이고, HTML에는 안 나옴.
@@ -48,15 +55,27 @@ export const CategoryButton = styled(Button, {
   shouldForwardProp: (prop) => prop !== 'active'
 })(({ active }) => ({
   fontSize: '1.2rem',
-  fontWeight: active ? 'bold' : 'normal',
-  color: active ? '#2142FF' : '#333',
+  fontWeight: active ? 700 : 500,
+  color: active ? '#2142FF' : '#555',
   // 터치 영역 확보를 위해 패딩 증가
-  padding: '12px 20px', // 8px 16px에서 더 넓게 변경
-  minWidth: '100px',
+  padding: '14px 22px', // 더 넓은 패딩으로 터치 정확도 향상
+  minWidth: '110px',
+  borderRadius: '12px', // 둥근 모서리 - 현대적 UI
 
-  // 선택된 카테고리(active)에 테두리 추가
-  outline: active ? '2px solid rgba(33, 66, 255, 0.5)' : 'none',
-  outlineOffset: '2px',
+  // 선택된 카테고리 표시 방법 개선 - 테두리 대신 배경색과 하단 바 사용
+  backgroundColor: active ? 'rgba(33, 66, 255, 0.08)' : 'transparent',
+  position: 'relative',
+  '&::after': active ? {
+    content: '""',
+    position: 'absolute',
+    bottom: '6px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    width: '40%',
+    height: '3px',
+    backgroundColor: '#2142FF',
+    borderRadius: '6px',
+  } : {},
 
   // 터치 피드백을 위한 활성 상태 스타일링
   '&:active': {
@@ -67,205 +86,279 @@ export const CategoryButton = styled(Button, {
     transition: 'transform 0.1s ease'
   },
   // 버튼 간 간격을 위한 마진
-  margin: '4px'
+  margin: '4px',
+  // 호버 효과 제거 - 터치 환경 최적화
+  '&:hover': {
+    backgroundColor: active ? 'rgba(33, 66, 255, 0.08)' : 'transparent',
+  }
 }));
 
-// 메뉴 그리드 컨테이너 수정 - 더 큰 높이의 그리드 셀
-export const MenuGridContainer = styled(Box)`
-  flex: 1;
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); // 3열로 변경 - 각 메뉴 아이템이 더 크게 보임
-  gap: 16px; // 간격 조정
-  grid-auto-rows: 320px; // 충분한 높이 확보
-  align-items: start;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 12px;
-  padding-bottom: 20px;
-  
-  /* 터치 스크롤 최적화 */
-  -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
-  
-  /* 스크롤바 스타일링 */
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-  
-  &::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-  }
-  
-  &::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 4px;
-  }
-  
-  &::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
-  }
-`;
+// 메뉴 그리드 컨테이너 - 배리어프리 UI 개선
+export const MenuGridContainer = styled(Box)({
+  flex: 1,
+  width: '100%',
+  display: 'grid',
+  gridTemplateColumns: 'repeat(3, 1fr)', // 3열 그리드 유지
+  gap: '20px', // 간격 확대 - 터치 정확도 향상
+  gridAutoRows: '340px', // 높이 약간 증가 - 더 많은 정보 표시
+  alignItems: 'start',
+  overflowY: 'auto',
+  overflowX: 'hidden',
+  paddingRight: '12px',
+  paddingBottom: '24px',
 
-// 메뉴 카드 - 키오스크 스타일로 개선
-export const MenuCard = styled(Box)`
-  background: white;
-  padding: 16px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.2s;
-  height: 320px; // 충분한 높이
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-  border: 1px solid #f0f0f0;
-  
-  // 클릭 효과 - 키오스크에 적합한 피드백
-  &:active {
-    transform: scale(0.97);
-    background-color: #fcfcfc;
-    border-color: #2142FF;
-  }
-`;
+  // 터치 스크롤 최적화
+  WebkitOverflowScrolling: 'touch',
+  scrollBehavior: 'smooth',
 
-// 이미지 컨테이너 - 키오스크에 적합한 이미지 표시
-export const MenuImageContainer = styled(Box)`
-  width: 100%;
-  height: 180px; // 더 큰 이미지 영역
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 14px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  overflow: hidden;
-  
-  & img {
-    width: auto;
-    height: auto;
-    max-width: 100%;
-    max-height: 180px; // 높이 제한
-    object-fit: contain; // 이미지 비율 유지하면서 온전히 표시
-  }
-`;
+  // 스크롤바 스타일링 - 더 직관적으로
+  '&::-webkit-scrollbar': {
+    width: '10px' // 넓은 스크롤바 - 터치 정확도 향상
+  },
 
-// 호버 효과 관련 객체 제거
-// export const MenuCardHoverEffect = {
-//   '&:hover img': {
-//     transform: 'scale(1.05)'
-//   }
-// };
+  '&::-webkit-scrollbar-track': {
+    background: '#f1f3fa',
+    borderRadius: '8px'
+  },
+
+  '&::-webkit-scrollbar-thumb': {
+    background: '#c1c7e0',
+    borderRadius: '8px',
+    border: '2px solid #f1f3fa'
+  }
+});
+
+// 메뉴 카드 - 배리어프리 개선
+export const MenuCard = styled(Box)({
+  background: 'white',
+  padding: '20px',
+  borderRadius: '16px', // 모서리 둥글게 - 현대적 UI
+  cursor: 'pointer',
+  height: '340px', // 높이 증가 - 정보 가독성 향상
+  display: 'flex',
+  flexDirection: 'column',
+  boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
+  border: '1px solid #f0f2fa',
+  position: 'relative',
+  overflow: 'hidden',
+
+  // 터치 피드백 효과 강화
+  '&:active': {
+    transform: 'scale(0.98)',
+    boxShadow: '0 2px 10px rgba(0,0,0,0.04)',
+    // 터치 시 브랜드 컬러로 테두리 변경
+    borderColor: '#2142FF',
+    // 애니메이션 효과
+    transition: 'all 0.15s ease-out'
+  },
+
+  // 상단 브랜드 컬러 액센트 추가
+  '&::before': {
+    content: "''",
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: '4px',
+    background: '#2142FF',
+    opacity: 0.8
+  }
+});
+
+// 이미지 컨테이너 - 배리어프리 개선
+export const MenuImageContainer = styled(Box)({
+  width: '100%',
+  height: '180px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginBottom: '16px',
+  backgroundColor: '#f9faff', // 배경색 변경 - 이미지 대비 향상
+  borderRadius: '12px',
+  overflow: 'hidden',
+
+  '& img': {
+    width: 'auto',
+    height: 'auto',
+    maxWidth: '100%',
+    maxHeight: '180px',
+    objectFit: 'contain',
+    // 터치시 이미지 반응 효과 추가
+    transition: 'transform 0.2s ease-out'
+  },
+
+  // 부모 요소가 active일 때 이미지 축소 효과
+  // 컴포넌트 셀렉터 대신 클래스 셀렉터 사용
+  '.menu-card:active & img': {
+    transform: 'scale(0.95)'
+  }
+});
 
 // 메뉴 정보 컨테이너
-export const MenuInfo = styled(Box)`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  justify-content: space-between;
-`;
+export const MenuInfo = styled(Box)({
+  display: 'flex',
+  flexDirection: 'column',
+  flex: 1,
+  justifyContent: 'space-between'
+});
 
-// 메뉴 이름 - 키오스크에 적합한 크고 명확한 글꼴
-export const MenuName = styled(Box)`
-  font-size: 1.4rem; // 더 큰 글자 크기
-  font-weight: bold;
-  margin-bottom: 8px;
-  line-height: 1.3;
-  color: #222;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
+// 메뉴 이름 - 배리어프리 개선
+export const MenuName = styled(Box)({
+  fontSize: '1.4rem',
+  fontWeight: 700,
+  marginBottom: '8px',
+  lineHeight: 1.3,
+  color: '#1A1A1A', // 더 높은 대비 - 가독성 향상
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  // 레이블 효과 추가
+  position: 'relative',
+  paddingLeft: 0
+});
 
-// 메뉴 설명
-export const MenuDescription = styled(Box)`
-  font-size: 0.95rem; // 적절한 크기로 조정
-  color: #555;
-  margin-bottom: 12px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  line-height: 1.4;
-`;
+// 메뉴 설명 - 배리어프리 개선
+export const MenuDescription = styled(Box)({
+  fontSize: '0.95rem',
+  color: '#666', // 메뉴명과 구분되는 색상 - 계층 구조 명확화
+  marginBottom: '12px',
+  display: '-webkit-box',
+  WebkitLineClamp: 2,
+  WebkitBoxOrient: 'vertical',
+  overflow: 'hidden',
+  lineHeight: 1.5,
+  // 높이 고정 - 레이아웃 안정화
+  height: '2.9rem'
+});
 
-// 메뉴 가격 - 강조 표시
-export const MenuPrice = styled(Box)`
-  font-size: 1.25rem;
-  font-weight: bold;
-  color: #2142FF;
-  padding: 5px 0;
-  border-top: 1px dashed #eee;
-  margin-top: auto; // 항상 하단에 배치
-`;
+// 메뉴 가격 - 배리어프리 개선
+export const MenuPrice = styled(Box)({
+  fontSize: '1.3rem',
+  fontWeight: 700,
+  color: '#2142FF',
+  padding: '10px 0',
+  borderTop: '1px dashed #e8ecfb',
+  marginTop: 'auto',
+  // 가격 레이블 추가
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
 
-// 장바구니 컨테이너
-export const CartContainer = styled(Box)`
-  width: 320px;
-  min-width: 320px; // 최소 너비 고정
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  background: white;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-`;
-
-// 장바구니 헤더
-export const CartHeader = styled(Box)`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
-`;
-
-// 장바구니 목록
-export const CartList = styled(List)`
-  overflow-y: auto;
-  overflow-x: hidden;
-  flex: 1;
-  -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
-  padding: 4px;
-  
-  /* 스크롤바 스타일링 */
-  &::-webkit-scrollbar {
-    width: 6px;
+  // 가격 레이블 추가
+  '&::before': {
+    content: "'가격'",
+    fontSize: '0.85rem',
+    fontWeight: 400,
+    color: '#666'
   }
-  
-  &::-webkit-scrollbar-track {
-    background: #f5f5f5;
-    border-radius: 4px;
-  }
-  
-  &::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 4px;
-  }
-  
-  &::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
-  }
-`;
+});
 
-// 장바구니 푸터
-export const CartFooter = styled(Box)`
-  margin-top: auto;
-  padding-top: 20px;
-  border-top: 2px solid #eee;
-`;
+// 장바구니 컨테이너 - 배리어프리 개선
+export const CartContainer = styled(Box)({
+  width: '340px', // 약간 넓게 조정 - 가독성 향상
+  minWidth: '340px',
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  background: 'white',
+  borderRadius: '16px',
+  padding: '24px',
+  boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+  // 브랜드 컬러 액센트 추가
+  borderTop: '4px solid #2142FF'
+});
 
-// 구매 버튼
-export const PurchaseButton = styled(Button)`
-  width: 100%;
-  margin-top: 20px !important;
-  padding: 15px !important;
-  font-size: 1.2rem !important;
-  background-color: #2142FF !important;
-  &:hover {
-    background-color: #1935DB !important;
+// 장바구니 헤더 - 배리어프리 개선
+export const CartHeader = styled(Box)({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginBottom: '20px',
+  paddingBottom: '16px',
+  borderBottom: '1px solid #eef1fa',
+
+  // 헤더 제목 스타일 개선
+  '& h6': {
+    fontSize: '1.3rem',
+    fontWeight: 700,
+    color: '#1A1A1A',
+    // 이모지 삭제하고 텍스트만 중앙 정렬
+    textAlign: 'center'
   }
-`;
+});
+
+// 장바구니 목록 - 배리어프리 개선
+export const CartList = styled(List)({
+  overflowY: 'auto',
+  overflowX: 'hidden',
+  flex: 1,
+  // 터치 스크롤 최적화
+  WebkitOverflowScrolling: 'touch',
+  scrollBehavior: 'smooth',
+  padding: '4px 0',
+
+  // 스크롤바 스타일링 개선
+  '&::-webkit-scrollbar': {
+    width: '8px'
+  },
+
+  '&::-webkit-scrollbar-track': {
+    background: '#f5f7ff',
+    borderRadius: '4px'
+  },
+
+  '&::-webkit-scrollbar-thumb': {
+    background: '#d0d7ff',
+    borderRadius: '4px'
+  }
+});
+
+// 장바구니 푸터 - 배리어프리 개선
+export const CartFooter = styled(Box)({
+  marginTop: 'auto',
+  paddingTop: '20px',
+  borderTop: '2px solid #eef1fa',
+
+  // 총 금액 표시 스타일 개선
+  '& h6': {
+    fontSize: '1.15rem',
+    fontWeight: 600,
+    color: '#333',
+    marginBottom: '16px',
+
+    // 금액 부분만 강조
+    '& span': {
+      color: '#2142FF',
+      fontWeight: 700,
+      fontSize: '1.25rem'
+    }
+  }
+});
+
+// 구매 버튼 - 배리어프리 개선
+export const PurchaseButton = styled(Button)({
+  width: '100%',
+  marginTop: '16px !important',
+  // 충분한 터치 영역 확보
+  padding: '16px !important',
+  fontSize: '1.2rem !important',
+  fontWeight: '700 !important',
+  letterSpacing: '-0.5px !important',
+  // 현대적인 모서리 둥글기
+  borderRadius: '14px !important',
+  backgroundColor: '#2142FF !important',
+  // 그림자 효과로 입체감 강화
+  boxShadow: '0 4px 12px rgba(33, 66, 255, 0.25) !important',
+
+  // 터치 피드백 애니메이션
+  '&:active': {
+    transform: 'scale(0.98) !important',
+    boxShadow: '0 2px 8px rgba(33, 66, 255, 0.15) !important',
+    transition: 'all 0.15s ease !important'
+  },
+
+  // 호버 효과 제거 - 터치 환경 최적화
+  '&:hover': {
+    backgroundColor: '#2142FF !important'
+  }
+});

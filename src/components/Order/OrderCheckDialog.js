@@ -3,26 +3,43 @@ import Dialog from '@mui/material/Dialog';
 import styled from '@emotion/styled';
 import OrderCheck from './OrderCheck';
 
-// 반응형 다이얼로그 스타일
+// 배리어프리 다이얼로그 스타일 - 터치 최적화
 const StyledDialog = styled(Dialog)({
     '& .MuiDialog-paper': {
-        // 여기서 전체 다이얼로그 크기를 조절할 수 있음
-        borderRadius: '16px',
+        // 모서리 둥글게 - 터치 친화적 UI
+        borderRadius: '24px',
         overflow: 'hidden',
-        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.15)',
-        margin: '20px',
-        // 고정 너비 대신 화면 비율로 설정
-        // ✅ 이 값들을 수정하여 크기를 키울 수 있음
-        width: '95vw',       // 화면 너비의 90% → 95vw (화면 너비의 95%로 증가)
-        maxWidth: '700px',   // 최대 너비는 550px → 700px (최대 너비 증가)
-        minWidth: '320px',   // 최소 너비는 320px
+        // 그림자 강화 - 시각적 분리 명확히
+        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.18)',
+        // 다이얼로그 여백 조정
+        margin: '16px',
 
-        // 높이도 화면 비율로 설정
-        height: 'auto',      // 내용에 맞춰 자동 조정
-        maxHeight: '85vh',   // 화면 높이의 80% 제한 → 85vh (화면 높이의 85%로 증가)
+        // 충분한 크기 확보로 터치 정확도 향상
+        width: '96vw',
+        maxWidth: '700px',
+        minWidth: '320px',
+
+        // 높이 자동 조절
+        height: 'auto',
+        maxHeight: '88vh',
+
+        // 다이얼로그 등장 애니메이션 - 부드러운 슬라이드 업
+        animation: 'dialogSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+        '@keyframes dialogSlideUp': {
+            '0%': {
+                opacity: 0,
+                transform: 'translateY(30px)'
+            },
+            '100%': {
+                opacity: 1,
+                transform: 'translateY(0)'
+            }
+        }
     },
+    // 배경 어둡게 - 다이얼로그 집중도 향상
     '& .MuiBackdrop-root': {
-        backgroundColor: 'rgba(0, 0, 0, 0.6)'
+        backgroundColor: 'rgba(18, 24, 38, 0.75)',
+        backdropFilter: 'blur(5px)'
     }
 });
 
@@ -39,9 +56,10 @@ const OrderCheckDialog = ({ open, cartItems, onClose, onPayment }) => {
         <StyledDialog
             open={open}
             onClose={onClose}
-            // maxWidth prop 제거 (직접 스타일로 제어)
             fullWidth={false}
             aria-labelledby="order-check-dialog"
+            // 어두운 배경 클릭 시 닫기 - 터치 환경 고려
+            closeAfterTransition
         >
             <OrderCheck
                 cartItems={cartItems}

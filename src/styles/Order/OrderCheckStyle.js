@@ -1,112 +1,118 @@
 import styled from '@emotion/styled';
 import { Box, Button } from '@mui/material';
 
-// 주문 확인 컨테이너 - 반응형 설정
+// 주문 확인 컨테이너 - 반응형 설정 + 배리어프리 개선
 export const OrderCheckContainer = styled(Box)({
-    width: '100%',  // 부모 요소 (다이얼로그)의 너비에 맞춤
+    width: '100%',
     backgroundColor: 'white',
     display: 'flex',
     flexDirection: 'column',
-    overflow: 'hidden'
+    overflow: 'hidden',
+    // 모서리 둥글게 - 터치 친화적 UI
+    borderRadius: '20px',
+    // 그림자 효과로 깊이감 추가
+    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.12)',
 });
 
-// 주문 확인 헤더
+// 주문 확인 헤더 - 배리어프리 UI 개선
 export const OrderCheckHeader = styled(Box)({
-    padding: '3vh 5%',  // 비율 단위 사용
-    backgroundColor: '#f9f9f9',
-    borderBottom: '1px solid #eee',
-    '& h6': {
-        fontWeight: 'bold',
-        color: '#333',
-        // ✅ 폰트 크기를 키울 수 있음
-        fontSize: 'clamp(1.2rem, 3vw, 1.5rem)',  // 반응형 폰트 크기
-        textAlign: 'center'  // 텍스트 중앙 정렬 추가
+    padding: '28px 24px',
+    backgroundColor: 'white',
+    borderBottom: '1px solid #eff2f5',
+    textAlign: 'center',
+    // 내부 여백 증가로 가독성 향상
+    '& h5': {
+        margin: '0 0 6px 0',
     }
 });
 
-// 주문 항목 리스트 - 반응형 높이 설정
+// 주문 항목 리스트 - 터치 스크롤 최적화
 export const OrderItemsList = styled(Box)({
-    // ✅ 이 값을 수정하여 항목 리스트 영역 크기를 키울 수 있음
-    height: 'clamp(200px, 40vh, 350px)',  // 최소 200px, 화면 높이의 40%, 최대 350px
+    // 높이 조정으로 충분한 스크롤 공간 확보
+    height: 'clamp(250px, 40vh, 350px)',
     overflowY: 'auto',
     padding: '0',
+
+    // 터치 스크롤 최적화
+    WebkitOverflowScrolling: 'touch',
+    scrollBehavior: 'smooth',
+
+    // 스크롤바 스타일 개선
     '&::-webkit-scrollbar': {
-        width: '8px'  // 터치에 적합하게 스크롤바 크기 증가
+        width: '8px'
     },
     '&::-webkit-scrollbar-track': {
-        background: '#f5f5f5',
+        background: '#f9f9ff',
         borderRadius: '4px'
     },
     '&::-webkit-scrollbar-thumb': {
-        background: '#c1c1c1',
+        background: '#d0d7ff',
         borderRadius: '4px'
     }
 });
 
-// 각 주문 항목 - 반응형 여백
+// 각 주문 항목 - 터치 피드백 추가
 export const OrderItem = styled(Box)({
     display: 'flex',
     alignItems: 'center',
-    padding: 'clamp(10px, 2vh, 15px) clamp(15px, 5%, 25px)',
-    // 주문내역 각 항목의 경계선 밑줄 색상
-    borderBottom: '1px solid #f5f5f5',
+    // 충분한 터치 영역 확보를 위해 패딩 증가
+    padding: '18px 24px',
+    borderBottom: '1px solid #f7f8fc',
+    // 터치 피드백 효과
+    '&:active': {
+        backgroundColor: '#f9faff',
+        transition: 'background-color 0.15s ease'
+    },
     '&:last-child': {
         borderBottom: 'none'
     }
 });
 
-// 주문 요약 - 반응형 여백
+// 주문 요약 영역
 export const OrderSummary = styled(Box)({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 'clamp(12px, 2vh, 20px) clamp(15px, 5%, 25px)',
-    borderTop: '2px solid #eee',
-    backgroundColor: '#f9f9f9',
-    '& .total-text': {
-        fontSize: 'clamp(1rem, 2.5vw, 1.25rem)',
-        fontWeight: 'bold'
-    }
+    // 여백 확대로 시각적 구분 강화
+    padding: '22px 24px',
+    // 섹션 구분을 위한 배경색 적용
+    backgroundColor: '#f9faff',
+    borderTop: '1px solid #eef1ff'
 });
 
-// 버튼 영역 - 반응형 여백 및 버튼 크기
+// 버튼 영역 - 터치 환경에 맞게 여백 확대
 export const OrderFooter = styled(Box)({
     display: 'flex',
     justifyContent: 'space-between',
-    padding: 'clamp(12px, 2vh, 20px) clamp(15px, 5%, 25px)',
-    borderTop: '1px solid #eee'
+    // 버튼 간 여백 확대 및 하단 여백 충분히
+    padding: '24px',
+    borderTop: '1px solid #eff2f5'
 });
 
-// 버튼 공통 스타일 - 반응형
-const buttonStyle = {
-    // ✅ 버튼 크기와 패딩을 키울 수 있음
-    padding: 'clamp(10px, 2vh, 16px) clamp(20px, 5vw, 40px)',  // 패딩 증가
-    fontSize: 'clamp(1rem, 2.5vw, 1.2rem)',  // 폰트 크기 증가
-    fontWeight: 'bold',
-    borderRadius: '8px',
-    minWidth: 'clamp(100px, 25%, 180px)',  // 최소 터치 영역 확보
-    transition: 'transform 0.1s ease',
-    '&:active': {
-        transform: 'scale(0.95)'  // 터치 피드백
-    }
-};
-
-// 돌아가기 버튼
+// 돌아가기 버튼 - 터치 최적화
 export const BackButton = styled(Button)({
-    ...buttonStyle,
-    color: '#666',
-    backgroundColor: '#eee',
+    color: '#555',
+    backgroundColor: 'white',
+    // 충분한 터치 영역
+    minWidth: '130px',
+    // 터치 피드백 애니메이션
+    transition: 'all 0.2s ease',
+    // 불필요한 호버 제거, 클릭/터치 시에만 피드백
     '&:hover': {
-        backgroundColor: '#ddd'
+        backgroundColor: 'white'
     }
 });
 
-// 결제 버튼
+// 결제 버튼 - 터치 최적화 및 강조
 export const PaymentButton = styled(Button)({
-    ...buttonStyle,
     color: 'white',
     backgroundColor: '#2142FF',
+    // 충분한 터치 영역
+    minWidth: '150px',
+    // 터치 피드백 애니메이션
+    transition: 'all 0.2s ease',
+    // 불필요한 호버 제거, 클릭/터치 시에만 피드백
     '&:hover': {
-        backgroundColor: '#1935DB'
+        backgroundColor: '#2142FF'
     }
 });
