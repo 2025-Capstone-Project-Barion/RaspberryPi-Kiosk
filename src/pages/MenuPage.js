@@ -231,80 +231,109 @@ const MenuPage = () => {
                             </Box>
                         ) : (
                             cart.map((item, index) => (
+                                // 장바구니 아이템 UI 개선 부분
                                 <ListItem key={index} divider sx={{
-                                    padding: '14px 10px',
+                                    padding: '16px 12px',
                                     display: 'flex',
                                     alignItems: 'center',
                                     borderBottom: '1px solid #f0f4ff',
-                                    // 터치 피드백 추가
+                                    borderRadius: '10px',
+                                    margin: '8px 0',
+                                    backgroundColor: 'white',
+                                    boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+                                    transition: 'all 0.2s ease',
+                                    // 터치 피드백 개선
                                     '&:active': {
                                         backgroundColor: '#f9faff',
-                                        transition: 'background-color 0.15s ease'
+                                        boxShadow: '0 1px 4px rgba(0,0,0,0.02)',
+                                        transform: 'scale(0.99)',
+                                        transition: 'all 0.15s ease'
                                     }
                                 }}>
-                                    <Typography sx={{
+                                    {/* 메뉴 이름 - 레이아웃 개선 */}
+                                    <Box sx={{
                                         flexGrow: 1,
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        whiteSpace: 'nowrap',
-                                        fontWeight: 500,
-                                        fontSize: '1.05rem',
-                                        color: '#333'
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        pr: 1
                                     }}>
-                                        {item.name}
-                                    </Typography>
+                                        <Typography sx={{
+                                            fontWeight: 600,
+                                            fontSize: '1.05rem',
+                                            color: '#333',
+                                            mb: 0.5
+                                        }}>
+                                            {item.name}
+                                        </Typography>
+                                        <Typography sx={{
+                                            fontSize: '0.9rem',
+                                            color: '#2142FF',
+                                            fontWeight: 500
+                                        }}>
+                                            {(item.price * item.quantity).toLocaleString()}원
+                                        </Typography>
+                                    </Box>
 
-                                    {/* 수량 조절 버튼 - 터치 최적화 */}
-                                    <IconButton
-                                        size="small"
-                                        onClick={() => handleQuantityChange(index, -1)}
-                                        sx={{
-                                            backgroundColor: 'rgba(33, 66, 255, 0.08)',
-                                            '&:active': {
-                                                backgroundColor: 'rgba(33, 66, 255, 0.15)',
-                                                transform: 'scale(0.9)',
-                                                transition: 'all 0.1s ease'
-                                            }
-                                        }}
-                                    >
-                                        <Remove fontSize="small" sx={{ color: '#2142FF' }} />
-                                    </IconButton>
-
-                                    <Typography sx={{
-                                        mx: 1.5,
-                                        minWidth: '30px',
-                                        textAlign: 'center',
-                                        fontWeight: 600,
-                                        fontSize: '1.05rem'
+                                    {/* 수량 조절 UI 모던하게 개선 */}
+                                    <Box sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        backgroundColor: '#f5f7ff',
+                                        borderRadius: '8px',
+                                        padding: '4px',
+                                        border: '1px solid #e8ecfb',
                                     }}>
-                                        {item.quantity}
-                                    </Typography>
+                                        <IconButton
+                                            size="small"
+                                            onClick={() => handleQuantityChange(index, -1)}
+                                            sx={{
+                                                padding: '4px',
+                                                '&:active': {
+                                                    transform: 'scale(0.9)',
+                                                    transition: 'transform 0.1s ease'
+                                                }
+                                            }}
+                                        >
+                                            <Remove fontSize="small" sx={{ color: '#2142FF' }} />
+                                        </IconButton>
 
+                                        <Typography sx={{
+                                            mx: 1,
+                                            minWidth: '24px',
+                                            textAlign: 'center',
+                                            fontWeight: 600,
+                                            fontSize: '1rem'
+                                        }}>
+                                            {item.quantity}
+                                        </Typography>
+
+                                        <IconButton
+                                            size="small"
+                                            onClick={() => handleQuantityChange(index, 1)}
+                                            sx={{
+                                                padding: '4px',
+                                                '&:active': {
+                                                    transform: 'scale(0.9)',
+                                                    transition: 'transform 0.1s ease'
+                                                }
+                                            }}
+                                        >
+                                            <Add fontSize="small" sx={{ color: '#2142FF' }} />
+                                        </IconButton>
+                                    </Box>
+
+                                    {/* 삭제 버튼 - 더 세련된 디자인 */}
                                     <IconButton
                                         size="small"
-                                        onClick={() => handleQuantityChange(index, 1)}
-                                        sx={{
-                                            backgroundColor: 'rgba(33, 66, 255, 0.08)',
-                                            '&:active': {
-                                                backgroundColor: 'rgba(33, 66, 255, 0.15)',
-                                                transform: 'scale(0.9)',
-                                                transition: 'all 0.1s ease'
-                                            }
-                                        }}
-                                    >
-                                        <Add fontSize="small" sx={{ color: '#2142FF' }} />
-                                    </IconButton>
-
-                                    <IconButton
-                                        size="small"
-                                        // color="error" 속성 제거
                                         onClick={() => handleQuantityChange(index, -item.quantity)}
                                         sx={{
-                                            ml: 1,
-                                            color: '#2142FF', // 브랜드 컬러로 변경
-                                            backgroundColor: 'rgba(33, 66, 255, 0.08)', // 배경색 추가
+                                            ml: 1.5,
+                                            color: '#8f9bb3', // 더 세련된 그레이 컬러
+                                            padding: '6px',
+                                            '&:hover': {
+                                                color: '#2142FF'
+                                            },
                                             '&:active': {
-                                                backgroundColor: 'rgba(33, 66, 255, 0.15)',
                                                 transform: 'scale(0.9)',
                                                 transition: 'all 0.1s ease'
                                             }
