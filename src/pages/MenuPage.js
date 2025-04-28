@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Typography, Box, IconButton, ListItem, Badge } from '@mui/material';
-import { Add, Remove, Delete, ShoppingCart } from '@mui/icons-material';
+import { Add, Remove, Delete, ShoppingCart, KeyboardArrowUp, KeyboardArrowDown } from '@mui/icons-material';
 import {
     AppContainer,
     CategoryWrapper,
     CategoryButton,
+    MenuGridWrapper,
     MenuGridContainer,
+    ScrollButtonContainer,
+    ScrollButton,
     MenuCard,
     MenuImageContainer,
     MenuInfo,
@@ -31,6 +34,24 @@ const MenuPage = () => {
     const [orderDialogOpen, setOrderDialogOpen] = useState(false);
     // 카드 활성화 상태 추적 - 터치 피드백 개선
     const [activeCardId, setActiveCardId] = useState(null);
+
+    // 스크롤 관련 상태 추가
+    const menuGridRef = useRef(null);
+    const [canScrollUp, setCanScrollUp] = useState(false);
+    const [canScrollDown, setCanScrollDown] = useState(true);
+
+    // 행의 높이를 계산하는 함수 (카드 높이 + 간격)
+    const calculateRowHeight = () => {
+        if (!menuGridRef.current) return 0;
+
+        const grid = menuGridRef.current;
+        const firstCard = grid.querySelector('.menu-card');
+
+        if (!firstCard) return 0;
+
+        // 카드 높이 + 간격 = 행 높이
+        return firstCard.offsetHeight + 16; // 16px는 그리드 gap
+    };
 
     // 카드 터치 시작 시 활성화 상태 설정
     const handleCardTouchStart = (id) => {
@@ -80,6 +101,71 @@ const MenuPage = () => {
         setCart([]);
     };
 
+    // 스크롤 위로 버튼 클릭 핸들러
+    const handleScrollUp = () => {
+        if (!menuGridRef.current || !canScrollUp) return;
+
+        const rowHeight = calculateRowHeight();
+        // 2행 위로 스크롤 - 버튼 클릭 시에만 2행씩 이동
+        menuGridRef.current.scrollTop -= rowHeight * 2;
+
+        // 약간의 지연 후 스크롤 버튼 상태 업데이트
+        setTimeout(updateScrollButtonStates, 100);
+    };
+
+    // 스크롤 아래로 버튼 클릭 핸들러
+    const handleScrollDown = () => {
+        if (!menuGridRef.current || !canScrollDown) return;
+
+        const rowHeight = calculateRowHeight();
+        // 2행 아래로 스크롤 - 버튼 클릭 시에만 2행씩 이동
+        menuGridRef.current.scrollTop += rowHeight * 2;
+
+        // 약간의 지연 후 스크롤 버튼 상태 업데이트
+        setTimeout(updateScrollButtonStates, 100);
+    };
+
+    // 스크롤 버튼 상태 업데이트
+    const updateScrollButtonStates = () => {
+        if (!menuGridRef.current) return;
+
+        // 위로 스크롤 가능 여부
+        setCanScrollUp(menuGridRef.current.scrollTop > 5); // 약간의 임계값
+
+        // 아래로 스크롤 가능 여부
+        const maxScroll = menuGridRef.current.scrollHeight - menuGridRef.current.clientHeight;
+        setCanScrollDown(menuGridRef.current.scrollTop < maxScroll - 5); // 약간의 임계값
+    };
+
+    // 카테고리 변경 시 스크롤 위치 초기화 및 버튼 상태 업데이트
+    useEffect(() => {
+        if (menuGridRef.current) {
+            menuGridRef.current.scrollTop = 0;
+        }
+
+        // 약간의 지연 후 스크롤 버튼 상태 업데이트
+        setTimeout(updateScrollButtonStates, 100);
+
+        // 현재 ref 값을 변수에 저장
+        const currentMenuGrid = menuGridRef.current;
+
+        if (currentMenuGrid) {
+            // 스크롤 이벤트 중 상태 업데이트
+            currentMenuGrid.addEventListener('scroll', updateScrollButtonStates);
+        }
+
+        return () => {
+            if (currentMenuGrid) {
+                currentMenuGrid.removeEventListener('scroll', updateScrollButtonStates);
+            }
+        };
+    }, [selectedCategory]);
+
+    // 컴포넌트 마운트 시 초기 스크롤 상태 설정
+    useEffect(() => {
+        updateScrollButtonStates();
+    }, []);
+
     const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -125,41 +211,63 @@ const MenuPage = () => {
                         </Box>
                     </CategoryWrapper>
 
-                    {/* Menu Items Grid */}
-                    <MenuGridContainer>
-                        {getMenuItems(selectedCategory).map((item) => (
-                            <MenuCard
-                                key={item.id}
-                                className="menu-card" // 이 클래스 추가
-                                onTouchStart={() => handleCardTouchStart(item.id)} // 터치 시작 핸들러
-                                onTouchEnd={() => handleCardTouchEnd(item)} // 터치 종료 핸들러
-                                onClick={() => handleAddToCart(item)} // 클릭 핸들러 유지 (PC 환경)
-                                sx={{
-                                    // 카드 활성 상태에 따른 스타일 변경
-                                    transform: activeCardId === item.id ? 'scale(0.98)' : 'scale(1)',
-                                    borderColor: activeCardId === item.id ? '#2142FF' : '#f0f2fa',
-                                    transition: 'transform 0.15s ease-out, border-color 0.15s ease-out',
-                                }}
+                    {/* 메뉴 그리드와 스크롤 버튼 래퍼 */}
+                    <MenuGridWrapper>
+                        {/* 메뉴 그리드 컨테이너 - ref 추가 */}
+                        <MenuGridContainer ref={menuGridRef}>
+                            {getMenuItems(selectedCategory).map((item) => (
+                                <MenuCard
+                                    key={item.id}
+                                    className="menu-card" // 이 클래스 필수! (행 높이 계산에 사용)
+                                    onTouchStart={() => handleCardTouchStart(item.id)}
+                                    onTouchEnd={() => handleCardTouchEnd(item)}
+                                    onClick={() => handleAddToCart(item)}
+                                    sx={{
+                                        transform: activeCardId === item.id ? 'scale(0.98)' : 'scale(1)',
+                                        borderColor: activeCardId === item.id ? '#2142FF' : '#f0f2fa',
+                                        transition: 'transform 0.15s ease-out, border-color 0.15s ease-out',
+                                    }}
+                                >
+                                    <MenuImageContainer>
+                                        {item.image && (
+                                            <img
+                                                src={item.image}
+                                                alt={item.name}
+                                                className="menu-image"
+                                            />
+                                        )}
+                                    </MenuImageContainer>
+                                    <MenuInfo>
+                                        <div>
+                                            <MenuName>{item.name}</MenuName>
+                                            <MenuDescription>{item.description}</MenuDescription>
+                                        </div>
+                                        <MenuPrice>{item.price.toLocaleString()}원</MenuPrice>
+                                    </MenuInfo>
+                                </MenuCard>
+                            ))}
+                        </MenuGridContainer>
+
+                        {/* 토스 스타일 스크롤 버튼 */}
+                        <ScrollButtonContainer>
+                            <ScrollButton
+                                direction="up"
+                                disabled={!canScrollUp}
+                                onClick={handleScrollUp}
+                                aria-label="위로 스크롤"
                             >
-                                <MenuImageContainer>
-                                    {item.image && (
-                                        <img
-                                            src={item.image}
-                                            alt={item.name}
-                                            className="menu-image" // 이미지 클래스 추가
-                                        />
-                                    )}
-                                </MenuImageContainer>
-                                <MenuInfo>
-                                    <div>
-                                        <MenuName>{item.name}</MenuName>
-                                        <MenuDescription>{item.description}</MenuDescription>
-                                    </div>
-                                    <MenuPrice>{item.price.toLocaleString()}원</MenuPrice>
-                                </MenuInfo>
-                            </MenuCard>
-                        ))}
-                    </MenuGridContainer>
+                                <KeyboardArrowUp />
+                            </ScrollButton>
+                            <ScrollButton
+                                direction="down"
+                                disabled={!canScrollDown}
+                                onClick={handleScrollDown}
+                                aria-label="아래로 스크롤"
+                            >
+                                <KeyboardArrowDown />
+                            </ScrollButton>
+                        </ScrollButtonContainer>
+                    </MenuGridWrapper>
                 </Box>
 
                 {/* 장바구니 영역 - 세로 전체 높이로 확장 */}
@@ -341,9 +449,6 @@ const MenuPage = () => {
                                             padding: '10px',  // 터치 영역 확대
                                             backgroundColor: 'rgba(232, 236, 245, 0.9)',  // 배경색 추가로 터치 영역 시각화
                                             borderRadius: '12px',  // 모서리 둥글게
-                                            // 호버링 효과 제거
-                                            // 터치 피드백 강화
-
                                         }}
                                     >
                                         <Delete

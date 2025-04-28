@@ -93,48 +93,98 @@ export const CategoryButton = styled(Button, {
   }
 }));
 
-// 메뉴 그리드 컨테이너 - 4열 그리드로 변경
-export const MenuGridContainer = styled(Box)({
+// 메뉴 그리드와 스크롤 버튼을 함께 포함하는 컨테이너
+export const MenuGridWrapper = styled(Box)({
+  position: 'relative',
+  display: 'flex',
   flex: 1,
   width: '100%',
+  height: '100%',
+  overflow: 'hidden',
+});
+
+// 메뉴 그리드 컨테이너 - 정확히 2행만 표시되도록 조정
+export const MenuGridContainer = styled(Box)({
+  flex: 1,
+  width: 'calc(100% - 40px)', // 스크롤 버튼 영역을 제외한 너비
   display: 'grid',
-  gridTemplateColumns: 'repeat(4, 1fr)', // 4열 그리드로 변경
-  gap: '16px', // 간격 약간 줄임 - 더 많은 아이템 배치
-  gridAutoRows: '320px', // 높이 약간 조정
+  gridTemplateColumns: 'repeat(4, 1fr)', // 4열 그리드
+  gap: '16px',
+  gridAutoRows: '1fr', // 행 높이를 비율로 설정
   alignItems: 'start',
   overflowY: 'auto',
   overflowX: 'hidden',
-  paddingRight: '12px',
-  paddingBottom: '24px',
+  padding: '0 16px 16px 0',
 
-  // 터치 스크롤 최적화
-  WebkitOverflowScrolling: 'touch',
-  scrollBehavior: 'smooth',
+  // 스크롤 부드럽게 (강제 스냅 없이)
+  scrollBehavior: 'smooth', // 부드러운 스크롤
 
-  // 스크롤바 스타일링 - 더 직관적으로
+  // 스크롤바 완전히 숨김 (토스 스타일)
   '&::-webkit-scrollbar': {
-    width: '10px' // 넓은 스크롤바 - 터치 정확도 향상
+    display: 'none'
   },
 
-  '&::-webkit-scrollbar-track': {
-    background: '#f1f3fa',
-    borderRadius: '8px'
-  },
+  // Firefox 등에서도 스크롤바 숨김
+  scrollbarWidth: 'none',
 
-  '&::-webkit-scrollbar-thumb': {
-    background: '#c1c7e0',
-    borderRadius: '8px',
-    border: '2px solid #f1f3fa'
+  // 높이 제한을 통해 정확히 2행만 표시
+  maxHeight: 'calc((100% - 16px) / 2 * 2 + 16px)', // 2행 높이 + 간격
+
+  // 메뉴 카드의 행 높이를 viewport 높이의 비율로 설정
+  '& .menu-card': {
+    height: 'calc((100vh - 200px) / 2)',
   }
 });
 
-// 메뉴 카드 - 크기 조정 및 배리어프리 개선
+// 토스 스타일 스크롤 버튼 컨테이너
+export const ScrollButtonContainer = styled(Box)({
+  position: 'absolute',
+  right: 0,
+  top: '50%',
+  transform: 'translateY(-50%)',
+  width: '40px', // 버튼 너비
+  height: '100px', // 버튼 컨테이너 높이
+  display: 'flex',
+  flexDirection: 'column',
+  zIndex: 2,
+});
+
+// 스크롤 버튼 스타일 - 토스 스타일로 세로로 긴 버튼
+export const ScrollButton = styled(Button, {
+  shouldForwardProp: (prop) => prop !== 'direction' && prop !== 'disabled'
+})(({ direction, disabled }) => ({
+  width: '40px', // 버튼 너비
+  height: '50px', // 버튼 높이 (총 100px의 절반)
+  minWidth: 'unset',
+  padding: 0,
+  margin: 0,
+  borderRadius: direction === 'up' ? '8px 8px 0 0' : '0 0 8px 8px',
+  backgroundColor: disabled ? '#e8ecfa' : '#2142FF',
+  color: disabled ? '#c0c5e0' : 'white',
+  border: 'none',
+  boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+
+  // 비활성화 상태에서도 호버 효과 제거
+  '&:hover': {
+    backgroundColor: disabled ? '#e8ecfa' : '#2142FF',
+  },
+
+  // 활성화된 경우에만 클릭 효과
+  '&:active': !disabled ? {
+    backgroundColor: '#1833d0',
+    transform: 'scale(0.98)',
+  } : {},
+
+  // 버튼 사이 경계선
+  borderBottom: direction === 'up' ? '1px solid rgba(255,255,255,0.2)' : 'none',
+}));
+
+// 메뉴 카드 - 높이는 메뉴그리드 컨테이너에서 %로 조정
 export const MenuCard = styled(Box)({
   background: 'white',
-  padding: '16px', // 패딩 약간 축소
-  borderRadius: '16px', // 모서리 둥글게 - 현대적 UI
+  padding: '16px',
+  borderRadius: '16px',
   cursor: 'pointer',
-  height: '320px', // 높이 약간 축소
   display: 'flex',
   flexDirection: 'column',
   boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
@@ -165,15 +215,15 @@ export const MenuCard = styled(Box)({
   }
 });
 
-// 이미지 컨테이너 - 배리어프리 개선
+// 이미지 컨테이너 - 부모의 비율 유지
 export const MenuImageContainer = styled(Box)({
   width: '100%',
-  height: '160px', // 높이 약간 축소
+  height: '45%', // 카드의 45% 차지
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  marginBottom: '12px', // 마진 약간 축소
-  backgroundColor: '#f9faff', // 배경색 변경 - 이미지 대비 향상
+  marginBottom: '12px',
+  backgroundColor: '#f9faff',
   borderRadius: '12px',
   overflow: 'hidden',
 
@@ -181,14 +231,12 @@ export const MenuImageContainer = styled(Box)({
     width: 'auto',
     height: 'auto',
     maxWidth: '100%',
-    maxHeight: '160px', // 높이에 맞게 조정
-    objectFit: 'contain', // 이미지 비율 유지
-    // 터치시 이미지 반응 효과 추가
+    maxHeight: '100%',
+    objectFit: 'contain',
     transition: 'transform 0.2s ease-out'
   },
 
   // 부모 요소가 active일 때 이미지 축소 효과
-  // 컴포넌트 셀렉터 대신 클래스 셀렉터 사용
   '.menu-card:active & img': {
     transform: 'scale(0.95)'
   }
@@ -204,23 +252,22 @@ export const MenuInfo = styled(Box)({
 
 // 메뉴 이름 - 배리어프리 개선
 export const MenuName = styled(Box)({
-  fontSize: '1.25rem', // 폰트 크기 약간 축소
+  fontSize: '1.25rem',
   fontWeight: 700,
   marginBottom: '6px',
   lineHeight: 1.3,
-  color: '#1A1A1A', // 더 높은 대비 - 가독성 향상
+  color: '#1A1A1A',
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
-  // 레이블 효과 추가
   position: 'relative',
   paddingLeft: 0
 });
 
 // 메뉴 설명 - 배리어프리 개선
 export const MenuDescription = styled(Box)({
-  fontSize: '0.9rem', // 폰트 크기 약간 축소
-  color: '#666', // 메뉴명과 구분되는 색상 - 계층 구조 명확화
+  fontSize: '0.9rem',
+  color: '#666',
   marginBottom: '10px',
   display: '-webkit-box',
   WebkitLineClamp: 2,
@@ -231,18 +278,17 @@ export const MenuDescription = styled(Box)({
   height: '2.7rem'
 });
 
-// 메뉴 가격 - 레이블 제거 및 위치 조정
+// 메뉴 가격 - 왼쪽 정렬
 export const MenuPrice = styled(Box)({
-  fontSize: '1.2rem', // 폰트 크기 약간 축소
+  fontSize: '1.2rem',
   fontWeight: 700,
   color: '#2142FF',
   padding: '8px 0',
   borderTop: '1px dashed #e8ecfb',
   marginTop: 'auto',
-  textAlign: 'left', // 우측 정렬로 변경
-  // 가격 레이블 제거
+  textAlign: 'left',
   display: 'flex',
-  justifyContent: 'flex-start', // 우측 정렬
+  justifyContent: 'flex-start',
 });
 
 // 장바구니 컨테이너 - 너비 증가 및 배리어프리 개선
