@@ -93,14 +93,14 @@ export const CategoryButton = styled(Button, {
   }
 }));
 
-// 메뉴 그리드 컨테이너 - 배리어프리 UI 개선
+// 메뉴 그리드 컨테이너 - 4열 그리드로 변경
 export const MenuGridContainer = styled(Box)({
   flex: 1,
   width: '100%',
   display: 'grid',
-  gridTemplateColumns: 'repeat(3, 1fr)', // 3열 그리드 유지
-  gap: '20px', // 간격 확대 - 터치 정확도 향상
-  gridAutoRows: '340px', // 높이 약간 증가 - 더 많은 정보 표시
+  gridTemplateColumns: 'repeat(4, 1fr)', // 4열 그리드로 변경
+  gap: '16px', // 간격 약간 줄임 - 더 많은 아이템 배치
+  gridAutoRows: '320px', // 높이 약간 조정
   alignItems: 'start',
   overflowY: 'auto',
   overflowX: 'hidden',
@@ -128,13 +128,13 @@ export const MenuGridContainer = styled(Box)({
   }
 });
 
-// 메뉴 카드 - 배리어프리 개선
+// 메뉴 카드 - 크기 조정 및 배리어프리 개선
 export const MenuCard = styled(Box)({
   background: 'white',
-  padding: '20px',
+  padding: '16px', // 패딩 약간 축소
   borderRadius: '16px', // 모서리 둥글게 - 현대적 UI
   cursor: 'pointer',
-  height: '340px', // 높이 증가 - 정보 가독성 향상
+  height: '320px', // 높이 약간 축소
   display: 'flex',
   flexDirection: 'column',
   boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
@@ -168,11 +168,11 @@ export const MenuCard = styled(Box)({
 // 이미지 컨테이너 - 배리어프리 개선
 export const MenuImageContainer = styled(Box)({
   width: '100%',
-  height: '180px',
+  height: '160px', // 높이 약간 축소
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  marginBottom: '16px',
+  marginBottom: '12px', // 마진 약간 축소
   backgroundColor: '#f9faff', // 배경색 변경 - 이미지 대비 향상
   borderRadius: '12px',
   overflow: 'hidden',
@@ -181,8 +181,8 @@ export const MenuImageContainer = styled(Box)({
     width: 'auto',
     height: 'auto',
     maxWidth: '100%',
-    maxHeight: '180px',
-    objectFit: 'contain',
+    maxHeight: '160px', // 높이에 맞게 조정
+    objectFit: 'contain', // 이미지 비율 유지
     // 터치시 이미지 반응 효과 추가
     transition: 'transform 0.2s ease-out'
   },
@@ -204,9 +204,9 @@ export const MenuInfo = styled(Box)({
 
 // 메뉴 이름 - 배리어프리 개선
 export const MenuName = styled(Box)({
-  fontSize: '1.4rem',
+  fontSize: '1.25rem', // 폰트 크기 약간 축소
   fontWeight: 700,
-  marginBottom: '8px',
+  marginBottom: '6px',
   lineHeight: 1.3,
   color: '#1A1A1A', // 더 높은 대비 - 가독성 향상
   whiteSpace: 'nowrap',
@@ -219,45 +219,37 @@ export const MenuName = styled(Box)({
 
 // 메뉴 설명 - 배리어프리 개선
 export const MenuDescription = styled(Box)({
-  fontSize: '0.95rem',
+  fontSize: '0.9rem', // 폰트 크기 약간 축소
   color: '#666', // 메뉴명과 구분되는 색상 - 계층 구조 명확화
-  marginBottom: '12px',
+  marginBottom: '10px',
   display: '-webkit-box',
   WebkitLineClamp: 2,
   WebkitBoxOrient: 'vertical',
   overflow: 'hidden',
   lineHeight: 1.5,
   // 높이 고정 - 레이아웃 안정화
-  height: '2.9rem'
+  height: '2.7rem'
 });
 
-// 메뉴 가격 - 배리어프리 개선
+// 메뉴 가격 - 레이블 제거 및 위치 조정
 export const MenuPrice = styled(Box)({
-  fontSize: '1.3rem',
+  fontSize: '1.2rem', // 폰트 크기 약간 축소
   fontWeight: 700,
   color: '#2142FF',
-  padding: '10px 0',
+  padding: '8px 0',
   borderTop: '1px dashed #e8ecfb',
   marginTop: 'auto',
-  // 가격 레이블 추가
+  textAlign: 'right', // 우측 정렬로 변경
+  // 가격 레이블 제거
   display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-
-  // 가격 레이블 추가
-  '&::before': {
-    content: "'가격'",
-    fontSize: '0.85rem',
-    fontWeight: 400,
-    color: '#666'
-  }
+  justifyContent: 'flex-end', // 우측 정렬
 });
 
-// 장바구니 컨테이너 - 배리어프리 개선
+// 장바구니 컨테이너 - 너비 증가 및 배리어프리 개선
 export const CartContainer = styled(Box)({
-  width: '340px', // 약간 넓게 조정 - 가독성 향상
-  minWidth: '340px',
-  height: '100%',
+  width: '400px', // 너비 증가
+  minWidth: '400px',
+  height: '100%', // 전체 높이로 변경
   display: 'flex',
   flexDirection: 'column',
   background: 'white',

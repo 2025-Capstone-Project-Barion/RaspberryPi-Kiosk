@@ -85,76 +85,84 @@ const MenuPage = () => {
 
     return (
         <AppContainer>
-            {/* Logo & Categories */}
-            <CategoryWrapper>
-                <img src={logo} alt="logo" style={{ height: '44px' }} />
-                <Box sx={{
-                    display: 'flex',
-                    gap: '16px',
-                    flexWrap: 'nowrap',
-                    overflow: 'auto',
-                    WebkitOverflowScrolling: 'touch',
-                    pb: 1,
-                    '&::-webkit-scrollbar': { height: '6px' },
-                    '&::-webkit-scrollbar-track': { background: 'transparent' },
-                    '&::-webkit-scrollbar-thumb': { background: '#e0e6ff', borderRadius: '3px' }
-                }}>
-                    {categories.map(category => (
-                        <CategoryButton
-                            key={category.id}
-                            onClick={() => setSelectedCategory(category.id)}
-                            active={selectedCategory === category.id}
-                        >
-                            {category.name}
-                        </CategoryButton>
-                    ))}
-                </Box>
-            </CategoryWrapper>
-
-            {/* Main Content Area */}
+            {/* 전체 레이아웃 구조 변경 - 좌측(카테고리+메뉴), 우측(장바구니) 2단 구조 */}
             <Box sx={{
                 display: 'flex',
-                gap: '24px',
-                height: 'calc(100vh - 130px)',
-                width: '100%'
+                width: '100%',
+                height: '100%',
+                gap: '24px'
             }}>
-                {/* Menu Items */}
-                <MenuGridContainer>
-                    {getMenuItems(selectedCategory).map((item) => (
-                        <MenuCard
-                            key={item.id}
-                            className="menu-card" // 이 클래스 추가
-                            onTouchStart={() => handleCardTouchStart(item.id)} // 터치 시작 핸들러
-                            onTouchEnd={() => handleCardTouchEnd(item)} // 터치 종료 핸들러
-                            onClick={() => handleAddToCart(item)} // 클릭 핸들러 유지 (PC 환경)
-                            sx={{
-                                // 카드 활성 상태에 따른 스타일 변경
-                                transform: activeCardId === item.id ? 'scale(0.98)' : 'scale(1)',
-                                borderColor: activeCardId === item.id ? '#2142FF' : '#f0f2fa',
-                                transition: 'transform 0.15s ease-out, border-color 0.15s ease-out',
-                            }}
-                        >
-                            <MenuImageContainer>
-                                {item.image && (
-                                    <img
-                                        src={item.image}
-                                        alt={item.name}
-                                        className="menu-image" // 이미지 클래스 추가
-                                    />
-                                )}
-                            </MenuImageContainer>
-                            <MenuInfo>
-                                <div>
-                                    <MenuName>{item.name}</MenuName>
-                                    <MenuDescription>{item.description}</MenuDescription>
-                                </div>
-                                <MenuPrice>{item.price.toLocaleString()}원</MenuPrice>
-                            </MenuInfo>
-                        </MenuCard>
-                    ))}
-                </MenuGridContainer>
+                {/* 왼쪽 영역: 카테고리 + 메뉴 */}
+                <Box sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: 'calc(100% - 400px)', // 장바구니 너비를 늘리기 위해 메뉴 영역 축소
+                    gap: '24px'
+                }}>
+                    {/* Logo & Categories */}
+                    <CategoryWrapper>
+                        <img src={logo} alt="logo" style={{ height: '44px' }} />
+                        <Box sx={{
+                            display: 'flex',
+                            gap: '16px',
+                            flexWrap: 'nowrap',
+                            overflow: 'auto',
+                            WebkitOverflowScrolling: 'touch',
+                            pb: 1,
+                            '&::-webkit-scrollbar': { height: '6px' },
+                            '&::-webkit-scrollbar-track': { background: 'transparent' },
+                            '&::-webkit-scrollbar-thumb': { background: '#e0e6ff', borderRadius: '3px' }
+                        }}>
+                            {categories.map(category => (
+                                <CategoryButton
+                                    key={category.id}
+                                    onClick={() => setSelectedCategory(category.id)}
+                                    active={selectedCategory === category.id}
+                                >
+                                    {category.name}
+                                </CategoryButton>
+                            ))}
+                        </Box>
+                    </CategoryWrapper>
 
-                {/* Cart Container */}
+                    {/* Menu Items Grid */}
+                    <MenuGridContainer>
+                        {getMenuItems(selectedCategory).map((item) => (
+                            <MenuCard
+                                key={item.id}
+                                className="menu-card" // 이 클래스 추가
+                                onTouchStart={() => handleCardTouchStart(item.id)} // 터치 시작 핸들러
+                                onTouchEnd={() => handleCardTouchEnd(item)} // 터치 종료 핸들러
+                                onClick={() => handleAddToCart(item)} // 클릭 핸들러 유지 (PC 환경)
+                                sx={{
+                                    // 카드 활성 상태에 따른 스타일 변경
+                                    transform: activeCardId === item.id ? 'scale(0.98)' : 'scale(1)',
+                                    borderColor: activeCardId === item.id ? '#2142FF' : '#f0f2fa',
+                                    transition: 'transform 0.15s ease-out, border-color 0.15s ease-out',
+                                }}
+                            >
+                                <MenuImageContainer>
+                                    {item.image && (
+                                        <img
+                                            src={item.image}
+                                            alt={item.name}
+                                            className="menu-image" // 이미지 클래스 추가
+                                        />
+                                    )}
+                                </MenuImageContainer>
+                                <MenuInfo>
+                                    <div>
+                                        <MenuName>{item.name}</MenuName>
+                                        <MenuDescription>{item.description}</MenuDescription>
+                                    </div>
+                                    <MenuPrice>{item.price.toLocaleString()}원</MenuPrice>
+                                </MenuInfo>
+                            </MenuCard>
+                        ))}
+                    </MenuGridContainer>
+                </Box>
+
+                {/* 장바구니 영역 - 세로 전체 높이로 확장 */}
                 <CartContainer>
                     <CartHeader>
                         {/* 왼쪽에 장바구니 아이콘 배치 - Badge 컴포넌트로 수량 표시 */}
@@ -206,6 +214,7 @@ const MenuPage = () => {
                             <Delete />
                         </IconButton>
                     </CartHeader>
+
                     {/* 장바구니 목록 */}
                     <CartList>
                         {cart.length === 0 ? (
