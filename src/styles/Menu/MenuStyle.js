@@ -239,10 +239,10 @@ export const MenuPrice = styled(Box)({
   padding: '8px 0',
   borderTop: '1px dashed #e8ecfb',
   marginTop: 'auto',
-  textAlign: 'right', // 우측 정렬로 변경
+  textAlign: 'left', // 우측 정렬로 변경
   // 가격 레이블 제거
   display: 'flex',
-  justifyContent: 'flex-end', // 우측 정렬
+  justifyContent: 'flex-start', // 우측 정렬
 });
 
 // 장바구니 컨테이너 - 너비 증가 및 배리어프리 개선
