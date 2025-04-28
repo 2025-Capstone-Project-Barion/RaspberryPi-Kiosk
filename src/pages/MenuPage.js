@@ -150,15 +150,19 @@ const MenuPage = () => {
 
         const container = menuGridRef.current;
 
-        // 위로 스크롤 가능 여부 (정확히 맨 위인지)
-        setCanScrollUp(Math.round(container.scrollTop) > 0);
+        // 위로 스크롤 가능 여부
+        setCanScrollUp(container.scrollTop > 0);
 
-        // 아래로 스크롤 가능 여부 (정확히 맨 아래인지)
+        // 아래로 스크롤 가능 여부 - 여유값 대폭 확대 (10px)
         const maxScroll = container.scrollHeight - container.clientHeight;
-        setCanScrollDown(Math.round(container.scrollTop) < Math.round(maxScroll));
+        setCanScrollDown(container.scrollTop < maxScroll - 10); // 10픽셀 여유 추가
+
+        // 디버깅용 (테스트 후 제거)
+        // console.log(`Category: ${selectedCategory}, scrollTop: ${container.scrollTop}, maxScroll: ${maxScroll}, diff: ${maxScroll - container.scrollTop}`);
     };
 
     // 카테고리 변경 시 스크롤 위치 초기화 및 버튼 상태 업데이트
+    // 카테고리 변경 시 호출되는 useEffect 수정
     useEffect(() => {
         if (menuGridRef.current) {
             menuGridRef.current.scrollTop = 0;
@@ -170,14 +174,25 @@ const MenuPage = () => {
         // 현재 ref 값을 변수에 저장
         const currentMenuGrid = menuGridRef.current;
 
+        // 스크롤 이벤트 핸들러 - useEffect 시작 부분에 선언하여 클로저 문제 해결
+        const handleScroll = () => {
+            // requestAnimationFrame으로 성능 최적화
+            requestAnimationFrame(updateScrollButtonStates);
+        };
+
         if (currentMenuGrid) {
-            // 스크롤 이벤트 중 상태 업데이트
-            currentMenuGrid.addEventListener('scroll', updateScrollButtonStates);
+            // 다양한 스크롤 이벤트에 리스너 추가
+            currentMenuGrid.addEventListener('scroll', handleScroll, { passive: true });
+            currentMenuGrid.addEventListener('touchmove', handleScroll, { passive: true });
+
+            // 이미지 로드 완료 후 다시 체크 (비동기 로딩 이슈 해결)
+            setTimeout(updateScrollButtonStates, 500);
         }
 
         return () => {
             if (currentMenuGrid) {
-                currentMenuGrid.removeEventListener('scroll', updateScrollButtonStates);
+                currentMenuGrid.removeEventListener('scroll', handleScroll);
+                currentMenuGrid.removeEventListener('touchmove', handleScroll);
             }
         };
     }, [selectedCategory]);
