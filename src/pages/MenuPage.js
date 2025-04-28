@@ -322,24 +322,30 @@ const MenuPage = () => {
                                         </IconButton>
                                     </Box>
 
-                                    {/* 삭제 버튼 - 더 세련된 디자인 */}
+                                    {/* 삭제 버튼 - 터치 최적화 디자인 */}
                                     <IconButton
                                         size="small"
                                         onClick={() => handleQuantityChange(index, -item.quantity)}
                                         sx={{
                                             ml: 1.5,
-                                            color: '#8f9bb3', // 더 세련된 그레이 컬러
-                                            padding: '6px',
-                                            '&:hover': {
-                                                color: '#2142FF'
-                                            },
-                                            '&:active': {
-                                                transform: 'scale(0.9)',
-                                                transition: 'all 0.1s ease'
-                                            }
+                                            color: '#5d6b82',
+                                            padding: '10px',  // 터치 영역 확대
+                                            backgroundColor: 'rgba(232, 236, 245, 0.9)',  // 배경색 추가로 터치 영역 시각화
+                                            borderRadius: '12px',  // 모서리 둥글게
+                                            // 호버링 효과 제거
+                                            // 터치 피드백 강화
+
                                         }}
                                     >
-                                        <Delete fontSize="small" />
+                                        <Delete
+                                            fontSize="small"
+                                            sx={{
+                                                // 아이콘 자체에도 터치 효과 추가
+                                                '&:active': {
+                                                    color: '#2142FF'
+                                                }
+                                            }}
+                                        />
                                     </IconButton>
                                 </ListItem>
                             ))
