@@ -101,40 +101,61 @@ const MenuPage = () => {
         setCart([]);
     };
 
-    // 스크롤 위로 버튼 클릭 핸들러
+    // 스크롤 위로 버튼 클릭 핸들러 수정
     const handleScrollUp = () => {
         if (!menuGridRef.current || !canScrollUp) return;
 
         const rowHeight = calculateRowHeight();
-        // 2행 위로 스크롤 - 버튼 클릭 시에만 2행씩 이동
-        menuGridRef.current.scrollTop -= rowHeight * 2;
+        const container = menuGridRef.current;
+        const currentScroll = container.scrollTop;
+
+        // 정상적인 2행 스크롤로 처음에 도달할 수 있는 경우 또는 가까워진 경우
+        if (currentScroll - rowHeight * 2 <= rowHeight / 2) {
+            // 바로 처음까지 스크롤
+            container.scrollTop = 0;
+        } else {
+            // 일반적인 2행 스크롤
+            container.scrollTop -= rowHeight * 2;
+        }
 
         // 약간의 지연 후 스크롤 버튼 상태 업데이트
         setTimeout(updateScrollButtonStates, 100);
     };
 
-    // 스크롤 아래로 버튼 클릭 핸들러
+    // 스크롤 아래로 버튼 클릭 핸들러 수정
     const handleScrollDown = () => {
         if (!menuGridRef.current || !canScrollDown) return;
 
         const rowHeight = calculateRowHeight();
-        // 2행 아래로 스크롤 - 버튼 클릭 시에만 2행씩 이동
-        menuGridRef.current.scrollTop += rowHeight * 2;
+        const container = menuGridRef.current;
+        const maxScroll = container.scrollHeight - container.clientHeight;
+        const currentScroll = container.scrollTop;
+
+        // 정상적인 2행 스크롤로 끝에 도달할 수 있는 경우 또는 가까워진 경우
+        if (currentScroll + rowHeight * 2 >= maxScroll - rowHeight / 2) {
+            // 바로 끝까지 스크롤
+            container.scrollTop = maxScroll;
+        } else {
+            // 일반적인 2행 스크롤
+            container.scrollTop += rowHeight * 2;
+        }
 
         // 약간의 지연 후 스크롤 버튼 상태 업데이트
         setTimeout(updateScrollButtonStates, 100);
     };
 
-    // 스크롤 버튼 상태 업데이트
+    // 스크롤 버튼 상태 업데이트 함수 개선
     const updateScrollButtonStates = () => {
         if (!menuGridRef.current) return;
 
-        // 위로 스크롤 가능 여부
-        setCanScrollUp(menuGridRef.current.scrollTop > 5); // 약간의 임계값
+        const container = menuGridRef.current;
 
-        // 아래로 스크롤 가능 여부
-        const maxScroll = menuGridRef.current.scrollHeight - menuGridRef.current.clientHeight;
-        setCanScrollDown(menuGridRef.current.scrollTop < maxScroll - 5); // 약간의 임계값
+        // 위로 스크롤 가능 여부 (정확히 맨 위인지)
+        setCanScrollUp(Math.round(container.scrollTop) > 0);
+
+        // 아래로 스크롤 가능 여부 (정확히 맨 아래인지)
+        const maxScroll = container.scrollHeight - container.clientHeight;
+        setCanScrollDown(Math.round(container.scrollTop) < Math.round(maxScroll));
     };
 
     // 카테고리 변경 시 스크롤 위치 초기화 및 버튼 상태 업데이트
