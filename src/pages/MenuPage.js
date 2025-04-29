@@ -21,7 +21,7 @@ import {
     CartFooter,
     PurchaseButton
 } from '../styles/Menu/MenuStyle';
-// Hammer.js 라이브러리 추가
+// Hammer.js 라이브러리 추가 => 터치 스크롤 구현을 위한 라이브러리
 import Hammer from 'hammerjs';
 
 import { categories, getMenuItems } from '../data/menuData';
