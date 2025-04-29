@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Typography, Box, IconButton, ListItem, Badge } from '@mui/material';
 import { Add, Remove, Delete, ShoppingCart, KeyboardArrowUp, KeyboardArrowDown } from '@mui/icons-material';
 import {
@@ -40,18 +40,18 @@ const MenuPage = () => {
     const [canScrollUp, setCanScrollUp] = useState(false);
     const [canScrollDown, setCanScrollDown] = useState(true);
 
-    // 행의 높이를 계산하는 함수 (카드 높이 + 간격)
-    const calculateRowHeight = () => {
-        if (!menuGridRef.current) return 0;
+    // 스크롤 타이머 ref 추가 (스크롤 이벤트 성능 최적화용)
+    const scrollTimer = useRef(null);
 
-        const grid = menuGridRef.current;
-        const firstCard = grid.querySelector('.menu-card');
-
-        if (!firstCard) return 0;
-
-        // 카드 높이 + 간격 = 행 높이
-        return firstCard.offsetHeight + 16; // 16px는 그리드 gap
-    };
+    // 행의 높이를 계산하는 함수 - useCallback으로 메모이제이션
+    const calculateRowHeight = useCallback(() => {
+        // 카드 높이 (CSS와 동일하게 맞춤)
+        const cardHeight = (window.innerHeight - 230) / 2;
+        // 그리드 간격 (MenuGridContainer의 gap과 동일하게 32px 설정)
+        const rowGap = 32;
+        // 전체 행 높이 = 카드 높이 + 간격
+        return cardHeight + rowGap;
+    }, []);
 
     // 카드 터치 시작 시 활성화 상태 설정
     const handleCardTouchStart = (id) => {
@@ -101,68 +101,104 @@ const MenuPage = () => {
         setCart([]);
     };
 
-    // 스크롤 위로 버튼 클릭 핸들러 수정
+    // 스크롤 위로 버튼 클릭 핸들러 - 정확한 행 단위 이동 보장
     const handleScrollUp = () => {
-        if (!menuGridRef.current || !canScrollUp) return;
-
-        const rowHeight = calculateRowHeight();
-        const container = menuGridRef.current;
-        const currentScroll = container.scrollTop;
-
-        // 정상적인 2행 스크롤로 처음에 도달할 수 있는 경우 또는 가까워진 경우
-        if (currentScroll - rowHeight * 2 <= rowHeight / 2) {
-            // 바로 처음까지 스크롤
-            container.scrollTop = 0;
-        } else {
-            // 일반적인 2행 스크롤
-            container.scrollTop -= rowHeight * 2;
-        }
-
-        // 약간의 지연 후 스크롤 버튼 상태 업데이트
-        setTimeout(updateScrollButtonStates, 100);
-    };
-
-    // 스크롤 아래로 버튼 클릭 핸들러 수정
-    const handleScrollDown = () => {
-        if (!menuGridRef.current || !canScrollDown) return;
-
-        const rowHeight = calculateRowHeight();
-        const container = menuGridRef.current;
-        const maxScroll = container.scrollHeight - container.clientHeight;
-        const currentScroll = container.scrollTop;
-
-        // 정상적인 2행 스크롤로 끝에 도달할 수 있는 경우 또는 가까워진 경우
-        if (currentScroll + rowHeight * 2 >= maxScroll - rowHeight / 2) {
-            // 바로 끝까지 스크롤
-            container.scrollTop = maxScroll;
-        } else {
-            // 일반적인 2행 스크롤
-            container.scrollTop += rowHeight * 2;
-        }
-
-        // 약간의 지연 후 스크롤 버튼 상태 업데이트
-        setTimeout(updateScrollButtonStates, 100);
-    };
-
-    // 스크롤 버튼 상태 업데이트 함수 개선
-    const updateScrollButtonStates = () => {
         if (!menuGridRef.current) return;
 
         const container = menuGridRef.current;
+        const rowHeight = calculateRowHeight();
 
-        // 위로 스크롤 가능 여부
-        setCanScrollUp(container.scrollTop > 0);
+        // 현재 스크롤 위치
+        const currentScroll = container.scrollTop;
+        // 현재 몇 번째 행인지 계산 (정수로 내림)
+        const currentRow = Math.floor(currentScroll / rowHeight);
 
-        // 아래로 스크롤 가능 여부 - 여유값 대폭 확대 (10px)
-        const maxScroll = container.scrollHeight - container.clientHeight;
-        setCanScrollDown(container.scrollTop < maxScroll - 10); // 10픽셀 여유 추가
+        // 항상 2행씩 정확히 이동 (음수 방지)
+        const targetRow = Math.max(0, currentRow - 2);
+        // 행의 정확한 시작 위치로 스크롤
+        const targetScroll = targetRow * rowHeight;
 
-        // 디버깅용 (테스트 후 제거)
-        // console.log(`Category: ${selectedCategory}, scrollTop: ${container.scrollTop}, maxScroll: ${maxScroll}, diff: ${maxScroll - container.scrollTop}`);
+        container.scrollTo({
+            top: targetScroll,
+            behavior: 'smooth'
+        });
+
+        // 스크롤 후 버튼 상태 업데이트 (애니메이션 완료 후)
+        setTimeout(updateScrollButtonStates, 300);
     };
 
-    // 카테고리 변경 시 스크롤 위치 초기화 및 버튼 상태 업데이트
-    // 카테고리 변경 시 호출되는 useEffect 수정
+    // 스크롤 아래로 버튼 클릭 핸들러
+    const handleScrollDown = () => {
+        if (!menuGridRef.current) return;
+
+        const container = menuGridRef.current;
+        const rowHeight = calculateRowHeight();
+
+        // 현재 스크롤 위치
+        const currentScroll = container.scrollTop;
+        // 현재 몇 번째 행인지 계산 (정수로 내림)
+        const currentRow = Math.floor(currentScroll / rowHeight);
+
+        // 컨테이너 내용물 전체 높이
+        const scrollHeight = container.scrollHeight;
+        // 컨테이너 높이
+        const containerHeight = container.clientHeight;
+        // 총 행 수 계산 (올림)
+        const totalRows = Math.ceil(scrollHeight / rowHeight);
+        // 화면에 보이는 행 수 (일반적으로 2행)
+        const visibleRows = Math.floor(containerHeight / rowHeight);
+        // 가능한 최대 시작 행
+        const maxStartRow = Math.max(0, totalRows - visibleRows);
+
+        // 항상 2행씩 정확히 이동 (최대치 초과 방지)
+        const targetRow = Math.min(maxStartRow, currentRow + 2);
+        // 행의 정확한 시작 위치로 스크롤
+        const targetScroll = targetRow * rowHeight;
+
+        container.scrollTo({
+            top: targetScroll,
+            behavior: 'smooth'
+        });
+
+        // 스크롤 후 버튼 상태 업데이트 (애니메이션 완료 후)
+        setTimeout(updateScrollButtonStates, 300);
+    };
+
+    // 스크롤 버튼 상태 업데이트 함수 개선 - useCallback으로 메모이제이션
+    const updateScrollButtonStates = useCallback(() => {
+        if (!menuGridRef.current) return;
+
+        const container = menuGridRef.current;
+        const scrollTop = container.scrollTop;
+        const clientHeight = container.clientHeight;
+        const scrollHeight = container.scrollHeight;
+        const rowHeight = calculateRowHeight();
+
+        // 현재 행 위치
+        const currentRow = Math.floor(scrollTop / rowHeight);
+        // 총 행 수
+        const totalRows = Math.ceil(scrollHeight / rowHeight);
+        // 화면에 보이는 행 수
+        const visibleRows = Math.floor(clientHeight / rowHeight);
+
+        // 더 위로 스크롤 가능한지 여부
+        setCanScrollUp(currentRow > 0);
+
+        // 더 아래로 스크롤 가능한지 여부 개선 - 정확한 바닥 감지
+        // 스크롤 바닥 감지를 위한 정확한 계산
+        const isAtBottom = Math.abs(scrollHeight - scrollTop - clientHeight) < 2; // 작은 오차 허용
+
+        // 첫 번째 검사: 일반적인 행 기반 계산
+        let canScrollMore = currentRow + visibleRows < totalRows;
+
+        // 두 번째 검사: 실제로 스크롤 바닥에 도달했는지 확인
+        if (isAtBottom) canScrollMore = false;
+
+        setCanScrollDown(canScrollMore);
+    }, [calculateRowHeight]); // calculateRowHeight를 의존성 배열에 추가
+
+
+    // 카테고리 변경 시 useEffect - 의존성 배열 수정
     useEffect(() => {
         if (menuGridRef.current) {
             menuGridRef.current.scrollTop = 0;
@@ -174,18 +210,22 @@ const MenuPage = () => {
         // 현재 ref 값을 변수에 저장
         const currentMenuGrid = menuGridRef.current;
 
-        // 스크롤 이벤트 핸들러 - useEffect 시작 부분에 선언하여 클로저 문제 해결
+        // 스크롤 이벤트 핸들러 - 성능 개선
         const handleScroll = () => {
-            // requestAnimationFrame으로 성능 최적화
-            requestAnimationFrame(updateScrollButtonStates);
+            // 쓰로틀링으로 성능 최적화
+            if (!scrollTimer.current) {
+                scrollTimer.current = setTimeout(() => {
+                    updateScrollButtonStates();
+                    scrollTimer.current = null;
+                }, 50);
+            }
         };
 
         if (currentMenuGrid) {
-            // 다양한 스크롤 이벤트에 리스너 추가
             currentMenuGrid.addEventListener('scroll', handleScroll, { passive: true });
             currentMenuGrid.addEventListener('touchmove', handleScroll, { passive: true });
 
-            // 이미지 로드 완료 후 다시 체크 (비동기 로딩 이슈 해결)
+            // 이미지 로드 완료 후 다시 체크
             setTimeout(updateScrollButtonStates, 500);
         }
 
@@ -194,13 +234,38 @@ const MenuPage = () => {
                 currentMenuGrid.removeEventListener('scroll', handleScroll);
                 currentMenuGrid.removeEventListener('touchmove', handleScroll);
             }
+            // 타이머 정리
+            if (scrollTimer.current) {
+                clearTimeout(scrollTimer.current);
+                scrollTimer.current = null;
+            }
         };
-    }, [selectedCategory]);
+    }, [selectedCategory, updateScrollButtonStates]); // updateScrollButtonStates 추가
 
     // 컴포넌트 마운트 시 초기 스크롤 상태 설정
     useEffect(() => {
+        // 컴포넌트 마운트 시 초기화
         updateScrollButtonStates();
-    }, []);
+
+        // 창 크기 변경 시 다시 계산
+        const handleResize = () => {
+            if (scrollTimer.current) clearTimeout(scrollTimer.current);
+            scrollTimer.current = setTimeout(() => {
+                updateScrollButtonStates();
+                scrollTimer.current = null;
+            }, 100);
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            if (scrollTimer.current) {
+                clearTimeout(scrollTimer.current);
+            }
+        };
+    }, [updateScrollButtonStates]); // updateScrollButtonStates 추가
+
 
     const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
