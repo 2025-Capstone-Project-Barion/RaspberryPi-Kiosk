@@ -120,13 +120,14 @@ const FrontPage = () => {
                             fontSize: '1.5rem',
                             padding: '1.5rem 3rem',
                             borderRadius: '50px',
-                            background: 'linear-gradient(45deg, #FF6B6B 30%, #FF8E53 90%)',
+                            // 그라디언트 색상 변경
+                            background: 'linear-gradient(45deg, #2142FF 30%, #4A66FF 90%)',
                             color: 'white',
-                            boxShadow: '0 8px 32px rgba(255, 107, 107, 0.3)',
+                            boxShadow: '0 8px 32px rgba(33, 66, 255, 0.3)',
                             '&:hover': {
-                                background: 'linear-gradient(45deg, #FF8E53 30%, #FF6B6B 90%)',
+                                background: 'linear-gradient(45deg, #1935DB 30%, #2142FF 90%)',
                                 transform: 'translateY(-2px)',
-                                boxShadow: '0 12px 40px rgba(255, 107, 107, 0.4)',
+                                boxShadow: '0 12px 40px rgba(33, 66, 255, 0.4)',
                             },
                             transition: 'all 0.3s ease-in-out',
                         }}
