@@ -110,13 +110,9 @@ const MenuPage = () => {
 
         // 현재 스크롤 위치
         const currentScroll = container.scrollTop;
-        // 현재 몇 번째 행인지 계산 (정수로 내림)
-        const currentRow = Math.floor(currentScroll / rowHeight);
 
-        // 항상 2행씩 정확히 이동 (음수 방지)
-        const targetRow = Math.max(0, currentRow - 2);
-        // 행의 정확한 시작 위치로 스크롤
-        const targetScroll = targetRow * rowHeight;
+        // 항상 정확히 2행 위로 이동 (음수 방지)
+        const targetScroll = Math.max(0, currentScroll - (rowHeight * 2));
 
         container.scrollTo({
             top: targetScroll,
@@ -136,24 +132,17 @@ const MenuPage = () => {
 
         // 현재 스크롤 위치
         const currentScroll = container.scrollTop;
-        // 현재 몇 번째 행인지 계산 (정수로 내림)
-        const currentRow = Math.floor(currentScroll / rowHeight);
 
         // 컨테이너 내용물 전체 높이
         const scrollHeight = container.scrollHeight;
         // 컨테이너 높이
         const containerHeight = container.clientHeight;
-        // 총 행 수 계산 (올림)
-        const totalRows = Math.ceil(scrollHeight / rowHeight);
-        // 화면에 보이는 행 수 (일반적으로 2행)
-        const visibleRows = Math.floor(containerHeight / rowHeight);
-        // 가능한 최대 시작 행
-        const maxStartRow = Math.max(0, totalRows - visibleRows);
 
-        // 항상 2행씩 정확히 이동 (최대치 초과 방지)
-        const targetRow = Math.min(maxStartRow, currentRow + 2);
-        // 행의 정확한 시작 위치로 스크롤
-        const targetScroll = targetRow * rowHeight;
+        // 항상 정확히 2행 아래로 이동 (최대치 초과 방지)
+        const targetScroll = Math.min(
+            scrollHeight - containerHeight,
+            currentScroll + (rowHeight * 2)
+        );
 
         container.scrollTo({
             top: targetScroll,
@@ -174,28 +163,28 @@ const MenuPage = () => {
         const scrollHeight = container.scrollHeight;
         const rowHeight = calculateRowHeight();
 
-        // 현재 행 위치
-        const currentRow = Math.floor(scrollTop / rowHeight);
-        // 총 행 수
-        const totalRows = Math.ceil(scrollHeight / rowHeight);
-        // 화면에 보이는 행 수
-        const visibleRows = Math.floor(clientHeight / rowHeight);
+        // 현재 행 위치 (소수점 자리까지 정확히 계산)
+        const currentRowExact = scrollTop / rowHeight;
 
-        // 더 위로 스크롤 가능한지 여부
-        setCanScrollUp(currentRow > 0);
+        // 더 위로 스크롤 가능한지 여부 - 정밀 계산
+        // 현재 스크롤 위치가 아주 약간이라도 0보다 크면 위로 스크롤 가능
+        setCanScrollUp(scrollTop > 2); // 매우 작은 오차 허용 (2px)
 
         // 더 아래로 스크롤 가능한지 여부 개선 - 정확한 바닥 감지
         // 스크롤 바닥 감지를 위한 정확한 계산
         const isAtBottom = Math.abs(scrollHeight - scrollTop - clientHeight) < 2; // 작은 오차 허용
 
         // 첫 번째 검사: 일반적인 행 기반 계산
-        let canScrollMore = currentRow + visibleRows < totalRows;
+        const visibleRows = Math.floor(clientHeight / rowHeight);
+        const totalRows = Math.ceil(scrollHeight / rowHeight);
+        let canScrollMore = currentRowExact + visibleRows < totalRows - 0.1; // 오차 허용
 
         // 두 번째 검사: 실제로 스크롤 바닥에 도달했는지 확인
         if (isAtBottom) canScrollMore = false;
 
         setCanScrollDown(canScrollMore);
     }, [calculateRowHeight]); // calculateRowHeight를 의존성 배열에 추가
+
 
 
     // 카테고리 변경 시 useEffect - 의존성 배열 수정
