@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Typography, Box, Divider } from '@mui/material';
 import {
     OrderCheckContainer,
@@ -12,6 +12,9 @@ import {
 } from '../../styles/Order/OrderCheckStyle';
 
 const OrderCheck = ({ cartItems, onClose, onPayment }) => {
+    // 주문 항목 목록의 ref
+    const orderItemsListRef = useRef(null);
+
     // 총 주문 수량 계산
     const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -68,7 +71,10 @@ const OrderCheck = ({ cartItems, onClose, onPayment }) => {
             </Box>
 
             {/* 주문 항목 리스트 - 스크롤 영역 */}
-            <OrderItemsList>
+            <OrderItemsList
+                ref={orderItemsListRef}
+                className="order-items-list" // Hammer.js에서 이 클래스로 요소 찾음
+            >
                 {cartItems.map((item, index) => (
                     <OrderItem key={index}>
                         {/* 상품명 - 더 강조된 텍스트 */}

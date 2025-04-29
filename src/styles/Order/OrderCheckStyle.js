@@ -31,6 +31,7 @@ export const OrderItemsList = styled(Box)({
     // 높이 조정으로 충분한 스크롤 공간 확보
     height: 'clamp(250px, 40vh, 350px)',
     overflowY: 'auto',
+    touchAction: 'none', // Hammer.js를 위해 추가
     padding: '0',
 
     // 터치 스크롤 최적화

@@ -36,14 +36,18 @@ const MenuPage = () => {
     const [orderDialogOpen, setOrderDialogOpen] = useState(false);
     // 카드 활성화 상태 추적 - 터치 피드백 개선
     const [activeCardId, setActiveCardId] = useState(null);
+    // 카드 터치로 시작된 드래그 여부
+    const [draggingFromCard, setDraggingFromCard] = useState(false);
 
     // 스크롤 관련 상태 추가
     const menuGridRef = useRef(null);
+    const cartListRef = useRef(null); // 장바구니 목록 ref 추가
     const [canScrollUp, setCanScrollUp] = useState(false);
     const [canScrollDown, setCanScrollDown] = useState(true);
 
     // Hammer.js 인스턴스 저장용 ref
     const menuHammerRef = useRef(null);
+    const cartHammerRef = useRef(null);
 
     // 스크롤 타이머 ref 추가 (스크롤 이벤트 성능 최적화용)
     const scrollTimer = useRef(null);
@@ -59,14 +63,42 @@ const MenuPage = () => {
     }, []);
 
     // 카드 터치 시작 시 활성화 상태 설정
-    const handleCardTouchStart = (id) => {
+    const handleCardTouchStart = (id, e) => {
+        if (e) {
+            // 드래그 시작 위치 저장
+            setDraggingFromCard(true);
+            // 이벤트 전파 중지하지 않음 (드래그가 가능하도록)
+        }
         setActiveCardId(id);
     };
 
     // 카드 터치 종료 시 활성화 상태 해제 및 장바구니 추가
-    const handleCardTouchEnd = (item) => {
+    const handleCardTouchEnd = (item, e) => {
+        if (e) {
+            // 매우 짧은 시간의 터치만 클릭으로 간주
+            if (!draggingFromCard) {
+                handleAddToCart(item);
+            }
+            setDraggingFromCard(false);
+        }
         setActiveCardId(null);
-        handleAddToCart(item);
+    };
+
+    // 카드 클릭 핸들러 - 터치 외 마우스 클릭 지원
+    const handleCardClick = (item, e) => {
+        if (e) {
+            // 모바일에서 터치 이벤트와 클릭 이벤트 중복 방지
+            if ('ontouchstart' in window) {
+                return;
+            }
+            handleAddToCart(item);
+        }
+    };
+
+    // 카드 터치 이동 핸들러
+    const handleCardTouchMove = () => {
+        // 드래그 상태로 설정
+        setDraggingFromCard(true);
     };
 
     const handleAddToCart = (item) => {
@@ -83,7 +115,11 @@ const MenuPage = () => {
         }
     };
 
-    const handleQuantityChange = (index, value) => {
+    const handleQuantityChange = (index, value, e) => {
+        if (e) {
+            e.stopPropagation(); // 이벤트 버블링 방지
+        }
+
         // 기존 로직 유지
         const updatedCart = [...cart];
         const newQuantity = updatedCart[index].quantity + value;
@@ -234,11 +270,14 @@ const MenuPage = () => {
         };
     }, [selectedCategory, updateScrollButtonStates]); // updateScrollButtonStates 추가
 
-    // Hammer.js를 이용한 터치 스크롤 구현 - 메뉴 그리드에만 적용
+    // Hammer.js를 이용한 터치 스크롤 구현 - 메뉴 그리드와 장바구니에 적용
     useEffect(() => {
         // 기존 Hammer 인스턴스 정리
         if (menuHammerRef.current) {
             menuHammerRef.current.destroy();
+        }
+        if (cartHammerRef.current) {
+            cartHammerRef.current.destroy();
         }
 
         // 메뉴 그리드에 Hammer.js 적용
@@ -254,9 +293,6 @@ const MenuPage = () => {
             // 패닝 이벤트 핸들러 등록
             menuHammerRef.current.on('panup pandown', (ev) => {
                 if (!menuGridRef.current) return;
-
-                // 패닝 이벤트가 메뉴 카드에서 시작된 경우는 무시
-                if (ev.target.closest('.menu-card')) return;
 
                 // 스크롤 속도 계수 - 라즈베리파이 환경에 맞게 조정
                 const scrollSpeed = 3.0;
@@ -274,11 +310,37 @@ const MenuPage = () => {
             });
         }
 
+        // 장바구니 목록에 Hammer.js 적용
+        if (cartListRef.current) {
+            cartHammerRef.current = new Hammer(cartListRef.current);
+
+            // 세로 방향 패닝만 감지
+            cartHammerRef.current.get('pan').set({
+                direction: Hammer.DIRECTION_VERTICAL,
+                threshold: 5
+            });
+
+            // 패닝 이벤트 핸들러 등록
+            cartHammerRef.current.on('panup pandown', (ev) => {
+                if (!cartListRef.current) return;
+
+                // 스크롤 속도 계수
+                const scrollSpeed = 2.5;
+
+                // 이동 거리에 따라 스크롤 조정
+                cartListRef.current.scrollTop += ev.deltaY * scrollSpeed * -1;
+            });
+        }
+
         // 클린업 함수
         return () => {
             if (menuHammerRef.current) {
                 menuHammerRef.current.destroy();
                 menuHammerRef.current = null;
+            }
+            if (cartHammerRef.current) {
+                cartHammerRef.current.destroy();
+                cartHammerRef.current = null;
             }
         };
     }, [updateScrollButtonStates]); // updateScrollButtonStates 의존성 추가
@@ -365,9 +427,10 @@ const MenuPage = () => {
                                 <MenuCard
                                     key={item.id}
                                     className="menu-card" // 이 클래스 필수! (행 높이 계산에 사용)
-                                    onTouchStart={() => handleCardTouchStart(item.id)}
-                                    onTouchEnd={() => handleCardTouchEnd(item)}
-                                    onClick={() => handleAddToCart(item)}
+                                    onTouchStart={(e) => handleCardTouchStart(item.id, e)}
+                                    onTouchMove={handleCardTouchMove}
+                                    onTouchEnd={(e) => handleCardTouchEnd(item, e)}
+                                    onClick={(e) => handleCardClick(item, e)}
                                     sx={{
                                         transform: activeCardId === item.id ? 'scale(0.98)' : 'scale(1)',
                                         borderColor: activeCardId === item.id ? '#2142FF' : '#f0f2fa',
@@ -469,8 +532,13 @@ const MenuPage = () => {
                         </IconButton>
                     </CartHeader>
 
-                    {/* 장바구니 목록 - 기존 코드 그대로 유지 */}
-                    <CartList>
+                    {/* 장바구니 목록 - 기존 코드 그대로 유지하되 ref 추가 */}
+                    <CartList
+                        ref={cartListRef}
+                        sx={{
+                            touchAction: 'none', // Hammer.js 사용을 위해 추가
+                        }}
+                    >
                         {cart.length === 0 ? (
                             <Box sx={{
                                 height: '100%',
@@ -548,7 +616,7 @@ const MenuPage = () => {
                                     }}>
                                         <IconButton
                                             size="small"
-                                            onClick={() => handleQuantityChange(index, -1)}
+                                            onClick={(e) => handleQuantityChange(index, -1, e)}
                                             sx={{
                                                 padding: '4px',
                                                 '&:active': {
@@ -572,7 +640,7 @@ const MenuPage = () => {
 
                                         <IconButton
                                             size="small"
-                                            onClick={() => handleQuantityChange(index, 1)}
+                                            onClick={(e) => handleQuantityChange(index, 1, e)}
                                             sx={{
                                                 padding: '4px',
                                                 '&:active': {
@@ -588,7 +656,7 @@ const MenuPage = () => {
                                     {/* 삭제 버튼 - 터치 최적화 디자인 */}
                                     <IconButton
                                         size="small"
-                                        onClick={() => handleQuantityChange(index, -item.quantity)}
+                                        onClick={(e) => handleQuantityChange(index, -item.quantity, e)}
                                         sx={{
                                             ml: 1.5,
                                             color: '#5d6b82',
