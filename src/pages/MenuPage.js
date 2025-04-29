@@ -572,14 +572,7 @@ const MenuPage = () => {
                                     margin: '8px 0',
                                     backgroundColor: 'white',
                                     boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-                                    transition: 'all 0.2s ease',
-                                    // 터치 피드백 개선
-                                    '&:active': {
-                                        backgroundColor: '#f9faff',
-                                        boxShadow: '0 1px 4px rgba(0,0,0,0.02)',
-                                        transform: 'scale(0.99)',
-                                        transition: 'all 0.15s ease'
-                                    }
+
                                 }}>
                                     {/* 메뉴 이름 - 레이아웃 개선 */}
                                     <Box sx={{

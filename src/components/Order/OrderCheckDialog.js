@@ -1,9 +1,7 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import Dialog from '@mui/material/Dialog';
 import styled from '@emotion/styled';
 import OrderCheck from './OrderCheck';
-// Hammer.js 추가
-import Hammer from 'hammerjs';
 
 // 배리어프리 다이얼로그 스타일 - 터치 최적화
 const StyledDialog = styled(Dialog)({
@@ -54,54 +52,6 @@ const StyledDialog = styled(Dialog)({
  * @param {Function} props.onPayment - 결제 함수
  */
 const OrderCheckDialog = ({ open, cartItems, onClose, onPayment }) => {
-    // 다이얼로그 내부 컨텐츠 ref
-    const dialogContentRef = useRef(null);
-    // Hammer.js 인스턴스 ref
-    const hammerRef = useRef(null);
-
-    // Hammer.js 초기화 및 설정
-    useEffect(() => {
-        // 다이얼로그가 열려있고, 내부 컨텐츠가 존재할 때만 실행
-        if (open && dialogContentRef.current) {
-            // 기존 Hammer 인스턴스 정리
-            if (hammerRef.current) {
-                hammerRef.current.destroy();
-            }
-
-            // 새로운 Hammer 인스턴스 생성
-            hammerRef.current = new Hammer(dialogContentRef.current);
-
-            // 세로 방향 패닝만 감지하도록 설정
-            hammerRef.current.get('pan').set({
-                direction: Hammer.DIRECTION_VERTICAL,
-                threshold: 5 // 감도 조정
-            });
-
-            // 패닝 이벤트 핸들러 등록
-            hammerRef.current.on('panup pandown', (ev) => {
-                if (!dialogContentRef.current) return;
-
-                // 스크롤 영역 찾기
-                const scrollableElement = dialogContentRef.current.querySelector('.order-items-list');
-                if (!scrollableElement) return;
-
-                // 스크롤 속도 계수
-                const scrollSpeed = 2.5;
-
-                // 이동 거리에 따라 스크롤 조정
-                scrollableElement.scrollTop += ev.deltaY * scrollSpeed * -1;
-            });
-        }
-
-        // 클린업 함수
-        return () => {
-            if (hammerRef.current) {
-                hammerRef.current.destroy();
-                hammerRef.current = null;
-            }
-        };
-    }, [open]); // open 상태가 변경될 때만 실행
-
     return (
         <StyledDialog
             open={open}
@@ -111,13 +61,11 @@ const OrderCheckDialog = ({ open, cartItems, onClose, onPayment }) => {
             // 어두운 배경 클릭 시 닫기 - 터치 환경 고려
             closeAfterTransition
         >
-            <div ref={dialogContentRef} style={{ touchAction: 'none' }}>
-                <OrderCheck
-                    cartItems={cartItems}
-                    onClose={onClose}
-                    onPayment={onPayment}
-                />
-            </div>
+            <OrderCheck
+                cartItems={cartItems}
+                onClose={onClose}
+                onPayment={onPayment}
+            />
         </StyledDialog>
     );
 };

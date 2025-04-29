@@ -1,5 +1,6 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Typography, Box, Divider } from '@mui/material';
+import Hammer from 'hammerjs';
 import {
     OrderCheckContainer,
     OrderCheckHeader,
@@ -12,8 +13,48 @@ import {
 } from '../../styles/Order/OrderCheckStyle';
 
 const OrderCheck = ({ cartItems, onClose, onPayment }) => {
-    // 주문 항목 목록의 ref
+    // 주문 항목 리스트 ref 추가
     const orderItemsListRef = useRef(null);
+    // Hammer.js 인스턴스 저장용 ref
+    const orderHammerRef = useRef(null);
+
+    // Hammer.js 초기화 및 설정
+    useEffect(() => {
+        // 기존 Hammer 인스턴스 정리
+        if (orderHammerRef.current) {
+            orderHammerRef.current.destroy();
+        }
+
+        // 주문 항목 리스트에 Hammer.js 적용
+        if (orderItemsListRef.current) {
+            orderHammerRef.current = new Hammer(orderItemsListRef.current);
+
+            // 세로 방향 패닝(swipe)만 감지하도록 설정
+            orderHammerRef.current.get('pan').set({
+                direction: Hammer.DIRECTION_VERTICAL,
+                threshold: 5 // 감도 조정 (낮을수록 민감)
+            });
+
+            // 패닝 이벤트 핸들러 등록
+            orderHammerRef.current.on('panup pandown', (ev) => {
+                if (!orderItemsListRef.current) return;
+
+                // 스크롤 속도 계수 - 라즈베리파이 환경에 맞게 조정
+                const scrollSpeed = 2.5;
+
+                // 이동 거리에 따라 스크롤 조정 (deltaY가 양수면 아래로, 음수면 위로)
+                orderItemsListRef.current.scrollTop += ev.deltaY * scrollSpeed * -1;
+            });
+        }
+
+        // 클린업 함수
+        return () => {
+            if (orderHammerRef.current) {
+                orderHammerRef.current.destroy();
+                orderHammerRef.current = null;
+            }
+        };
+    }, []);
 
     // 총 주문 수량 계산
     const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
@@ -70,14 +111,14 @@ const OrderCheck = ({ cartItems, onClose, onPayment }) => {
                 <Typography sx={{ width: '120px', textAlign: 'right', fontWeight: 600, color: '#555' }}>금액</Typography>
             </Box>
 
-            {/* 주문 항목 리스트 - 스크롤 영역 */}
+            {/* 주문 항목 리스트 - ref 추가 및 touchAction 설정 */}
             <OrderItemsList
                 ref={orderItemsListRef}
-                className="order-items-list" // Hammer.js에서 이 클래스로 요소 찾음
+                sx={{ touchAction: 'none' }} // Hammer.js 사용 시 필수 설정
             >
                 {cartItems.map((item, index) => (
                     <OrderItem key={index}>
-                        {/* 상품명 - 더 강조된 텍스트 */}
+                        {/* 상품명 */}
                         <Typography sx={{
                             flex: 1,
                             fontWeight: 600,
@@ -87,7 +128,7 @@ const OrderCheck = ({ cartItems, onClose, onPayment }) => {
                             {item.name}
                         </Typography>
 
-                        {/* 수량 - 배지 스타일로 변경하여 명확성 강화 */}
+                        {/* 수량 - 배지 스타일 */}
                         <Typography sx={{
                             width: '80px',
                             textAlign: 'center',
@@ -101,7 +142,7 @@ const OrderCheck = ({ cartItems, onClose, onPayment }) => {
                             {item.quantity}개
                         </Typography>
 
-                        {/* 가격 - 브랜드 컬러로 강조 */}
+                        {/* 가격 */}
                         <Typography sx={{
                             width: '120px',
                             textAlign: 'right',
@@ -115,10 +156,10 @@ const OrderCheck = ({ cartItems, onClose, onPayment }) => {
                 ))}
             </OrderItemsList>
 
-            {/* 구분선 추가 - 시각적 분리 강화 */}
+            {/* 구분선 */}
             <Divider sx={{ margin: '0 20px', borderStyle: 'dashed', borderColor: '#e0e0e0' }} />
 
-            {/* 주문 요약 - 더 명확한 강조와 구분 */}
+            {/* 주문 요약 */}
             <OrderSummary>
                 <Box>
                     <Typography sx={{
@@ -144,14 +185,14 @@ const OrderCheck = ({ cartItems, onClose, onPayment }) => {
                 </Box>
 
                 <Box>
-                    {/* 총 결제금액 레이블 추가 */}
+                    {/* 총 결제금액 레이블 */}
                     <Box sx={{ textAlign: 'right', mb: 0.5 }}>
                         <Typography sx={{ fontSize: '0.9rem', color: '#666' }}>
                             총 결제금액
                         </Typography>
                     </Box>
 
-                    {/* 금액 - 크게 강조 */}
+                    {/* 금액 */}
                     <Typography sx={{
                         fontSize: '1.5rem',
                         fontWeight: 800,
@@ -165,15 +206,13 @@ const OrderCheck = ({ cartItems, onClose, onPayment }) => {
 
             {/* 하단 버튼 영역 */}
             <OrderFooter>
-                {/* 돌아가기 버튼 - 접근성 향상 */}
+                {/* 돌아가기 버튼 */}
                 <BackButton onClick={onClose} sx={{
                     padding: '16px 24px',
                     fontSize: '1.05rem',
                     fontWeight: 600,
                     borderRadius: '14px',
-                    // 테두리 강화
                     border: '1px solid #ddd',
-                    // 터치 피드백 애니메이션
                     '&:active': {
                         transform: 'scale(0.97)',
                         backgroundColor: '#f5f5f5',
@@ -183,7 +222,7 @@ const OrderCheck = ({ cartItems, onClose, onPayment }) => {
                     돌아가기
                 </BackButton>
 
-                {/* 결제하기 버튼 - 강조 및 접근성 향상 */}
+                {/* 결제하기 버튼 */}
                 <PaymentButton onClick={onPayment} sx={{
                     padding: '16px 32px',
                     fontSize: '1.1rem',
@@ -191,7 +230,6 @@ const OrderCheck = ({ cartItems, onClose, onPayment }) => {
                     borderRadius: '14px',
                     boxShadow: '0 4px 12px rgba(33, 66, 255, 0.25)',
                     backgroundColor: '#2142FF',
-                    // 터치 피드백 애니메이션
                     '&:active': {
                         transform: 'scale(0.97)',
                         boxShadow: '0 2px 8px rgba(33, 66, 255, 0.2)',

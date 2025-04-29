@@ -31,7 +31,6 @@ export const OrderItemsList = styled(Box)({
     // 높이 조정으로 충분한 스크롤 공간 확보
     height: 'clamp(250px, 40vh, 350px)',
     overflowY: 'auto',
-    touchAction: 'none', // Hammer.js를 위해 추가
     padding: '0',
 
     // 터치 스크롤 최적화
@@ -52,18 +51,13 @@ export const OrderItemsList = styled(Box)({
     }
 });
 
-// 각 주문 항목 - 터치 피드백 추가
+// 각 주문 항목 - 불필요한 터치 효과 제거
 export const OrderItem = styled(Box)({
     display: 'flex',
     alignItems: 'center',
-    // 충분한 터치 영역 확보를 위해 패딩 증가
+    // 충분한 영역 확보를 위해 패딩 유지
     padding: '18px 24px',
     borderBottom: '1px solid #f7f8fc',
-    // 터치 피드백 효과
-    '&:active': {
-        backgroundColor: '#f9faff',
-        transition: 'background-color 0.15s ease'
-    },
     '&:last-child': {
         borderBottom: 'none'
     }
