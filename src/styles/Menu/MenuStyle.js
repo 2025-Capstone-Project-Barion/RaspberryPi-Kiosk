@@ -103,21 +103,21 @@ export const MenuGridWrapper = styled(Box)({
   overflow: 'hidden',
 });
 
-// 메뉴 그리드 컨테이너 - 정확히 2행만 표시되도록 조정
+// 메뉴 그리드 컨테이너 - 너비 축소 및 간격 조정
 export const MenuGridContainer = styled(Box)({
   flex: 1,
-  width: 'calc(100% - 40px)', // 스크롤 버튼 영역을 제외한 너비
+  width: '100%', // 100%로 설정하고 패딩으로 공간 확보
   display: 'grid',
-  gridTemplateColumns: 'repeat(4, 1fr)', // 4열 그리드
-  gap: '16px',
-  gridAutoRows: '1fr', // 행 높이를 비율로 설정
+  gridTemplateColumns: 'repeat(4, 1fr)', // 4열 그리드 유지
+  gap: '12px', // 간격 축소 (16px → 12px)
+  gridAutoRows: '1fr',
   alignItems: 'start',
   overflowY: 'auto',
   overflowX: 'hidden',
-  padding: '0 16px 16px 0',
+  padding: '0 60px 16px 0', // 오른쪽 패딩 증가 (16px → 60px)로 스크롤 버튼 공간 확보
 
   // 스크롤 부드럽게 (강제 스냅 없이)
-  scrollBehavior: 'smooth', // 부드러운 스크롤
+  scrollBehavior: 'smooth',
 
   // 스크롤바 완전히 숨김 (토스 스타일)
   '&::-webkit-scrollbar': {
@@ -127,23 +127,23 @@ export const MenuGridContainer = styled(Box)({
   // Firefox 등에서도 스크롤바 숨김
   scrollbarWidth: 'none',
 
-  // 높이 제한을 통해 정확히 2행만 표시
-  maxHeight: 'calc((100% - 16px) / 2 * 2 + 16px)', // 2행 높이 + 간격
+  // 높이 제한을 통해 정확히 2행만 표시 (간격 변경 반영)
+  maxHeight: 'calc((100% - 12px) / 2 * 2 + 12px)', // 2행 높이 + 간격 12px
 
-  // 메뉴 카드의 행 높이를 viewport 높이의 비율로 설정
+  // 메뉴 카드의 행 높이 조정
   '& .menu-card': {
     height: 'calc((100vh - 200px) / 2)',
   }
 });
 
-// 토스 스타일 스크롤 버튼 컨테이너
+
+// 토스 스타일 스크롤 버튼 컨테이너 - 세로 전체 높이로 변경
 export const ScrollButtonContainer = styled(Box)({
   position: 'absolute',
   right: 0,
-  top: '50%',
-  transform: 'translateY(-50%)',
-  width: '40px', // 버튼 너비
-  height: '100px', // 버튼 컨테이너 높이
+  top: 0,
+  height: '100%', // 전체 높이 차지
+  width: '48px', // 버튼 너비 증가 (40px → 48px)
   display: 'flex',
   flexDirection: 'column',
   zIndex: 2,
@@ -153,12 +153,12 @@ export const ScrollButtonContainer = styled(Box)({
 export const ScrollButton = styled(Button, {
   shouldForwardProp: (prop) => prop !== 'direction' && prop !== 'disabled'
 })(({ direction, disabled }) => ({
-  width: '40px', // 버튼 너비
-  height: '50px', // 버튼 높이 (총 100px의 절반)
+  width: '48px', // 버튼 너비 증가 (40px → 48px)
+  height: 'calc(50% - 1px)', // 각 버튼이 절반 높이 차지 (경계선 고려)
   minWidth: 'unset',
   padding: 0,
   margin: 0,
-  borderRadius: direction === 'up' ? '8px 8px 0 0' : '0 0 8px 8px',
+  borderRadius: direction === 'up' ? '12px 12px 0 0' : '0 0 12px 12px', // 더 둥글게
   backgroundColor: disabled ? '#e8ecfa' : '#2142FF',
   color: disabled ? '#c0c5e0' : 'white',
   border: 'none',
@@ -177,12 +177,22 @@ export const ScrollButton = styled(Button, {
 
   // 버튼 사이 경계선
   borderBottom: direction === 'up' ? '1px solid rgba(255,255,255,0.2)' : 'none',
+
+  // 아이콘 배치 개선
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+
+  // 아이콘 크기 조절
+  '& svg': {
+    fontSize: '1.5rem',
+  },
 }));
 
 // 메뉴 카드 - 높이는 메뉴그리드 컨테이너에서 %로 조정
 export const MenuCard = styled(Box)({
   background: 'white',
-  padding: '16px',
+  padding: '14px', // 패딩 감소 (16px → 14px)
   borderRadius: '16px',
   cursor: 'pointer',
   display: 'flex',
@@ -191,6 +201,7 @@ export const MenuCard = styled(Box)({
   border: '1px solid #f0f2fa',
   position: 'relative',
   overflow: 'hidden',
+  width: 'calc(100% - 2px)', // 너비를 약간 축소하여 더 많은 여백 확보
 
   // 터치 피드백 효과 강화
   '&:active': {
