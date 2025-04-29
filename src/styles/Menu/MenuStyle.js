@@ -119,6 +119,12 @@ export const MenuGridContainer = styled(Box)({
   // 스크롤 부드럽게
   scrollBehavior: 'smooth',
 
+  // Hammer.js 사용을 위한 속성 - 기본 터치 동작 수정
+  // touchAction: 'none'은 Hammer.js에서 설정됨
+  userSelect: 'none',
+  WebkitUserSelect: 'none',
+  MozUserSelect: 'none',
+
   // 스크롤바 완전히 숨김 (토스 스타일)
   '&::-webkit-scrollbar': {
     display: 'none'
@@ -133,6 +139,8 @@ export const MenuGridContainer = styled(Box)({
   // 메뉴 카드의 행 높이를 살짝 키워 스크롤 버튼과 일치
   '& .menu-card': {
     height: 'calc((100vh - 230px) / 2)', // 210px → 230px로 조정하여 높이 증가
+    // 카드 내부 터치 이벤트 처리를 위해 터치 액션 자동으로 설정
+    touchAction: 'auto'
   }
 });
 

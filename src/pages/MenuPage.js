@@ -21,6 +21,8 @@ import {
     CartFooter,
     PurchaseButton
 } from '../styles/Menu/MenuStyle';
+// Hammer.js 라이브러리 추가
+import Hammer from 'hammerjs';
 
 import { categories, getMenuItems } from '../data/menuData';
 import OrderCheckDialog from '../components/Order/OrderCheckDialog';
@@ -39,6 +41,9 @@ const MenuPage = () => {
     const menuGridRef = useRef(null);
     const [canScrollUp, setCanScrollUp] = useState(false);
     const [canScrollDown, setCanScrollDown] = useState(true);
+
+    // Hammer.js 인스턴스 저장용 ref
+    const menuHammerRef = useRef(null);
 
     // 스크롤 타이머 ref 추가 (스크롤 이벤트 성능 최적화용)
     const scrollTimer = useRef(null);
@@ -185,8 +190,6 @@ const MenuPage = () => {
         setCanScrollDown(canScrollMore);
     }, [calculateRowHeight]); // calculateRowHeight를 의존성 배열에 추가
 
-
-
     // 카테고리 변경 시 useEffect - 의존성 배열 수정
     useEffect(() => {
         if (menuGridRef.current) {
@@ -231,6 +234,55 @@ const MenuPage = () => {
         };
     }, [selectedCategory, updateScrollButtonStates]); // updateScrollButtonStates 추가
 
+    // Hammer.js를 이용한 터치 스크롤 구현 - 메뉴 그리드에만 적용
+    useEffect(() => {
+        // 기존 Hammer 인스턴스 정리
+        if (menuHammerRef.current) {
+            menuHammerRef.current.destroy();
+        }
+
+        // 메뉴 그리드에 Hammer.js 적용
+        if (menuGridRef.current) {
+            menuHammerRef.current = new Hammer(menuGridRef.current);
+
+            // 세로 방향 패닝(swipe) 이벤트만 감지하도록 설정
+            menuHammerRef.current.get('pan').set({
+                direction: Hammer.DIRECTION_VERTICAL,
+                threshold: 5 // 감도 조정 (낮을수록 민감)
+            });
+
+            // 패닝 이벤트 핸들러 등록
+            menuHammerRef.current.on('panup pandown', (ev) => {
+                if (!menuGridRef.current) return;
+
+                // 패닝 이벤트가 메뉴 카드에서 시작된 경우는 무시
+                if (ev.target.closest('.menu-card')) return;
+
+                // 스크롤 속도 계수 - 라즈베리파이 환경에 맞게 조정
+                const scrollSpeed = 3.0;
+
+                // 이동 거리에 따라 스크롤 조정 (deltaY가 양수면 아래로, 음수면 위로)
+                menuGridRef.current.scrollTop += ev.deltaY * scrollSpeed * -1;
+
+                // 수동 스크롤 위치 변경 후 버튼 상태 업데이트
+                if (!scrollTimer.current) {
+                    scrollTimer.current = setTimeout(() => {
+                        updateScrollButtonStates();
+                        scrollTimer.current = null;
+                    }, 50);
+                }
+            });
+        }
+
+        // 클린업 함수
+        return () => {
+            if (menuHammerRef.current) {
+                menuHammerRef.current.destroy();
+                menuHammerRef.current = null;
+            }
+        };
+    }, [updateScrollButtonStates]); // updateScrollButtonStates 의존성 추가
+
     // 컴포넌트 마운트 시 초기 스크롤 상태 설정
     useEffect(() => {
         // 컴포넌트 마운트 시 초기화
@@ -254,7 +306,6 @@ const MenuPage = () => {
             }
         };
     }, [updateScrollButtonStates]); // updateScrollButtonStates 추가
-
 
     const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -303,8 +354,13 @@ const MenuPage = () => {
 
                     {/* 메뉴 그리드와 스크롤 버튼 래퍼 */}
                     <MenuGridWrapper>
-                        {/* 메뉴 그리드 컨테이너 - ref 추가 */}
-                        <MenuGridContainer ref={menuGridRef}>
+                        {/* 메뉴 그리드 컨테이너 - ref 추가 및 Hammer.js 적용 */}
+                        <MenuGridContainer
+                            ref={menuGridRef}
+                            sx={{
+                                touchAction: 'none', // Hammer.js 사용 시 기본 터치 동작 비활성화
+                            }}
+                        >
                             {getMenuItems(selectedCategory).map((item) => (
                                 <MenuCard
                                     key={item.id}
@@ -413,7 +469,7 @@ const MenuPage = () => {
                         </IconButton>
                     </CartHeader>
 
-                    {/* 장바구니 목록 */}
+                    {/* 장바구니 목록 - 기존 코드 그대로 유지 */}
                     <CartList>
                         {cart.length === 0 ? (
                             <Box sx={{
