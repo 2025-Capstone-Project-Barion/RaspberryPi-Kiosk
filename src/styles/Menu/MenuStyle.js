@@ -103,20 +103,20 @@ export const MenuGridWrapper = styled(Box)({
   overflow: 'hidden',
 });
 
-// 메뉴 그리드 컨테이너 - 너비 축소 및 간격 조정
+// 메뉴 그리드 컨테이너 - 간격과 여백 조정으로 세련된 UI 구현
 export const MenuGridContainer = styled(Box)({
   flex: 1,
-  width: '100%', // 100%로 설정하고 패딩으로 공간 확보
+  width: '100%',
   display: 'grid',
-  gridTemplateColumns: 'repeat(4, 1fr)', // 4열 그리드 유지
-  gap: '12px', // 간격 축소 (16px → 12px)
+  gridTemplateColumns: 'repeat(4, 1fr)',
+  gap: '32px', // 간격 확대 (12px → 16px) - 더 넓은 공간감
   gridAutoRows: '1fr',
   alignItems: 'start',
   overflowY: 'auto',
   overflowX: 'hidden',
-  padding: '0 60px 16px 0', // 오른쪽 패딩 증가 (16px → 60px)로 스크롤 버튼 공간 확보
+  padding: '0 52px 16px 0', // 오른쪽 패딩 최적화 (60px → 52px)
 
-  // 스크롤 부드럽게 (강제 스냅 없이)
+  // 스크롤 부드럽게
   scrollBehavior: 'smooth',
 
   // 스크롤바 완전히 숨김 (토스 스타일)
@@ -127,179 +127,189 @@ export const MenuGridContainer = styled(Box)({
   // Firefox 등에서도 스크롤바 숨김
   scrollbarWidth: 'none',
 
-  // 높이 제한을 통해 정확히 2행만 표시 (간격 변경 반영)
-  maxHeight: 'calc((100% - 12px) / 2 * 2 + 12px)', // 2행 높이 + 간격 12px
+  // 높이 제한 조정 - 증가된 간격 반영
+  maxHeight: 'calc((100% - 32px) / 2 * 2 + 32px)',
 
-  // 메뉴 카드의 행 높이 조정
+  // 메뉴 카드의 행 높이를 살짝 키워 스크롤 버튼과 일치
   '& .menu-card': {
-    height: 'calc((100vh - 200px) / 2)',
+    height: 'calc((100vh - 230px) / 2)', // 210px → 230px로 조정하여 높이 증가
   }
 });
 
 
-// 토스 스타일 스크롤 버튼 컨테이너 - 세로 전체 높이로 변경
+// 스크롤 버튼 컨테이너 - 위치 정확히 조정
 export const ScrollButtonContainer = styled(Box)({
   position: 'absolute',
   right: 0,
-  top: 0,
-  height: '100%', // 전체 높이 차지
-  width: '48px', // 버튼 너비 증가 (40px → 48px)
+  top: 0, // 상단에 정확히 맞춤
+  height: 'calc(100% - 16px)', // 하단 패딩 고려하여 높이 조정
+  width: '42px', // 너비 약간 증가
   display: 'flex',
   flexDirection: 'column',
+  justifyContent: 'space-between', // 버튼 사이 간격 최대화
   zIndex: 2,
 });
 
-// 스크롤 버튼 스타일 - 토스 스타일로 세로로 긴 버튼
+// 스크롤 버튼 - 메뉴카드와 완벽하게 일치하도록 조정
 export const ScrollButton = styled(Button, {
   shouldForwardProp: (prop) => prop !== 'direction' && prop !== 'disabled'
 })(({ direction, disabled }) => ({
-  width: '48px', // 버튼 너비 증가 (40px → 48px)
-  height: 'calc(50% - 1px)', // 각 버튼이 절반 높이 차지 (경계선 고려)
+  width: '42px',
+  // 메뉴카드와 정확히 같은 높이로 설정
+  height: 'calc((100vh - 230px) / 2)', // 메뉴 카드 높이와 정확히 일치
   minWidth: 'unset',
   padding: 0,
-  margin: 0,
-  borderRadius: direction === 'up' ? '12px 12px 0 0' : '0 0 12px 12px', // 더 둥글게
-  backgroundColor: disabled ? '#e8ecfa' : '#2142FF',
-  color: disabled ? '#c0c5e0' : 'white',
+  margin: 0, // 마진 제거하여 정확한 위치 조정
+  borderRadius: '10px',
+  backgroundColor: disabled ? '#f0f2fa' : '#2142FF',
+  color: disabled ? '#d0d5e8' : 'white',
   border: 'none',
-  boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+  boxShadow: disabled ? 'none' : '0 2px 10px rgba(33, 66, 255, 0.22)',
 
-  // 비활성화 상태에서도 호버 효과 제거
   '&:hover': {
-    backgroundColor: disabled ? '#e8ecfa' : '#2142FF',
+    backgroundColor: disabled ? '#f0f2fa' : '#2142FF',
   },
 
-  // 활성화된 경우에만 클릭 효과
   '&:active': !disabled ? {
     backgroundColor: '#1833d0',
-    transform: 'scale(0.98)',
+    transform: 'scale(0.95)',
+    transition: 'all 0.15s ease',
   } : {},
 
-  // 버튼 사이 경계선
-  borderBottom: direction === 'up' ? '1px solid rgba(255,255,255,0.2)' : 'none',
+  borderBottom: 'none',
 
-  // 아이콘 배치 개선
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
 
-  // 아이콘 크기 조절
   '& svg': {
-    fontSize: '1.5rem',
+    fontSize: '1.3rem',
   },
 }));
 
-// 메뉴 카드 - 높이는 메뉴그리드 컨테이너에서 %로 조정
+// 메뉴 카드 - 전체적인 높이와 비율 최적화
 export const MenuCard = styled(Box)({
   background: 'white',
-  padding: '14px', // 패딩 감소 (16px → 14px)
-  borderRadius: '16px',
+  padding: '16px 16px 20px', // 하단 패딩 증가 (18px → 20px)
+  borderRadius: '14px',
   cursor: 'pointer',
   display: 'flex',
   flexDirection: 'column',
-  boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
-  border: '1px solid #f0f2fa',
+  boxShadow: '0 3px 15px rgba(0,0,0,0.04)',
+  border: '1px solid #f5f7fa',
   position: 'relative',
   overflow: 'hidden',
-  width: 'calc(100% - 2px)', // 너비를 약간 축소하여 더 많은 여백 확보
+  width: '95%',
+  margin: '0 auto',
 
-  // 터치 피드백 효과 강화
   '&:active': {
     transform: 'scale(0.98)',
-    boxShadow: '0 2px 10px rgba(0,0,0,0.04)',
-    // 터치 시 브랜드 컬러로 테두리 변경
+    boxShadow: '0 1px 8px rgba(0,0,0,0.04)',
     borderColor: '#2142FF',
-    // 애니메이션 효과
     transition: 'all 0.15s ease-out'
   },
 
-  // 상단 브랜드 컬러 액센트 추가
   '&::before': {
     content: "''",
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    height: '4px',
+    height: '3px',
     background: '#2142FF',
-    opacity: 0.8
+    opacity: 0.75
   }
 });
 
-// 이미지 컨테이너 - 부모의 비율 유지
+// 이미지 컨테이너 - 높이 확대로 이미지 비율 개선
 export const MenuImageContainer = styled(Box)({
   width: '100%',
-  height: '45%', // 카드의 45% 차지
+  height: '52%', // 높이 대폭 증가 (50% → 52%)
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  marginBottom: '12px',
-  backgroundColor: '#f9faff',
-  borderRadius: '12px',
+  marginBottom: '14px', // 여백 증가 (12px → 14px)
+  backgroundColor: '#f8f9fd', // 배경색 약간 밝게
+  borderRadius: '12px', // 모서리 둥글기 증가
   overflow: 'hidden',
 
   '& img': {
     width: 'auto',
     height: 'auto',
-    maxWidth: '100%',
-    maxHeight: '100%',
+    maxWidth: '80%', // 너비 약간 증가 (78% → 80%)
+    maxHeight: '92%', // 높이 조정 (94% → 92%)
     objectFit: 'contain',
     transition: 'transform 0.2s ease-out'
   },
 
-  // 부모 요소가 active일 때 이미지 축소 효과
   '.menu-card:active & img': {
     transform: 'scale(0.95)'
   }
 });
 
-// 메뉴 정보 컨테이너
+// 메뉴 정보 컨테이너 - 간격 최적화
 export const MenuInfo = styled(Box)({
   display: 'flex',
   flexDirection: 'column',
   flex: 1,
-  justifyContent: 'space-between'
+  justifyContent: 'space-between',
+  gap: '8px',
 });
 
-// 메뉴 이름 - 배리어프리 개선
+// 메뉴 이름 - 토스 스타일로 세련되게 개선
 export const MenuName = styled(Box)({
-  fontSize: '1.25rem',
+  fontSize: '1.38rem', // 크기 약간 증가
   fontWeight: 700,
-  marginBottom: '6px',
-  lineHeight: 1.3,
-  color: '#1A1A1A',
+  marginBottom: '8px', // 여백 감소 (10px → 8px)
+  lineHeight: 1.2,
+  color: '#121212', // 색상 더 진하게 (#101010 → #121212)
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   position: 'relative',
-  paddingLeft: 0
+  paddingLeft: 0,
+  letterSpacing: '-0.02em', // 토스 스타일 자간
 });
 
-// 메뉴 설명 - 배리어프리 개선
+// 메뉴 설명 - 토스 스타일로 세련되게 개선
 export const MenuDescription = styled(Box)({
-  fontSize: '0.9rem',
-  color: '#666',
+  fontSize: '1.05rem',
+  color: '#666', // 색상 약간 어둡게 (#555 → #666)
   marginBottom: '10px',
   display: '-webkit-box',
   WebkitLineClamp: 2,
   WebkitBoxOrient: 'vertical',
   overflow: 'hidden',
-  lineHeight: 1.5,
-  // 높이 고정 - 레이아웃 안정화
-  height: '2.7rem'
+  lineHeight: 1.4,
+  height: '2.9rem',
+  letterSpacing: '-0.01em',
+  fontWeight: 400, // 기본 폰트 무게 명시
 });
 
-// 메뉴 가격 - 왼쪽 정렬
+// 메뉴 가격 - 고급스러운 구분선 추가
 export const MenuPrice = styled(Box)({
-  fontSize: '1.2rem',
+  fontSize: '1.42rem', // 크기 미세 증가 (1.4rem → 1.42rem)
   fontWeight: 700,
   color: '#2142FF',
-  padding: '8px 0',
-  borderTop: '1px dashed #e8ecfb',
-  marginTop: 'auto',
+  padding: '12px 0 0',
+  position: 'relative',
+  marginTop: '4px',
   textAlign: 'left',
   display: 'flex',
   justifyContent: 'flex-start',
+  letterSpacing: '-0.02em',
+
+  // 세련된 그라데이션 구분선 유지
+  '&::before': {
+    content: "''",
+    position: 'absolute',
+    top: 0,
+    left: '0',
+    right: '0',
+    height: '1px',
+    background: 'linear-gradient(90deg, rgba(33, 66, 255, 0.2), rgba(33, 66, 255, 0.05) 70%, transparent)',
+    borderRadius: '1px',
+  }
 });
 
 // 장바구니 컨테이너 - 너비 증가 및 배리어프리 개선
