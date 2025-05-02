@@ -8,7 +8,6 @@ import logoImage from '../assets/Image/Logo/logo.png';
 import MicIcon from '@mui/icons-material/Mic';
 import TouchAppIcon from '@mui/icons-material/TouchApp';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import WavesIcon from '@mui/icons-material/Waves';
 
 // 배경 애니메이션 파티클 데이터
 const PARTICLES = 35; // 파티클 수량 증가
@@ -42,7 +41,7 @@ const FrontPage = () => {
         });
     }, []);
 
-    // 파티클 애니메이션 - 더 뚜렷하고 다양하게
+    // 파티클 애니메이션 - 더 가볍게 최적화
     const particleSprings = useSprings(
         PARTICLES,
         particles.map(particle => ({
@@ -60,14 +59,14 @@ const FrontPage = () => {
                     config: { tension: 80, friction: 10 }
                 });
 
-                // 계속 움직이는 애니메이션
+                // 계속 움직이는 애니메이션 - 성능 최적화
                 while (true) {
                     await next({
-                        x: particle.x + (Math.random() * 15 - 7.5), // 더 큰 움직임
+                        x: particle.x + (Math.random() * 15 - 7.5),
                         y: particle.y + (Math.random() * 15 - 7.5),
-                        opacity: 0.1 + Math.random() * 0.4, // 더 큰 투명도 변화
-                        scale: 0.8 + Math.random() * 0.4, // 크기도 변화
-                        config: { duration: 4000 + Math.random() * 4000 }
+                        opacity: 0.1 + Math.random() * 0.4,
+                        scale: 0.8 + Math.random() * 0.4,
+                        config: { duration: 6000 + Math.random() * 4000 } // 더 길게 설정해 부드러움 증가
                     });
                 }
             },
@@ -84,33 +83,11 @@ const FrontPage = () => {
         },
     });
 
-    // 좌측 섹션 배경 물결 효과
-    const waveSpring = useSpring({
-        from: { transform: 'translateY(0px)' },
-        to: async (next) => {
-            while (true) {
-                await next({ transform: 'translateY(-15px)', config: { duration: 3000 } });
-                await next({ transform: 'translateY(15px)', config: { duration: 3000 } });
-            }
-        },
-    });
-
-    // 로고 섹션 애니메이션
+    // 로고 섹션 애니메이션 - 정적인 등장만
     const logoSpring = useSpring({
-        from: { opacity: 0, transform: 'translateY(-50px)' },
+        from: { opacity: 0, transform: 'translateY(-30px)' },
         to: { opacity: 1, transform: 'translateY(0)' },
         config: { tension: 120, friction: 14 },
-    });
-
-    // 로고 부드러운 움직임 애니메이션
-    const logoFloating = useSpring({
-        from: { transform: 'translateY(0px)' },
-        to: async (next) => {
-            while (true) {
-                await next({ transform: 'translateY(-5px) rotate(2deg)', config: { duration: 2500 } });
-                await next({ transform: 'translateY(5px) rotate(-2deg)', config: { duration: 2500 } });
-            }
-        },
     });
 
     // 제목 애니메이션
@@ -129,25 +106,14 @@ const FrontPage = () => {
         config: { tension: 100, friction: 14 },
     });
 
-    // 우측 배경 물결 효과
-    const rightWaveSpring = useSpring({
-        from: { transform: 'translateY(0px)' },
-        to: async (next) => {
-            while (true) {
-                await next({ transform: 'translateY(15px)', config: { duration: 3500 } });
-                await next({ transform: 'translateY(-15px)', config: { duration: 3500 } });
-            }
-        },
-    });
-
-    // 옵션 카드 애니메이션
+    // 옵션 카드 애니메이션 - 성능 최적화
     const optionSprings = useSprings(
         2, // 2개의 카드
         [0, 1].map(i => ({
-            from: { opacity: 0, transform: 'translateX(50px)' },
-            to: { opacity: 1, transform: 'translateX(0)' },
-            delay: 400 + i * 150,
-            config: { tension: 120, friction: 14 },
+            from: { opacity: 0, transform: 'translateY(30px)' }, // X에서 Y로 변경하여 최적화
+            to: { opacity: 1, transform: 'translateY(0)' },
+            delay: 300 + i * 150, // 딜레이 조정
+            config: { mass: 1, tension: 100, friction: 14 }, // 더 부드럽게 조정
         }))
     );
 
@@ -155,7 +121,7 @@ const FrontPage = () => {
     const buttonSpring = useSpring({
         from: { opacity: 0, scale: 0.9 },
         to: { opacity: 1, scale: 1 },
-        delay: 700,
+        delay: 600, // 딜레이 조정
         config: { tension: 120, friction: 14 },
     });
 
@@ -175,17 +141,6 @@ const FrontPage = () => {
             while (true) {
                 await next({ transform: 'translateX(8px)', config: { duration: 1000 } });
                 await next({ transform: 'translateX(0px)', config: { duration: 1000 } });
-            }
-        },
-    });
-
-    // 물결 아이콘 애니메이션
-    const wavesIconSpring = useSpring({
-        from: { opacity: 0.5 },
-        to: async (next) => {
-            while (true) {
-                await next({ opacity: 0.8, config: { duration: 1500 } });
-                await next({ opacity: 0.5, config: { duration: 1500 } });
             }
         },
     });
@@ -227,19 +182,11 @@ const FrontPage = () => {
             <div className={styles.content}>
                 {/* 좌측 브랜드 섹션 */}
                 <div className={styles.brandSection}>
-                    {/* 배경 물결 효과 */}
-                    <animated.div className={styles.backgroundWave} style={waveSpring}>
-                        <animated.div className={styles.wavesIconContainer} style={wavesIconSpring}>
-                            <WavesIcon className={styles.wavesIcon} />
-                        </animated.div>
-                    </animated.div>
-
                     <animated.div style={logoSpring} className={styles.logoContainer}>
-                        <animated.img
+                        <img
                             src={logoImage}
                             alt="Barion 로고"
                             className={styles.logo}
-                            style={logoFloating}
                         />
                     </animated.div>
                     <animated.div style={titleSpring} className={styles.titleContainer}>
@@ -251,8 +198,8 @@ const FrontPage = () => {
 
                     <animated.div style={descriptionSpring} className={styles.descriptionContainer}>
                         <p className={styles.description}>
-                            누구나 편리하게 이용할 수 있는<br />
-                            <span className={styles.highlightText}>음성 인식 기반 키오스크</span>를<br />
+                            누구나 편리하고 스마트하게 이용할 수 있는<br />
+                            <span className={styles.highlightText}>스마트 배리어프리 키오스크</span>를<br />
                             지금 경험해보세요
                         </p>
                     </animated.div>
@@ -260,12 +207,7 @@ const FrontPage = () => {
 
                 {/* 우측 주문 섹션 */}
                 <div className={styles.orderSection}>
-                    {/* 우측 배경 물결 효과 */}
-                    <animated.div className={styles.rightBackgroundWave} style={rightWaveSpring}></animated.div>
-
                     <div className={styles.optionsContainer}>
-                        <h2 className={styles.optionsTitle}>주문 방법</h2>
-
                         {/* 음성 주문 안내 - 내용 변경 */}
                         <animated.div style={optionSprings[0]} className={styles.optionCard}>
                             <div className={styles.iconWrapper}>
@@ -273,8 +215,8 @@ const FrontPage = () => {
                             </div>
                             <div className={styles.optionText}>
                                 <h3 className={styles.optionTitle}>음성으로 주문하기</h3>
-                                <p><span className={styles.highlight}>"Hey, Barion"</span>이라고 부르면</p>
-                                <p>Barion이 음성 명령을 인식합니다</p>
+                                <p><span className={styles.highlight}>"Hey, Barion"</span>으로</p>
+                                <p>음성 인식 시스템을 호출합니다</p>
                             </div>
                         </animated.div>
 

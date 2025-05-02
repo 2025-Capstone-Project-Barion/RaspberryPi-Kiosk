@@ -47,7 +47,7 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
   z-index: 2;
 }
 
-/* 좌측 브랜드 섹션 - 개선 */
+/* 좌측 브랜드 섹션 - 개선 및 단순화 */
 .brandSection {
   position: relative;
   flex: 1;
@@ -59,30 +59,7 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
   overflow: hidden;
 }
 
-/* 배경 물결 효과 */
-.backgroundWave {
-  position: absolute;
-  width: 150%;
-  height: 150%;
-  top: -25%;
-  left: -25%;
-  background: radial-gradient(ellipse at center, rgba(62, 73, 240, 0.2) 0%, transparent 70%);
-  z-index: -1;
-  pointer-events: none;
-}
-
-.wavesIconContainer {
-  position: absolute;
-  top: 20%;
-  left: 30%;
-  opacity: 0.5;
-}
-
-.wavesIcon {
-  font-size: 500px !important;
-  color: rgba(255, 255, 255, 0.03);
-  transform: rotate(45deg);
-}
+/* 물결 효과 제거함 */
 
 .logoContainer {
   margin-bottom: 2rem;
@@ -128,16 +105,7 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
   position: relative;
 }
 
-.tagline::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 60px;
-  height: 4px;
-  background-color: rgba(255, 255, 255, 0.7);
-  border-radius: 2px;
-}
+/* 밑줄 제거 */
 
 .descriptionContainer {
   margin-top: 2rem;
@@ -173,17 +141,7 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
   border-left: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* 우측 배경 물결 효과 */
-.rightBackgroundWave {
-  position: absolute;
-  width: 120%;
-  height: 120%;
-  top: -10%;
-  right: -10%;
-  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-  z-index: 0;
-  pointer-events: none;
-}
+/* 물결 효과 제거함 */
 
 .optionsContainer {
   width: 100%;
@@ -193,12 +151,7 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
   z-index: 2;
 }
 
-.optionsTitle {
-  font-size: 2.2rem;
-  font-weight: 600;
-  margin: 0 0 1.5rem 0;
-  text-align: center;
-}
+/* 주문 방법 제목 제거 */
 
 .optionCard {
   display: flex;
@@ -271,7 +224,7 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
   z-index: 2;
 }
 
-/* 새롭게 디자인된 주문 버튼 - 더 강조 */
+/* 주문 버튼 - 개선된 그라데이션 */
 .orderButton {
   position: relative;
   display: flex;
@@ -282,7 +235,7 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
   font-size: 1.9rem;
   font-weight: 600;
   color: white;
-  background: linear-gradient(135deg, #3e49f0 0%, #2b34c3 100%);
+  background: linear-gradient(135deg, #3242e0 0%, #2b34c3 100%); /* 그라데이션 개선 */
   border: none;
   border-radius: 18px;
   cursor: pointer;
@@ -302,8 +255,8 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.15), transparent);
+  height: 40%; /* 위쪽만 하이라이트 */
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)); /* 그라데이션 개선 */
   pointer-events: none;
 }
 
@@ -354,11 +307,6 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
 
   .titleContainer {
     text-align: center;
-  }
-
-  .tagline::after {
-    left: 50%;
-    transform: translateX(-50%);
   }
 
   .orderSection {
