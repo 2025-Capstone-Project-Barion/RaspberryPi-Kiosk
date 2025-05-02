@@ -203,9 +203,9 @@ const FrontPage = () => {
 
                     <animated.div style={descriptionSpring} className={styles.descriptionContainer}>
                         <p className={styles.description}>
-                            모든 사용자를 고려한<br />
-                            <span className={styles.highlightText}>배리어프리 키오스크 플랫폼</span>으로<br />
-                            더 스마트한 경험을 시작하세요
+                            누구나 편리하고 스마트하게 이용할 수 있는<br />
+                            <span className={styles.highlightText}>스마트 배리어프리 키오스크</span>를<br />
+                            지금 경험해보세요
                         </p>
                     </animated.div>
                 </div>

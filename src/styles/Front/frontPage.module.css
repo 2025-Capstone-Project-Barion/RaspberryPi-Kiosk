@@ -87,10 +87,12 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
   letter-spacing: -1px;
   background: linear-gradient(to right, #ffffff, #d0d4ff);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 0 5px 30px rgba(0, 0, 0, 0.15);
 }
 
+/* 태그라인 스타일과 밑줄 복원 */
 .taglineContainer {
   position: relative;
   overflow: hidden;
@@ -105,8 +107,7 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
   position: relative;
 }
 
-/* 밑줄 제거 */
-
+/* 설명 텍스트 스타일 롤백 */
 .descriptionContainer {
   margin-top: 2rem;
   position: relative;
@@ -120,13 +121,13 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
   max-width: 500px;
 }
 
+/* 하이라이트 텍스트 스타일 - 더 눈에 띄는 밑줄 */
 .highlightText {
   font-weight: 600;
-  background: linear-gradient(to right, #ffffff, #d0d4ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  position: relative;
+  border-bottom: 3px solid rgba(255, 255, 255, 0.8); /* 더 두껍고 불투명한 밑줄 */
   padding-bottom: 2px;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); /* 텍스트에 약간의 글로우 효과 */
 }
 
 /* 우측 주문 섹션 - 개선 */
