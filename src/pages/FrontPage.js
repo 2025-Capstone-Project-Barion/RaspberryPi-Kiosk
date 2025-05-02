@@ -221,7 +221,7 @@ const FrontPage = () => {
                             <div className={styles.optionText}>
                                 <h3 className={styles.optionTitle}>음성 인식으로 주문</h3>
                                 <p><span className={styles.wakeWord}>"Hey, Barion"</span>으로</p>
-                                <p>음성 명령을 시작하세요</p>
+                                <p>Barion AI 비서를 호출하세요</p>
                             </div>
                         </animated.div>
 
@@ -232,8 +232,8 @@ const FrontPage = () => {
                             </div>
                             <div className={styles.optionText}>
                                 <h3 className={styles.optionTitle}>터치로 직접 주문</h3>
-                                <p>화면을 터치하여</p>
-                                <p>원하는 메뉴를 선택하세요</p>
+                                <p>기존 방식이에요</p>
+                                <p>터치로 간편하게 주문하세요</p>
                             </div>
                         </animated.div>
                     </div>

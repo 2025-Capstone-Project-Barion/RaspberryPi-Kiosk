@@ -224,12 +224,13 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
   font-weight: 700;
   font-size: 1.3rem;
   padding: 2px 8px;
-  margin: 0 -2px;
+  margin-right: 6px; /* 오른쪽 여백 추가 */
   border-radius: 4px;
   background: linear-gradient(135deg, #4147db 40%, #323cc4 100%);
   box-shadow: 0 0 10px rgba(65, 71, 219, 0.5);
   position: relative;
   animation: pulse 2s infinite;
+  display: inline-block; /* 인라인 블록으로 변경 */
 }
 
 /* 펄스 애니메이션 */
