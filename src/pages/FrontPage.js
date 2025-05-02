@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSpring, useSprings, animated } from '@react-spring/web';
+import { useSpring, useSprings, animated, easings } from '@react-spring/web';
 import styles from '../styles/Front/frontPage.module.css';
 
 // 로고 및 아이콘
 import logoImage from '../assets/Image/Logo/logo.png';
 import MicIcon from '@mui/icons-material/Mic';
 import TouchAppIcon from '@mui/icons-material/TouchApp';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 // 배경 애니메이션 파티클 데이터
-const PARTICLES = 35; // 파티클 수량 증가
+const PARTICLES = 35;
 const generateParticles = () => {
     return Array.from({ length: PARTICLES }, () => ({
         x: Math.random() * 100,
         y: Math.random() * 100,
-        size: 3 + Math.random() * 8, // 크기 증가
-        opacity: 0.15 + Math.random() * 0.3, // 투명도 조정
+        size: 3 + Math.random() * 8,
+        opacity: 0.15 + Math.random() * 0.3,
     }));
 };
 
@@ -41,7 +41,7 @@ const FrontPage = () => {
         });
     }, []);
 
-    // 파티클 애니메이션 - 더 가볍게 최적화
+    // 파티클 애니메이션
     const particleSprings = useSprings(
         PARTICLES,
         particles.map(particle => ({
@@ -66,7 +66,7 @@ const FrontPage = () => {
                         y: particle.y + (Math.random() * 15 - 7.5),
                         opacity: 0.1 + Math.random() * 0.4,
                         scale: 0.8 + Math.random() * 0.4,
-                        config: { duration: 6000 + Math.random() * 4000 } // 더 길게 설정해 부드러움 증가
+                        config: { duration: 6000 + Math.random() * 4000 }
                     });
                 }
             },
@@ -83,7 +83,7 @@ const FrontPage = () => {
         },
     });
 
-    // 로고 섹션 애니메이션 - 정적인 등장만
+    // 로고 섹션 애니메이션
     const logoSpring = useSpring({
         from: { opacity: 0, transform: 'translateY(-30px)' },
         to: { opacity: 1, transform: 'translateY(0)' },
@@ -106,14 +106,19 @@ const FrontPage = () => {
         config: { tension: 100, friction: 14 },
     });
 
-    // 옵션 카드 애니메이션 - 성능 최적화
+    // 옵션 카드 애니메이션 - 부드러운 등장 개선
     const optionSprings = useSprings(
-        2, // 2개의 카드
+        2,
         [0, 1].map(i => ({
-            from: { opacity: 0, transform: 'translateY(30px)' }, // X에서 Y로 변경하여 최적화
+            from: { opacity: 0, transform: 'translateY(30px)' },
             to: { opacity: 1, transform: 'translateY(0)' },
-            delay: 300 + i * 150, // 딜레이 조정
-            config: { mass: 1, tension: 100, friction: 14 }, // 더 부드럽게 조정
+            delay: 300 + i * 150,
+            config: {
+                tension: 65,  // 낮은 tension으로 더 부드럽게
+                friction: 12,  // 적당한 마찰력
+                mass: 1.2,    // 더 무거운 질량감
+                easing: easings.easeOutQuart // 자연스러운 감속 이징 적용
+            },
         }))
     );
 
@@ -121,26 +126,26 @@ const FrontPage = () => {
     const buttonSpring = useSpring({
         from: { opacity: 0, scale: 0.9 },
         to: { opacity: 1, scale: 1 },
-        delay: 600, // 딜레이 조정
+        delay: 600,
         config: { tension: 120, friction: 14 },
     });
 
     // 버튼 터치 애니메이션
     const buttonHoverSpring = useSpring({
-        scale: activeTouch === 'order_button' ? 0.96 : 1,
+        scale: activeTouch === 'order_button' ? 0.97 : 1,
         boxShadow: activeTouch === 'order_button'
-            ? '0 4px 15px rgba(62, 73, 240, 0.6)'
-            : '0 8px 30px rgba(62, 73, 240, 0.4)',
+            ? '0 4px 20px rgba(30, 36, 162, 0.7)'
+            : '0 8px 35px rgba(62, 73, 240, 0.5)',
         config: { tension: 300, friction: 20 },
     });
 
-    // 화살표 애니메이션
+    // 화살표 애니메이션 (더 큰 움직임)
     const arrowSpring = useSpring({
         from: { transform: 'translateX(0)' },
         to: async (next) => {
             while (true) {
-                await next({ transform: 'translateX(8px)', config: { duration: 1000 } });
-                await next({ transform: 'translateX(0px)', config: { duration: 1000 } });
+                await next({ transform: 'translateX(12px)', config: { duration: 1000, easing: easings.easeInOutQuad } });
+                await next({ transform: 'translateX(0px)', config: { duration: 1000, easing: easings.easeInOutQuad } });
             }
         },
     });
@@ -163,7 +168,7 @@ const FrontPage = () => {
 
     return (
         <animated.div style={pageTransition} className={styles.container}>
-            {/* 배경 파티클 - 더 눈에 띄게 */}
+            {/* 배경 파티클 */}
             {particleSprings.map((props, i) => (
                 <animated.div
                     key={i}
@@ -198,9 +203,9 @@ const FrontPage = () => {
 
                     <animated.div style={descriptionSpring} className={styles.descriptionContainer}>
                         <p className={styles.description}>
-                            누구나 편리하고 스마트하게 이용할 수 있는<br />
-                            <span className={styles.highlightText}>스마트 배리어프리 키오스크</span>를<br />
-                            지금 경험해보세요
+                            모든 사용자를 고려한<br />
+                            <span className={styles.highlightText}>배리어프리 키오스크 플랫폼</span>으로<br />
+                            더 스마트한 경험을 시작하세요
                         </p>
                     </animated.div>
                 </div>
@@ -208,7 +213,7 @@ const FrontPage = () => {
                 {/* 우측 주문 섹션 */}
                 <div className={styles.orderSection}>
                     <div className={styles.optionsContainer}>
-                        {/* 음성 주문 안내 - 내용 변경 */}
+                        {/* 음성 주문 안내 */}
                         <animated.div style={optionSprings[0]} className={styles.optionCard}>
                             <div className={styles.iconWrapper}>
                                 <MicIcon className={styles.optionIcon} />
@@ -220,7 +225,7 @@ const FrontPage = () => {
                             </div>
                         </animated.div>
 
-                        {/* 터치 주문 안내 - 내용 변경 */}
+                        {/* 터치 주문 안내 */}
                         <animated.div style={optionSprings[1]} className={styles.optionCard}>
                             <div className={styles.iconWrapper}>
                                 <TouchAppIcon className={styles.optionIcon} />
@@ -233,7 +238,7 @@ const FrontPage = () => {
                         </animated.div>
                     </div>
 
-                    {/* 주문 버튼 - 크게 강조 */}
+                    {/* 주문 버튼 - 개선된 디자인 */}
                     <animated.div style={buttonSpring} className={styles.buttonContainer}>
                         <animated.button
                             className={styles.orderButton}
@@ -244,7 +249,7 @@ const FrontPage = () => {
                         >
                             <span className={styles.buttonText}>주문하러 가기</span>
                             <animated.div className={styles.arrowIcon} style={arrowSpring}>
-                                <ArrowForwardIcon />
+                                <NavigateNextIcon className={styles.nextIcon} />
                             </animated.div>
                         </animated.button>
                     </animated.div>
