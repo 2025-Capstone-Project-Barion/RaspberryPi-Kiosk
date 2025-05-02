@@ -105,6 +105,19 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
   opacity: 0.9;
   margin: 0;
   position: relative;
+  display: inline-block; /* 인라인 블록으로 변경하여 텍스트 너비만큼만 밑줄 표시 */
+}
+
+/* 태그라인 밑줄에 그라데이션 효과 추가 */
+.tagline::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.2));
+  border-radius: 2px;
 }
 
 /* 설명 텍스트 스타일 롤백 */
@@ -122,13 +135,13 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
 }
 
 /* 하이라이트 텍스트 스타일 - 더 눈에 띄는 밑줄 */
-.highlightText {
+/* .highlightText {
   font-weight: 600;
   position: relative;
-  border-bottom: 3px solid rgba(255, 255, 255, 0.8); /* 더 두껍고 불투명한 밑줄 */
+  border-bottom: 3px solid rgba(255, 255, 255, 0.8); 
   padding-bottom: 2px;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); /* 텍스트에 약간의 글로우 효과 */
-}
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); 
+} */
 
 /* 우측 주문 섹션 - 개선 */
 .orderSection {
