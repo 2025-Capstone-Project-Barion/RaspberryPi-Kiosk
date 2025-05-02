@@ -73,13 +73,31 @@ const FrontPage = () => {
         }))
     );
 
-    // 페이지 전환 애니메이션
+    // 개선된 페이지 전환 애니메이션
+    // 페이지 전환 애니메이션 완전 개선
     const pageTransition = useSpring({
+        // 불투명도 변화
         opacity: isLeaving ? 0 : 1,
-        transform: isLeaving ? 'scale(1.05) translateX(-5%)' : 'scale(1) translateX(0%)',
-        config: { tension: 200, friction: 26 },
+        // 왼쪽으로 사라지는 슬라이드 효과 (X축으로 -30% 이동)
+        transform: isLeaving
+            ? 'translateX(-30%) scale(0.92)'
+            : 'translateX(0%) scale(1)',
+        // 부드러운 애니메이션을 위한 설정
+        config: {
+            // 자연스러운 이징 적용
+            easing: easings.easeInOutCubic,
+            // 자연스러운 애니메이션을 위한 설정값 조정
+            tension: 180,
+            friction: 24,
+            // 적절한 애니메이션 시간
+            duration: 450
+        },
+        // 애니메이션이 끝난 후 페이지 이동
         onRest: () => {
-            if (isLeaving) navigate('/MenuPage');
+            if (isLeaving) {
+                // 애니메이션이 완료된 후 페이지 이동
+                navigate('/MenuPage');
+            }
         },
     });
 
