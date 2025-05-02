@@ -91,11 +91,12 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   text-align: left;
-  transition: transform 0.3s ease;
+  transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-.optionCard:hover {
-  transform: translateY(-5px);
+.optionCard:active {
+  transform: scale(0.98);
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .iconWrapper {
@@ -142,6 +143,10 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
   text-transform: none !important;
 }
 
+.orderButton:active {
+  transform: scale(0.98) !important;
+}
+
 /* 반응형 스타일 */
 @media (max-height: 700px) {
   .content {
@@ -181,5 +186,20 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
   .iconWrapper {
     margin-right: 0;
     margin-bottom: 1rem;
+  }
+}
+
+/* 터치 디바이스 최적화 스타일 추가 */
+@media (pointer: coarse) {
+  /* 터치 디바이스용 스타일 */
+  .optionCard,
+  .orderButton {
+    cursor: default; /* 포인터 커서 제거 */
+  }
+
+  /* 필요한 경우 탭 타겟 크기 증가 */
+  .iconWrapper {
+    min-width: 60px;
+    min-height: 60px;
   }
 }
