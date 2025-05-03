@@ -32,9 +32,8 @@ export const LogoContainer = styled(Box)({
 export const CategoryContainer = styled(Box)({
     display: 'flex',
     flexGrow: 1,
-    justifyContent: 'flex-end', // 오른쪽 정렬로 변경
-    gap: '42px',
-    paddingLeft: '40px', // 로고와의 간격 확보
+    justifyContent: 'center', // 오른쪽 정렬로 변경
+    gap: '30px'
 });
 
 // 카테고리 버튼
