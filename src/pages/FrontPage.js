@@ -76,29 +76,24 @@ const FrontPage = () => {
     // 개선된 페이지 전환 애니메이션
     // 페이지 전환 애니메이션 완전 개선
     const pageTransition = useSpring({
-        // 불투명도 변화
         opacity: isLeaving ? 0 : 1,
-        // 왼쪽으로 사라지는 슬라이드 효과 (X축으로 -30% 이동)
         transform: isLeaving
-            ? 'translateX(-30%) scale(0.92)'
-            : 'translateX(0%) scale(1)',
-        // 부드러운 애니메이션을 위한 설정
+            ? 'translateY(10px) scale(0.98)'
+            : 'translateY(0px) scale(1)',
         config: {
-            // 자연스러운 이징 적용
             easing: easings.easeInOutCubic,
-            // 자연스러운 애니메이션을 위한 설정값 조정
-            tension: 180,
-            friction: 24,
-            // 적절한 애니메이션 시간
-            duration: 450
+            duration: 1000,
         },
-        // 애니메이션이 끝난 후 페이지 이동
         onRest: () => {
             if (isLeaving) {
-                // 애니메이션이 완료된 후 페이지 이동
                 navigate('/MenuPage');
             }
         },
+    });
+
+    const overlaySpring = useSpring({
+        opacity: isLeaving ? 1 : 0,
+        config: { duration: 600 },
     });
 
     // 로고 섹션 애니메이션
@@ -186,6 +181,7 @@ const FrontPage = () => {
 
     return (
         <animated.div style={pageTransition} className={styles.container}>
+            <animated.div className={styles.overlay} style={overlaySpring} />
             {/* 배경 파티클 */}
             {particleSprings.map((props, i) => (
                 <animated.div
