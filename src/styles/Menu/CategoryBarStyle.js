@@ -43,7 +43,7 @@ export const CategoryButton = styled(Button, {
 })(({ active }) => ({
     fontSize: '1.25rem', // 폰트 사이즈 키움
     fontWeight: active ? 700 : 500,
-    color: active ? '#2142FF' : '#666',
+    color: active ? '#2142FF' : '#555', // 비활성 상태 텍스트 색상 약간 진하게
     padding: '12px 24px',
     minWidth: '120px',
     borderRadius: '16px', // 더 둥근 모서리
@@ -51,10 +51,10 @@ export const CategoryButton = styled(Button, {
     border: '2px solid transparent', // 추가: 모든 버튼에 투명 테두리 기본 적용
 
     // 기본 스타일 - 모든 버튼에 적용
-    background: active ? '#e0e7ff' : '#f8f9fb',  // 더 뚜렷한 배경색 차이
+    background: active ? '#e0e7ff' : '#f0f0f8',  // 더 뚜렷한 배경색 차이
     boxShadow: active
         ? '0 6px 16px rgba(33, 66, 255, 0.22)'  // 그림자 강화
-        : '0 2px 8px rgba(0, 0, 0, 0.05)',
+        : '0 4px 12px rgba(0, 0, 0, 0.08)',     // 비활성 버튼 그림자 강화
     position: 'relative',
 
     // 활성화된 버튼 스타일
