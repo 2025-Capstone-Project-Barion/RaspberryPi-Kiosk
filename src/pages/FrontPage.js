@@ -74,27 +74,44 @@ const FrontPage = () => {
     );
 
     // 개선된 페이지 전환 애니메이션
-    // 페이지 전환 애니메이션 완전 개선
     const pageTransition = useSpring({
+        // 불투명도 변화
         opacity: isLeaving ? 0 : 1,
+        // 왼쪽으로 사라지는 슬라이드 효과 (X축으로 -20% 이동, 더 자연스러운 이동)
         transform: isLeaving
-            ? 'translateY(10px) scale(0.98)'
-            : 'translateY(0px) scale(1)',
+            ? 'translateX(-20%) scale(0.95)'
+            : 'translateX(0%) scale(1)',
+        // 부드러운 애니메이션을 위한 설정
         config: {
-            easing: easings.easeInOutCubic,
-            duration: 1000,
+            // 더 부드러운 이징 적용
+            easing: easings.easeOutQuint,
+            // 더 낮은 tension과 friction으로 부드러움 증가
+            tension: 80, // 낮은 값으로 변경
+            friction: 16, // 적절한 마찰력
+            mass: 1.3, // 질량감 추가
+            // 애니메이션 시간을 더 늘려 여유롭게
+            duration: 700 // 더 긴 시간으로 설정
         },
+        // 애니메이션이 거의 완료될 때(95%) 페이지 이동 시작하여 부드러운 전환
         onRest: () => {
             if (isLeaving) {
-                navigate('/MenuPage');
+                setTimeout(() => {
+                    navigate('/MenuPage');
+                }, 50); // 약간의 지연 추가
             }
         },
     });
 
+    // 오버레이 애니메이션 개선 - 검은색 배경으로 자연스러운 전환
     const overlaySpring = useSpring({
-        opacity: isLeaving ? 1 : 0,
-        config: { duration: 600 },
+        opacity: isLeaving ? 0.95 : 0,
+        // 부드러운 이징 적용
+        config: {
+            easing: easings.easeInOutCubic,
+            duration: 700
+        },
     });
+
 
     // 로고 섹션 애니메이션
     const logoSpring = useSpring({

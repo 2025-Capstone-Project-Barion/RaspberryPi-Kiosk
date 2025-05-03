@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { useSpring, animated, easings, useTrail } from '@react-spring/web';
 import { Typography, Box, IconButton, ListItem, Badge } from '@mui/material';
 import { Add, Remove, Delete, ShoppingCart, KeyboardArrowUp, KeyboardArrowDown } from '@mui/icons-material';
 import {
@@ -52,6 +53,58 @@ const MenuPage = () => {
     // 스크롤 타이머 ref 추가 (스크롤 이벤트 성능 최적화용)
     const scrollTimer = useRef(null);
 
+    // 입장 애니메이션을 위한 상태 추가
+    const [isEntering, setIsEntering] = useState(true);
+
+    // 카테고리 애니메이션 - 순차적 등장
+    const categoryTrail = useTrail(categories.length, {
+        from: { opacity: 0, transform: 'translateY(-10px)' },
+        to: { opacity: 1, transform: 'translateY(0)' },
+        config: { tension: 170, friction: 26 },
+        delay: 200, // 페이지 등장 후 약간 지연
+    });
+
+    // 선택된 카테고리에 따라 메뉴 아이템 애니메이션
+    const menuItems = getMenuItems(selectedCategory);
+    const menuTrail = useTrail(menuItems.length, {
+        from: {
+            opacity: 0,
+            transform: 'translateY(20px)'
+        },
+        to: {
+            opacity: 1,
+            transform: 'translateY(0)'
+        },
+        config: {
+            tension: 100,
+            friction: 18,
+            mass: 1.1
+        },
+        delay: 300, // 카테고리 애니메이션 후 등장
+    });
+
+    // 페이지 입장 애니메이션
+    const pageEntrance = useSpring({
+        from: {
+            opacity: 0,
+            transform: 'translateX(3%) scale(0.98)'
+        },
+        to: {
+            opacity: 1,
+            transform: 'translateX(0%) scale(1)'
+        },
+        config: {
+            tension: 60,
+            friction: 16,
+            mass: 1,
+            duration: 700,
+            easing: easings.easeOutQuart
+        },
+        onRest: () => {
+            setIsEntering(false);
+        }
+    });
+
     // 행의 높이를 계산하는 함수 - useCallback으로 메모이제이션
     const calculateRowHeight = useCallback(() => {
         // 카드 높이 (CSS와 동일하게 맞춤)
@@ -64,10 +117,12 @@ const MenuPage = () => {
 
     // 카드 터치 시작 시 활성화 상태 설정
     const handleCardTouchStart = (id, e) => {
+        // 애니메이션 진행 중에는 상호작용 방지
+        if (isEntering) return;
+
         if (e) {
             // 드래그 시작 위치 저장
             setDraggingFromCard(true);
-            // 이벤트 전파 중지하지 않음 (드래그가 가능하도록)
         }
         setActiveCardId(id);
     };
@@ -84,8 +139,11 @@ const MenuPage = () => {
         setActiveCardId(null);
     };
 
-    // 카드 클릭 핸들러 - 터치 외 마우스 클릭 지원
+    // 다른 이벤트 핸들러에도 적용
     const handleCardClick = (item, e) => {
+        // 애니메이션 진행 중에는 상호작용 방지
+        if (isEntering) return;
+
         if (e) {
             // 모바일에서 터치 이벤트와 클릭 이벤트 중복 방지
             if ('ontouchstart' in window) {
@@ -373,336 +431,344 @@ const MenuPage = () => {
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
     return (
-        <AppContainer>
-            {/* 전체 레이아웃 구조 변경 - 좌측(카테고리+메뉴), 우측(장바구니) 2단 구조 */}
-            <Box sx={{
-                display: 'flex',
-                width: '100%',
-                height: '100%',
-                gap: '24px'
-            }}>
-                {/* 왼쪽 영역: 카테고리 + 메뉴 */}
+        <animated.div style={pageEntrance}>
+            <AppContainer>
+                {/* 전체 레이아웃 구조 변경 - 좌측(카테고리+메뉴), 우측(장바구니) 2단 구조 */}
                 <Box sx={{
                     display: 'flex',
-                    flexDirection: 'column',
-                    width: 'calc(100% - 400px)', // 장바구니 너비를 늘리기 위해 메뉴 영역 축소
+                    width: '100%',
+                    height: '100%',
                     gap: '24px'
                 }}>
-                    {/* Logo & Categories */}
-                    <CategoryWrapper>
-                        <img src={logo} alt="logo" style={{ height: '44px' }} />
-                        <Box sx={{
-                            display: 'flex',
-                            gap: '16px',
-                            flexWrap: 'nowrap',
-                            overflow: 'auto',
-                            WebkitOverflowScrolling: 'touch',
-                            pb: 1,
-                            '&::-webkit-scrollbar': { height: '6px' },
-                            '&::-webkit-scrollbar-track': { background: 'transparent' },
-                            '&::-webkit-scrollbar-thumb': { background: '#e0e6ff', borderRadius: '3px' }
-                        }}>
-                            {categories.map(category => (
-                                <CategoryButton
-                                    key={category.id}
-                                    onClick={() => setSelectedCategory(category.id)}
-                                    active={selectedCategory === category.id}
-                                >
-                                    {category.name}
-                                </CategoryButton>
-                            ))}
-                        </Box>
-                    </CategoryWrapper>
+                    {/* 왼쪽 영역: 카테고리 + 메뉴 */}
+                    <Box sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        width: 'calc(100% - 400px)', // 장바구니 너비를 늘리기 위해 메뉴 영역 축소
+                        gap: '24px'
+                    }}>
+                        {/* Logo & Categories - 애니메이션 적용 */}
+                        <CategoryWrapper>
+                            <img src={logo} alt="logo" style={{ height: '44px' }} />
+                            <Box sx={{
+                                display: 'flex',
+                                gap: '16px',
+                                flexWrap: 'nowrap',
+                                overflow: 'auto',
+                                WebkitOverflowScrolling: 'touch',
+                                pb: 1,
+                                '&::-webkit-scrollbar': { height: '6px' },
+                                '&::-webkit-scrollbar-track': { background: 'transparent' },
+                                '&::-webkit-scrollbar-thumb': { background: '#e0e6ff', borderRadius: '3px' }
+                            }}>
+                                {categoryTrail.map((style, index) => (
+                                    <animated.div key={categories[index].id} style={style}>
+                                        <CategoryButton
+                                            onClick={() => setSelectedCategory(categories[index].id)}
+                                            active={selectedCategory === categories[index].id}
+                                        >
+                                            {categories[index].name}
+                                        </CategoryButton>
+                                    </animated.div>
+                                ))}
+                            </Box>
+                        </CategoryWrapper>
 
-                    {/* 메뉴 그리드와 스크롤 버튼 래퍼 */}
-                    <MenuGridWrapper>
-                        {/* 메뉴 그리드 컨테이너 - ref 추가 및 Hammer.js 적용 */}
-                        <MenuGridContainer
-                            ref={menuGridRef}
-                            sx={{
-                                touchAction: 'none', // Hammer.js 사용 시 기본 터치 동작 비활성화
-                            }}
-                        >
-                            {getMenuItems(selectedCategory).map((item) => (
-                                <MenuCard
-                                    key={item.id}
-                                    className="menu-card" // 이 클래스 필수! (행 높이 계산에 사용)
-                                    onTouchStart={(e) => handleCardTouchStart(item.id, e)}
-                                    onTouchMove={handleCardTouchMove}
-                                    onTouchEnd={(e) => handleCardTouchEnd(item, e)}
-                                    onClick={(e) => handleCardClick(item, e)}
-                                    sx={{
-                                        transform: activeCardId === item.id ? 'scale(0.98)' : 'scale(1)',
-                                        borderColor: activeCardId === item.id ? '#2142FF' : '#f0f2fa',
-                                        transition: 'transform 0.15s ease-out, border-color 0.15s ease-out',
-                                    }}
-                                >
-                                    <MenuImageContainer>
-                                        {item.image && (
-                                            <img
-                                                src={item.image}
-                                                alt={item.name}
-                                                className="menu-image"
-                                            />
-                                        )}
-                                    </MenuImageContainer>
-                                    <MenuInfo>
-                                        <div>
-                                            <MenuName>{item.name}</MenuName>
-                                            <MenuDescription>{item.description}</MenuDescription>
-                                        </div>
-                                        <MenuPrice>{item.price.toLocaleString()}원</MenuPrice>
-                                    </MenuInfo>
-                                </MenuCard>
-                            ))}
-                        </MenuGridContainer>
-
-                        {/* 토스 스타일 스크롤 버튼 */}
-                        <ScrollButtonContainer>
-                            <ScrollButton
-                                direction="up"
-                                disabled={!canScrollUp}
-                                onClick={handleScrollUp}
-                                aria-label="위로 스크롤"
-                            >
-                                <KeyboardArrowUp />
-                            </ScrollButton>
-                            <ScrollButton
-                                direction="down"
-                                disabled={!canScrollDown}
-                                onClick={handleScrollDown}
-                                aria-label="아래로 스크롤"
-                            >
-                                <KeyboardArrowDown />
-                            </ScrollButton>
-                        </ScrollButtonContainer>
-                    </MenuGridWrapper>
-                </Box>
-
-                {/* 장바구니 영역 - 세로 전체 높이로 확장 */}
-                <CartContainer>
-                    <CartHeader>
-                        {/* 왼쪽에 장바구니 아이콘 배치 - Badge 컴포넌트로 수량 표시 */}
-                        <Badge
-                            badgeContent={totalItems}
-                            color="primary"
-                            invisible={totalItems === 0}
-                            sx={{
-                                '& .MuiBadge-badge': {
-                                    backgroundColor: '#2142FF',
-                                    fontWeight: 'bold',
-                                    fontSize: '0.8rem',
-                                    minWidth: '20px',
-                                    height: '20px'
-                                }
-                            }}
-                        >
-                            <ShoppingCart
+                        {/* 메뉴 그리드와 스크롤 버튼 래퍼 */}
+                        <MenuGridWrapper>
+                            {/* 메뉴 그리드 컨테이너 - ref 추가 및 Hammer.js 적용 */}
+                            <MenuGridContainer
+                                ref={menuGridRef}
                                 sx={{
-                                    color: '#2142FF',
-                                    fontSize: '1.8rem',
-                                    '&:active': {
-                                        transform: 'scale(0.9)',
-                                        transition: 'transform 0.1s ease'
+                                    touchAction: 'none', // Hammer.js 사용 시 기본 터치 동작 비활성화
+                                }}
+                            >
+                                {menuTrail.map((style, index) => {
+                                    const item = menuItems[index];
+                                    return (
+                                        <animated.div key={item.id} style={style}>
+                                            <MenuCard
+                                                className="menu-card"
+                                                onTouchStart={(e) => handleCardTouchStart(item.id, e)}
+                                                onTouchMove={handleCardTouchMove}
+                                                onTouchEnd={(e) => handleCardTouchEnd(item, e)}
+                                                onClick={(e) => handleCardClick(item, e)}
+                                                sx={{
+                                                    transform: activeCardId === item.id ? 'scale(0.98)' : 'scale(1)',
+                                                    borderColor: activeCardId === item.id ? '#2142FF' : '#f0f2fa',
+                                                    transition: 'transform 0.15s ease-out, border-color 0.15s ease-out',
+                                                }}
+                                            >
+                                                {/* 기존 메뉴 카드 내용 */}
+                                                <MenuImageContainer>
+                                                    {item.image && (
+                                                        <img
+                                                            src={item.image}
+                                                            alt={item.name}
+                                                            className="menu-image"
+                                                        />
+                                                    )}
+                                                </MenuImageContainer>
+                                                <MenuInfo>
+                                                    <div>
+                                                        <MenuName>{item.name}</MenuName>
+                                                        <MenuDescription>{item.description}</MenuDescription>
+                                                    </div>
+                                                    <MenuPrice>{item.price.toLocaleString()}원</MenuPrice>
+                                                </MenuInfo>
+                                            </MenuCard>
+                                        </animated.div>
+                                    );
+                                })}
+                            </MenuGridContainer>
+
+                            {/* 토스 스타일 스크롤 버튼 */}
+                            <ScrollButtonContainer>
+                                <ScrollButton
+                                    direction="up"
+                                    disabled={!canScrollUp}
+                                    onClick={handleScrollUp}
+                                    aria-label="위로 스크롤"
+                                >
+                                    <KeyboardArrowUp />
+                                </ScrollButton>
+                                <ScrollButton
+                                    direction="down"
+                                    disabled={!canScrollDown}
+                                    onClick={handleScrollDown}
+                                    aria-label="아래로 스크롤"
+                                >
+                                    <KeyboardArrowDown />
+                                </ScrollButton>
+                            </ScrollButtonContainer>
+                        </MenuGridWrapper>
+                    </Box>
+
+                    {/* 장바구니 영역 - 세로 전체 높이로 확장 */}
+                    <CartContainer>
+                        <CartHeader>
+                            {/* 왼쪽에 장바구니 아이콘 배치 - Badge 컴포넌트로 수량 표시 */}
+                            <Badge
+                                badgeContent={totalItems}
+                                color="primary"
+                                invisible={totalItems === 0}
+                                sx={{
+                                    '& .MuiBadge-badge': {
+                                        backgroundColor: '#2142FF',
+                                        fontWeight: 'bold',
+                                        fontSize: '0.8rem',
+                                        minWidth: '20px',
+                                        height: '20px'
                                     }
                                 }}
-                            />
-                        </Badge>
+                            >
+                                <ShoppingCart
+                                    sx={{
+                                        color: '#2142FF',
+                                        fontSize: '1.8rem',
+                                        '&:active': {
+                                            transform: 'scale(0.9)',
+                                            transition: 'transform 0.1s ease'
+                                        }
+                                    }}
+                                />
+                            </Badge>
 
-                        {/* 중앙에 장바구니 텍스트 배치 - 수량 표시 제거 */}
-                        <Typography variant="h6" sx={{ flex: 1, textAlign: 'center' }}>
-                            장바구니
-                        </Typography>
+                            {/* 중앙에 장바구니 텍스트 배치 - 수량 표시 제거 */}
+                            <Typography variant="h6" sx={{ flex: 1, textAlign: 'center' }}>
+                                장바구니
+                            </Typography>
 
-                        {/* 오른쪽에 삭제 버튼 배치 - 기존 코드 유지 */}
-                        <IconButton
-                            onClick={() => setCart([])}
-                            color="error"
-                            disabled={cart.length === 0}
+                            {/* 오른쪽에 삭제 버튼 배치 - 기존 코드 유지 */}
+                            <IconButton
+                                onClick={() => setCart([])}
+                                color="error"
+                                disabled={cart.length === 0}
+                                sx={{
+                                    backgroundColor: cart.length > 0 ? 'rgba(244, 67, 54, 0.1)' : 'transparent',
+                                    '&:active': cart.length > 0 ? {
+                                        backgroundColor: 'rgba(244, 67, 54, 0.2)',
+                                        transform: 'scale(0.95)',
+                                        transition: 'all 0.1s ease-out'
+                                    } : {}
+                                }}
+                            >
+                                <Delete />
+                            </IconButton>
+                        </CartHeader>
+
+                        {/* 장바구니 목록 - 기존 코드 그대로 유지하되 ref 추가 */}
+                        <CartList
+                            ref={cartListRef}
                             sx={{
-                                backgroundColor: cart.length > 0 ? 'rgba(244, 67, 54, 0.1)' : 'transparent',
-                                '&:active': cart.length > 0 ? {
-                                    backgroundColor: 'rgba(244, 67, 54, 0.2)',
-                                    transform: 'scale(0.95)',
-                                    transition: 'all 0.1s ease-out'
-                                } : {}
+                                touchAction: 'none', // Hammer.js 사용을 위해 추가
                             }}
                         >
-                            <Delete />
-                        </IconButton>
-                    </CartHeader>
-
-                    {/* 장바구니 목록 - 기존 코드 그대로 유지하되 ref 추가 */}
-                    <CartList
-                        ref={cartListRef}
-                        sx={{
-                            touchAction: 'none', // Hammer.js 사용을 위해 추가
-                        }}
-                    >
-                        {cart.length === 0 ? (
-                            <Box sx={{
-                                height: '100%',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                color: '#888',
-                                p: 3
-                            }}>
-                                <ShoppingCart sx={{ fontSize: '3rem', color: '#ddd', mb: 2 }} />
-                                <Typography sx={{
-                                    fontSize: '1.1rem',
-                                    fontWeight: 500,
-                                    textAlign: 'center',
-                                    lineHeight: 1.5
-                                }}>
-                                    장바구니가 비어있습니다.<br />
-                                    메뉴를 터치하여 담아주세요.
-                                </Typography>
-                            </Box>
-                        ) : (
-                            cart.map((item, index) => (
-                                // 장바구니 아이템 UI 개선 부분
-                                <ListItem key={index} divider sx={{
-                                    padding: '16px 12px',
+                            {cart.length === 0 ? (
+                                <Box sx={{
+                                    height: '100%',
                                     display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'center',
                                     alignItems: 'center',
-                                    borderBottom: '1px solid #f0f4ff',
-                                    borderRadius: '10px',
-                                    margin: '8px 0',
-                                    backgroundColor: 'white',
-                                    boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-
+                                    color: '#888',
+                                    p: 3
                                 }}>
-                                    {/* 메뉴 이름 - 레이아웃 개선 */}
-                                    <Box sx={{
-                                        flexGrow: 1,
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        pr: 1
+                                    <ShoppingCart sx={{ fontSize: '3rem', color: '#ddd', mb: 2 }} />
+                                    <Typography sx={{
+                                        fontSize: '1.1rem',
+                                        fontWeight: 500,
+                                        textAlign: 'center',
+                                        lineHeight: 1.5
                                     }}>
-                                        <Typography sx={{
-                                            fontWeight: 600,
-                                            fontSize: '1.05rem',
-                                            color: '#333',
-                                            mb: 0.5
-                                        }}>
-                                            {item.name}
-                                        </Typography>
-                                        <Typography sx={{
-                                            fontSize: '0.9rem',
-                                            color: '#2142FF',
-                                            fontWeight: 500
-                                        }}>
-                                            {(item.price * item.quantity).toLocaleString()}원
-                                        </Typography>
-                                    </Box>
-
-                                    {/* 수량 조절 UI 모던하게 개선 */}
-                                    <Box sx={{
+                                        장바구니가 비어있습니다.<br />
+                                        메뉴를 터치하여 담아주세요.
+                                    </Typography>
+                                </Box>
+                            ) : (
+                                cart.map((item, index) => (
+                                    // 장바구니 아이템 UI 개선 부분
+                                    <ListItem key={index} divider sx={{
+                                        padding: '16px 12px',
                                         display: 'flex',
                                         alignItems: 'center',
-                                        backgroundColor: '#f5f7ff',
-                                        borderRadius: '8px',
-                                        padding: '4px',
-                                        border: '1px solid #e8ecfb',
+                                        borderBottom: '1px solid #f0f4ff',
+                                        borderRadius: '10px',
+                                        margin: '8px 0',
+                                        backgroundColor: 'white',
+                                        boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+
                                     }}>
-                                        <IconButton
-                                            size="small"
-                                            onClick={(e) => handleQuantityChange(index, -1, e)}
-                                            sx={{
-                                                padding: '4px',
-                                                '&:active': {
-                                                    transform: 'scale(0.9)',
-                                                    transition: 'transform 0.1s ease'
-                                                }
-                                            }}
-                                        >
-                                            <Remove fontSize="small" sx={{ color: '#2142FF' }} />
-                                        </IconButton>
-
-                                        <Typography sx={{
-                                            mx: 1,
-                                            minWidth: '24px',
-                                            textAlign: 'center',
-                                            fontWeight: 600,
-                                            fontSize: '1rem'
+                                        {/* 메뉴 이름 - 레이아웃 개선 */}
+                                        <Box sx={{
+                                            flexGrow: 1,
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            pr: 1
                                         }}>
-                                            {item.quantity}
-                                        </Typography>
+                                            <Typography sx={{
+                                                fontWeight: 600,
+                                                fontSize: '1.05rem',
+                                                color: '#333',
+                                                mb: 0.5
+                                            }}>
+                                                {item.name}
+                                            </Typography>
+                                            <Typography sx={{
+                                                fontSize: '0.9rem',
+                                                color: '#2142FF',
+                                                fontWeight: 500
+                                            }}>
+                                                {(item.price * item.quantity).toLocaleString()}원
+                                            </Typography>
+                                        </Box>
 
+                                        {/* 수량 조절 UI 모던하게 개선 */}
+                                        <Box sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            backgroundColor: '#f5f7ff',
+                                            borderRadius: '8px',
+                                            padding: '4px',
+                                            border: '1px solid #e8ecfb',
+                                        }}>
+                                            <IconButton
+                                                size="small"
+                                                onClick={(e) => handleQuantityChange(index, -1, e)}
+                                                sx={{
+                                                    padding: '4px',
+                                                    '&:active': {
+                                                        transform: 'scale(0.9)',
+                                                        transition: 'transform 0.1s ease'
+                                                    }
+                                                }}
+                                            >
+                                                <Remove fontSize="small" sx={{ color: '#2142FF' }} />
+                                            </IconButton>
+
+                                            <Typography sx={{
+                                                mx: 1,
+                                                minWidth: '24px',
+                                                textAlign: 'center',
+                                                fontWeight: 600,
+                                                fontSize: '1rem'
+                                            }}>
+                                                {item.quantity}
+                                            </Typography>
+
+                                            <IconButton
+                                                size="small"
+                                                onClick={(e) => handleQuantityChange(index, 1, e)}
+                                                sx={{
+                                                    padding: '4px',
+                                                    '&:active': {
+                                                        transform: 'scale(0.9)',
+                                                        transition: 'transform 0.1s ease'
+                                                    }
+                                                }}
+                                            >
+                                                <Add fontSize="small" sx={{ color: '#2142FF' }} />
+                                            </IconButton>
+                                        </Box>
+
+                                        {/* 삭제 버튼 - 터치 최적화 디자인 */}
                                         <IconButton
                                             size="small"
-                                            onClick={(e) => handleQuantityChange(index, 1, e)}
+                                            onClick={(e) => handleQuantityChange(index, -item.quantity, e)}
                                             sx={{
-                                                padding: '4px',
-                                                '&:active': {
-                                                    transform: 'scale(0.9)',
-                                                    transition: 'transform 0.1s ease'
-                                                }
+                                                ml: 1.5,
+                                                color: '#5d6b82',
+                                                padding: '10px',  // 터치 영역 확대
+                                                backgroundColor: 'rgba(232, 236, 245, 0.9)',  // 배경색 추가로 터치 영역 시각화
+                                                borderRadius: '12px',  // 모서리 둥글게
                                             }}
                                         >
-                                            <Add fontSize="small" sx={{ color: '#2142FF' }} />
+                                            <Delete
+                                                fontSize="small"
+                                                sx={{
+                                                    // 아이콘 자체에도 터치 효과 추가
+                                                    '&:active': {
+                                                        color: '#2142FF'
+                                                    }
+                                                }}
+                                            />
                                         </IconButton>
-                                    </Box>
+                                    </ListItem>
+                                ))
+                            )}
+                        </CartList>
 
-                                    {/* 삭제 버튼 - 터치 최적화 디자인 */}
-                                    <IconButton
-                                        size="small"
-                                        onClick={(e) => handleQuantityChange(index, -item.quantity, e)}
-                                        sx={{
-                                            ml: 1.5,
-                                            color: '#5d6b82',
-                                            padding: '10px',  // 터치 영역 확대
-                                            backgroundColor: 'rgba(232, 236, 245, 0.9)',  // 배경색 추가로 터치 영역 시각화
-                                            borderRadius: '12px',  // 모서리 둥글게
-                                        }}
-                                    >
-                                        <Delete
-                                            fontSize="small"
-                                            sx={{
-                                                // 아이콘 자체에도 터치 효과 추가
-                                                '&:active': {
-                                                    color: '#2142FF'
-                                                }
-                                            }}
-                                        />
-                                    </IconButton>
-                                </ListItem>
-                            ))
-                        )}
-                    </CartList>
+                        <CartFooter>
+                            <Typography variant="h6" align="right">
+                                총 금액: <span>{totalPrice.toLocaleString()}</span>원
+                            </Typography>
 
-                    <CartFooter>
-                        <Typography variant="h6" align="right">
-                            총 금액: <span>{totalPrice.toLocaleString()}</span>원
-                        </Typography>
+                            {/* 구매 버튼 - 접근성 및 배리어프리 UI 향상 */}
+                            <PurchaseButton
+                                variant="contained"
+                                disabled={cart.length === 0}
+                                onClick={() => setOrderDialogOpen(true)}
+                                // 비활성화 상태 스타일 개선
+                                sx={{
+                                    opacity: cart.length === 0 ? 0.6 : 1,
+                                    cursor: cart.length === 0 ? 'not-allowed' : 'pointer',
+                                }}
+                            >
+                                {cart.length === 0 ? '메뉴를 선택해주세요' : `구매하기 (${totalPrice.toLocaleString()}원)`}
+                            </PurchaseButton>
+                        </CartFooter>
+                    </CartContainer>
+                </Box>
 
-                        {/* 구매 버튼 - 접근성 및 배리어프리 UI 향상 */}
-                        <PurchaseButton
-                            variant="contained"
-                            disabled={cart.length === 0}
-                            onClick={() => setOrderDialogOpen(true)}
-                            // 비활성화 상태 스타일 개선
-                            sx={{
-                                opacity: cart.length === 0 ? 0.6 : 1,
-                                cursor: cart.length === 0 ? 'not-allowed' : 'pointer',
-                            }}
-                        >
-                            {cart.length === 0 ? '메뉴를 선택해주세요' : `구매하기 (${totalPrice.toLocaleString()}원)`}
-                        </PurchaseButton>
-                    </CartFooter>
-                </CartContainer>
-            </Box>
-
-            {/* 주문 확인 다이얼로그 */}
-            <OrderCheckDialog
-                open={orderDialogOpen}
-                cartItems={cart}
-                onClose={() => setOrderDialogOpen(false)}
-                onPayment={handlePayment}
-            />
-        </AppContainer>
+                {/* 주문 확인 다이얼로그 */}
+                <OrderCheckDialog
+                    open={orderDialogOpen}
+                    cartItems={cart}
+                    onClose={() => setOrderDialogOpen(false)}
+                    onPayment={handlePayment}
+                />
+            </AppContainer>
+        </animated.div>
     );
 };
 
