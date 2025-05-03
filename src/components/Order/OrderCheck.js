@@ -222,8 +222,15 @@ const OrderCheck = ({ cartItems, onClose, onPayment }) => {
                     돌아가기
                 </BackButton>
 
-                {/* 결제하기 버튼 */}
-                <PaymentButton onClick={onPayment} sx={{
+                <PaymentButton onClick={() => {
+                    // 주문 정보를 로컬 스토리지에 저장 - totalPrice가 확실히 숫자형으로 저장되도록 수정
+                    localStorage.setItem('orderItems', JSON.stringify(cartItems));
+                    localStorage.setItem('totalPrice', totalPrice.toString()); // 명시적으로 문자열 변환
+
+                    // 결제 페이지로 이동
+                    onClose && onClose(); // 다이얼로그 닫기
+                    window.location.href = '/payment';
+                }} sx={{
                     padding: '16px 32px',
                     fontSize: '1.1rem',
                     fontWeight: 700,
