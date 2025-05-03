@@ -47,18 +47,21 @@ export const CategoryButton = styled(Button, {
     padding: '12px 24px',
     minWidth: '120px',
     borderRadius: '16px', // 더 둥근 모서리
+    boxSizing: 'border-box', // 추가: 테두리가 요소 크기에 영향을 주지 않음
+    border: '2px solid transparent', // 추가: 모든 버튼에 투명 테두리 기본 적용
 
     // 기본 스타일 - 모든 버튼에 적용
-    background: '#f5f7ff', // 기본 배경색 추가로 버튼 구분
+    background: active ? '#e0e7ff' : '#f8f9fb',  // 더 뚜렷한 배경색 차이
     boxShadow: active
-        ? '0 4px 12px rgba(33, 66, 255, 0.15)'
+        ? '0 6px 16px rgba(33, 66, 255, 0.22)'  // 그림자 강화
         : '0 2px 8px rgba(0, 0, 0, 0.05)',
     position: 'relative',
 
     // 활성화된 버튼 스타일
     ...(active && {
-        background: 'linear-gradient(135deg, #f0f4ff, #e6ecff)', // 그라데이션 배경 효과
-        transform: 'translateY(-2px)', // 약간 들어올림 효과
+        background: 'linear-gradient(135deg, #e0e7ff, #c7d4ff)', // 더 진한 그라데이션
+        transform: 'translateY(-2px)',
+        border: '2px solid rgba(33, 66, 255, 0.3)', // 테두리 색상만 변경
     }),
 
     // 활성화 인디케이터 (밑줄)
@@ -93,7 +96,7 @@ export const CategoryButton = styled(Button, {
         transition: 'transform 0.1s ease'
     },
 
-    margin: '7px 26px',
+    margin: '5.5px 26px',
     transition: 'all 0.2s ease-in-out', // 모든 변화에 애니메이션 적용
 
     // 호버 효과 제거 - 터치 환경 최적화
