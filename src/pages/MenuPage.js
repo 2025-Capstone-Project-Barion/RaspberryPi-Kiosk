@@ -69,18 +69,20 @@ const MenuPage = () => {
     const menuTrail = useTrail(menuItems.length, {
         from: {
             opacity: 0,
-            transform: 'translateY(20px)'
+            transform: 'translateY(10px)'
         },
         to: {
             opacity: 1,
             transform: 'translateY(0)'
         },
         config: {
-            tension: 100,
-            friction: 18,
-            mass: 1.1
+            tension: 280, // 더 빠른 애니메이션을 위해 값 증가
+            friction: 30,  // 더 빠른 정착을 위해 값 증가
+            mass: 0.8,     // 더 가벼운 움직임을 위해 질량 감소
         },
-        delay: 300, // 카테고리 애니메이션 후 등장
+        delay: 300,
+        // 한 번에 더 많은 항목이 동시에 애니메이션되도록 설정
+        trail: 15, // 항목 간 지연 시간 감소 (기본값보다 훨씬 낮게)
     });
 
     // 페이지 입장 애니메이션
@@ -123,7 +125,7 @@ const MenuPage = () => {
             duration: 800
         },
         // 페이지 애니메이션 후 조금 지연시켜 등장
-        delay: 1200
+        delay: 1050
     });
 
     // 행의 높이를 계산하는 함수 - useCallback으로 메모이제이션
