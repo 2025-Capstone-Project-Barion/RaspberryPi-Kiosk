@@ -12,15 +12,17 @@ export const CategoryWrapper = styled(Box)({
     boxShadow: '0 6px 24px rgba(0, 0, 0, 0.08)', // 섀도우 개선
     position: 'relative',
     zIndex: 10,
-    justifyContent: 'space-between' // 로고와 카테고리 영역 분리
+    justifyContent: 'center' // 로고와 카테고리 영역 분리
 });
 
-// 로고 컨테이너
+// LogoContainer 수정
 export const LogoContainer = styled(Box)({
     display: 'flex',
     alignItems: 'center',
+    position: 'absolute', // 절대 위치로 변경
+    left: '24px', // 왼쪽에 고정
     img: {
-        height: '48px', // 로고 크기 약간 키움
+        height: '48px',
         transition: 'transform 0.3s ease',
         '&:hover': {
             transform: 'scale(1.05)'
@@ -28,12 +30,12 @@ export const LogoContainer = styled(Box)({
     }
 });
 
-// 카테고리 컨테이너
+// CategoryContainer는 그대로 유지
 export const CategoryContainer = styled(Box)({
     display: 'flex',
-    flexGrow: 1,
-    justifyContent: 'center', // 오른쪽 정렬로 변경
+    justifyContent: 'center',
     gap: '30px'
+    // flexGrow 제거
 });
 
 // 카테고리 버튼
