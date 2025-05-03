@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { useSpring, animated, easings, useTrail } from '@react-spring/web';
+import { useSpring, animated, useTrail } from '@react-spring/web';
 import { Typography, Box, IconButton, ListItem, Badge } from '@mui/material';
 import { Add, Remove, Delete, ShoppingCart, KeyboardArrowUp, KeyboardArrowDown } from '@mui/icons-material';
 import {
@@ -56,12 +56,17 @@ const MenuPage = () => {
     // 입장 애니메이션을 위한 상태 추가
     const [isEntering, setIsEntering] = useState(true);
 
-    // 카테고리 애니메이션 - 순차적 등장
+    // 카테고리 애니메이션 - 더 빠르게 등장하도록 개선
     const categoryTrail = useTrail(categories.length, {
-        from: { opacity: 0, transform: 'translateY(-10px)' },
+        from: { opacity: 0, transform: 'translateY(-5px)' }, // 이동 거리 감소
         to: { opacity: 1, transform: 'translateY(0)' },
-        config: { tension: 170, friction: 26 },
-        delay: 200, // 페이지 등장 후 약간 지연
+        config: {
+            tension: 400,  // 더 빠른 시작
+            friction: 26,  // 약간 조정
+            mass: 0.5      // 가벼운 질량
+        },
+        delay: 50, // 지연 시간 크게 감소
+        trail: 15  // 카테고리 간 등장 간격 (빠르게)
     });
 
     // 선택된 카테고리에 따라 메뉴 아이템 애니메이션
@@ -69,42 +74,40 @@ const MenuPage = () => {
     const menuTrail = useTrail(menuItems.length, {
         from: {
             opacity: 0,
-            transform: 'translateY(8px)'  // 이동 거리 살짝 줄임
+            transform: 'translateY(5px)'  // 이동 거리 더 줄임
         },
         to: {
             opacity: 1,
             transform: 'translateY(0)'
         },
         config: {
-            tension: 350,  // 더 빠른 시작
-            friction: 26,  // 약간 조정
-            mass: 0.75,    // 더 가볍게
+            tension: 500,  // 매우 빠른 시작
+            friction: 25,  // 최적화
+            mass: 0.4,     // 매우 가볍게
         },
-        delay: 150,  // 딜레이 줄임
-        trail: 8,    // 더 빠르게 연속 등장하도록 크게 줄임
+        delay: 30,   // 딜레이 최소화
+        trail: 5,    // 더 빠르게 연속 등장
     });
 
-    // 페이지 입장 애니메이션 (좌우 방향으로 변경)
+    // 페이지 입장 애니메이션 - 가볍게 최적화
     const pageEntrance = useSpring({
         from: {
-            opacity: 0,
-            transform: 'translateX(-3%)' // 왼쪽에서 오른쪽으로 나타나는 효과
+            opacity: 0.8,  // 약간만 투명하게 시작
+            transform: 'translateX(-1%)' // 이동 거리 크게 감소
         },
         to: {
             opacity: 1,
             transform: 'translateX(0%)'
         },
         config: {
-            tension: 120,
-            friction: 14,
-            duration: 450,
-            easing: easings.easeOutQuint
+            tension: 300,
+            friction: 20,
+            duration: 250, // 애니메이션 시간 단축
         },
         onRest: () => {
             setIsEntering(false);
         }
     });
-
 
     // // 장바구니 등장 애니메이션 - 마지막 카드 등장과 타이밍 맞추기
     // const cartAnimation = useSpring({
@@ -143,7 +146,7 @@ const MenuPage = () => {
             duration: 500
         },
         // 페이지 애니메이션 후 조금 지연시켜 등장
-        delay: 1000
+        delay: 700
     });
 
     // 행의 높이를 계산하는 함수 - useCallback으로 메모이제이션
