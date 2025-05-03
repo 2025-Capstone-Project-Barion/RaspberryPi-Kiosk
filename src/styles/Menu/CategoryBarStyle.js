@@ -51,17 +51,19 @@ export const CategoryButton = styled(Button, {
     border: '2px solid transparent', // 추가: 모든 버튼에 투명 테두리 기본 적용
 
     // 기본 스타일 - 모든 버튼에 적용
-    background: active ? '#e0e7ff' : '#f0f0f8',  // 더 뚜렷한 배경색 차이
+    background: active ? '#e0e7ff' : '#f5f6fa',  // 비활성 버튼 배경색을 더 밝게 변경
     boxShadow: active
-        ? '0 6px 16px rgba(33, 66, 255, 0.22)'  // 그림자 강화
-        : '0 4px 12px rgba(0, 0, 0, 0.08)',     // 비활성 버튼 그림자 강화
+        ? '0 6px 16px rgba(33, 66, 255, 0.22)'
+        : '0 4px 10px rgba(0, 0, 0, 0.15)',     // 그림자 불투명도 강화
     position: 'relative',
+    border: '2px solid',                         // 모든 버튼에 테두리 적용
+    borderColor: active ? 'rgba(33, 66, 255, 0.3)' : 'rgba(0, 0, 0, 0.08)', // 비활성 버튼에도 약한 테두리
 
     // 활성화된 버튼 스타일
     ...(active && {
-        background: 'linear-gradient(135deg, #e0e7ff, #c7d4ff)', // 더 진한 그라데이션
+        background: 'linear-gradient(135deg, #e0e7ff, #c7d4ff)',
         transform: 'translateY(-2px)',
-        border: '2px solid rgba(33, 66, 255, 0.3)', // 테두리 색상만 변경
+        // 테두리는 위에서 이미 설정했으므로 여기서는 제거
     }),
 
     // 활성화 인디케이터 (밑줄)
