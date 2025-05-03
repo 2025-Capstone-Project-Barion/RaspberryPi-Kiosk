@@ -5,7 +5,7 @@ import { Box, Button } from '@mui/material';
 export const CategoryWrapper = styled(Box)({
     display: 'flex',
     alignItems: 'center',
-    padding: '18px 28px',
+    padding: '18px 24px',
     background: 'white',
     borderRadius: '20px', // 더 둥근 모서리 - 모던한 느낌
     width: '100%',
@@ -45,10 +45,11 @@ export const CategoryButton = styled(Button, {
     fontWeight: active ? 700 : 500,
     color: active ? '#2142FF' : '#555', // 비활성 상태 텍스트 색상 약간 진하게
     padding: '12px 24px',
+    width: 'clamp(120px, 15vw, 180px)', // 최소 120px, 최대 180px, 화면 너비의 15% 기준
     minWidth: '120px',
     borderRadius: '16px', // 더 둥근 모서리
     boxSizing: 'border-box', // 추가: 테두리가 요소 크기에 영향을 주지 않음
-    border: '2px solid transparent', // 추가: 모든 버튼에 투명 테두리 기본 적용
+
 
     // 기본 스타일 - 모든 버튼에 적용
     background: active ? '#e0e7ff' : '#f5f6fa',  // 비활성 버튼 배경색을 더 밝게 변경
