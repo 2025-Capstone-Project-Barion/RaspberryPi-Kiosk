@@ -16,102 +16,425 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
 컴포넌트 기반으로 유지보수가 쉬움
 👉 메뉴 관련 컴포넌트는 styled-components로 작성 
 */
+
+/* 컨테이너 및 배경 */
 .container {
   position: relative;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background: #000;
+  /* 더 고급스러운 그라디언트 */
+  background: linear-gradient(135deg, #2c38d1 0%, #5a63f7 100%);
 }
 
-.bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
-  will-change: opacity;
-  filter: brightness(0.6);
+/* 배경 파티클 - 더 눈에 띄는 효과 */
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  filter: blur(1.5px);
+  pointer-events: none;
+  z-index: 1;
 }
 
+/* 메인 콘텐츠 레이아웃 */
 .content {
   position: relative;
-  z-index: 1;
+  display: flex;
   height: 100vh;
+  color: white;
+  z-index: 2;
+}
+
+/* 좌측 브랜드 섹션 - 개선 및 단순화 */
+.brandSection {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 3rem 3rem 3rem 6rem;
+  overflow: hidden;
+}
+
+/* 물결 효과 제거함 */
+
+.logoContainer {
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+.logo {
+  width: 220px;
+  height: auto;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+}
+
+.titleContainer {
+  text-align: left;
+  position: relative;
+  z-index: 2;
+}
+
+/* 브랜드명 강조 */
+.brandName {
+  font-size: 5rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -1px;
+  background: linear-gradient(to right, #ffffff, #d0d4ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 5px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* 태그라인 스타일과 밑줄 복원 */
+.taglineContainer {
+  position: relative;
+  overflow: hidden;
+  padding: 0.5rem 0;
+}
+
+.tagline {
+  font-size: 1.8rem;
+  font-weight: 400;
+  opacity: 0.9;
+  margin: 0;
+  position: relative;
+  display: inline-block; /* 인라인 블록으로 변경하여 텍스트 너비만큼만 밑줄 표시 */
+}
+
+/* 태그라인 밑줄에 그라데이션 효과 추가 */
+.tagline::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.2));
+  border-radius: 2px;
+}
+
+/* 설명 텍스트 스타일 롤백 */
+.descriptionContainer {
+  margin-top: 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+.description {
+  font-size: 1.3rem;
+  line-height: 1.8;
+  opacity: 0.85;
+  max-width: 500px;
+}
+
+/* 하이라이트 텍스트 스타일 - 더 눈에 띄는 밑줄 */
+/* .highlightText {
+  font-weight: 600;
+  position: relative;
+  border-bottom: 3px solid rgba(255, 255, 255, 0.8); 
+  padding-bottom: 2px;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); 
+} */
+
+/* 우측 주문 섹션 - 개선 */
+.orderSection {
+  position: relative;
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: white;
-  text-align: center;
-  padding: 0 2rem;
+  padding: 3rem;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.messageBox {
-  max-width: 800px;
+/* 물결 효과 제거함 */
+
+.optionsContainer {
+  width: 100%;
+  max-width: 520px;
+  margin-bottom: 3rem;
   position: relative;
-  top: -20vh; /* 메시지 박스를 약간 위로 이동 */
+  z-index: 2;
 }
 
-.messageBox h1 {
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  font-weight: 700;
-  line-height: 1.3;
-  margin: 0.5rem 0;
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
-}
+/* 주문 방법 제목 제거 */
 
-.orderButton {
-  position: absolute;
-  bottom: 35vh;
-  transform: translateX(-50%);
-  z-index: 10;
-}
-
-.instructionBox {
-  position: fixed; /* fixed로 변경하여 viewport에 고정 */
-  bottom: 8vh; /* 하단에서의 거리 */
-  /* left: 50%;*/
-  transform: translateX(-50%); /* 가운데 정렬 */
+.optionCard {
+  display: flex;
+  align-items: center;
   background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  padding: 2rem 3rem;
+  backdrop-filter: blur(10px);
   border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  padding: 1.8rem;
+  margin-bottom: 1.8rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  z-index: 10; /* 다른 요소들보다 위에 표시 */
+  transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
-.handwave {
-  font-size: 3.5rem;
-  margin-bottom: 1rem;
-  animation: wave 3s ease-in-out infinite;
+.optionCard:active {
+  transform: scale(0.98);
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
-.instructionBox p {
-  font-size: clamp(1.2rem, 3vw, 1.5rem);
-  font-weight: 500;
-  white-space: nowrap;
+.iconWrapper {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  margin-right: 1.8rem;
+  flex-shrink: 0;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3);
 }
 
-@keyframes wave {
-  0%,
+.optionIcon {
+  font-size: 3rem !important;
+  color: white;
+}
+
+.optionText {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 옵션 카드 제목 스타일 개선 */
+.optionTitle {
+  font-size: 1.7rem;
+  font-weight: 600;
+  margin: 0 0 0.8rem 0;
+  position: relative;
+  display: inline-block;
+}
+
+/* 제목 밑줄 효과 */
+.optionTitle::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.2));
+  border-radius: 2px;
+}
+
+/* "Hey, Barion" 웨이크 워드 강조 스타일 */
+.wakeWord {
+  font-weight: 700;
+  font-size: 1.3rem;
+  padding: 2px 8px;
+  margin-right: 6px; /* 오른쪽 여백 추가 */
+  border-radius: 4px;
+  background: linear-gradient(135deg, #4147db 40%, #323cc4 100%);
+  box-shadow: 0 0 10px rgba(65, 71, 219, 0.5);
+  position: relative;
+  animation: pulse 2s infinite;
+  display: inline-block; /* 인라인 블록으로 변경 */
+}
+
+/* 펄스 애니메이션 */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(65, 71, 219, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(65, 71, 219, 0);
+  }
   100% {
-    transform: rotate(0deg);
-  }
-  25% {
-    transform: rotate(-15deg);
-  }
-  75% {
-    transform: rotate(15deg);
+    box-shadow: 0 0 0 0 rgba(65, 71, 219, 0);
   }
 }
 
-@media (max-width: 768px) {
-  .instructionBox {
-    padding: 1.5rem 2rem;
+.optionText p {
+  font-size: 1.2rem;
+  margin: 0;
+  opacity: 0.9;
+  line-height: 1.6;
+}
+
+.highlight {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  padding: 0 6px;
+  font-weight: 600;
+}
+
+/* 버튼 컨테이너 */
+.buttonContainer {
+  width: 100%;
+  max-width: 520px;
+  padding: 1rem 0;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+/* 주문 버튼 - 개선된 그라데이션과 디자인 */
+.orderButton {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 1.7rem 2rem;
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: white;
+  /* 더 생생하고 눈에 띄는 그라데이션 */
+  background: linear-gradient(135deg, #4147db 0%, #2429aa 100%);
+  border: none;
+  border-radius: 18px;
+  cursor: pointer;
+  box-shadow: 0 12px 40px rgba(62, 73, 240, 0.5), 0 0 15px rgba(62, 73, 240, 0.3);
+  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+}
+
+.orderButton:active {
+  transform: scale(0.97);
+  box-shadow: 0 4px 15px rgba(62, 73, 240, 0.6);
+}
+
+/* 버튼 하이라이트 효과 개선 */
+.orderButton::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+  pointer-events: none;
+}
+
+.buttonText {
+  margin-right: 1.2rem;
+  letter-spacing: 0.5px;
+}
+
+/* 개선된 화살표 아이콘 */
+.arrowIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.15);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.nextIcon {
+  font-size: 2.2rem !important;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1200px) {
+  .brandName {
+    font-size: 4rem;
   }
+
+  .tagline {
+    font-size: 1.6rem;
+  }
+
+  .description {
+    font-size: 1.1rem;
+  }
+
+  .brandSection {
+    padding: 3rem;
+  }
+
+  .logo {
+    width: 180px;
+  }
+}
+
+@media (max-width: 960px) {
+  .content {
+    flex-direction: column;
+  }
+
+  .brandSection {
+    flex: none;
+    align-items: center;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .titleContainer {
+    text-align: center;
+  }
+
+  .orderSection {
+    flex: none;
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 2rem;
+  }
+
+  .brandName {
+    font-size: 3rem;
+  }
+
+  .description {
+    text-align: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .optionCard {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .iconWrapper {
+    margin: 0 0 1rem 0;
+  }
+
+  .orderButton {
+    font-size: 1.6rem;
+  }
+}
+
+/* 터치 디바이스 최적화 */
+@media (pointer: coarse) {
+  .optionCard,
+  .orderButton {
+    cursor: default;
+  }
+
+  .iconWrapper {
+    min-width: 80px;
+    min-height: 80px;
+  }
+
+  .orderButton {
+    min-height: 90px;
+  }
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: black; /* 혹은 브랜드 컬러 */
+  z-index: 999;
+  pointer-events: none;
 }
