@@ -105,6 +105,27 @@ const MenuPage = () => {
         }
     });
 
+
+    // 장바구니 등장 애니메이션 추가
+    const cartAnimation = useSpring({
+        from: {
+            opacity: 0,
+            transform: 'translateX(30px) scale(0.95)'
+        },
+        to: {
+            opacity: 1,
+            transform: 'translateX(0) scale(1)'
+        },
+        config: {
+            tension: 80,
+            friction: 20,
+            mass: 1.2,
+            duration: 800
+        },
+        // 페이지 애니메이션 후 조금 지연시켜 등장
+        delay: 1200
+    });
+
     // 행의 높이를 계산하는 함수 - useCallback으로 메모이제이션
     const calculateRowHeight = useCallback(() => {
         // 카드 높이 (CSS와 동일하게 맞춤)
@@ -544,220 +565,223 @@ const MenuPage = () => {
                         </MenuGridWrapper>
                     </Box>
 
-                    {/* 장바구니 영역 - 세로 전체 높이로 확장 */}
-                    <CartContainer>
-                        <CartHeader>
-                            {/* 왼쪽에 장바구니 아이콘 배치 - Badge 컴포넌트로 수량 표시 */}
-                            <Badge
-                                badgeContent={totalItems}
-                                color="primary"
-                                invisible={totalItems === 0}
-                                sx={{
-                                    '& .MuiBadge-badge': {
-                                        backgroundColor: '#2142FF',
-                                        fontWeight: 'bold',
-                                        fontSize: '0.8rem',
-                                        minWidth: '20px',
-                                        height: '20px'
-                                    }
-                                }}
-                            >
-                                <ShoppingCart
+                    {/* 장바구니 영역 - 애니메이션 추가 */}
+                    <animated.div style={cartAnimation}>
+                        {/* 장바구니 영역 - 세로 전체 높이로 확장 */}
+                        <CartContainer>
+                            <CartHeader>
+                                {/* 왼쪽에 장바구니 아이콘 배치 - Badge 컴포넌트로 수량 표시 */}
+                                <Badge
+                                    badgeContent={totalItems}
+                                    color="primary"
+                                    invisible={totalItems === 0}
                                     sx={{
-                                        color: '#2142FF',
-                                        fontSize: '1.8rem',
-                                        '&:active': {
-                                            transform: 'scale(0.9)',
-                                            transition: 'transform 0.1s ease'
+                                        '& .MuiBadge-badge': {
+                                            backgroundColor: '#2142FF',
+                                            fontWeight: 'bold',
+                                            fontSize: '0.8rem',
+                                            minWidth: '20px',
+                                            height: '20px'
                                         }
                                     }}
-                                />
-                            </Badge>
+                                >
+                                    <ShoppingCart
+                                        sx={{
+                                            color: '#2142FF',
+                                            fontSize: '1.8rem',
+                                            '&:active': {
+                                                transform: 'scale(0.9)',
+                                                transition: 'transform 0.1s ease'
+                                            }
+                                        }}
+                                    />
+                                </Badge>
 
-                            {/* 중앙에 장바구니 텍스트 배치 - 수량 표시 제거 */}
-                            <Typography variant="h6" sx={{ flex: 1, textAlign: 'center' }}>
-                                장바구니
-                            </Typography>
+                                {/* 중앙에 장바구니 텍스트 배치 - 수량 표시 제거 */}
+                                <Typography variant="h6" sx={{ flex: 1, textAlign: 'center' }}>
+                                    장바구니
+                                </Typography>
 
-                            {/* 오른쪽에 삭제 버튼 배치 - 기존 코드 유지 */}
-                            <IconButton
-                                onClick={() => setCart([])}
-                                color="error"
-                                disabled={cart.length === 0}
+                                {/* 오른쪽에 삭제 버튼 배치 - 기존 코드 유지 */}
+                                <IconButton
+                                    onClick={() => setCart([])}
+                                    color="error"
+                                    disabled={cart.length === 0}
+                                    sx={{
+                                        backgroundColor: cart.length > 0 ? 'rgba(244, 67, 54, 0.1)' : 'transparent',
+                                        '&:active': cart.length > 0 ? {
+                                            backgroundColor: 'rgba(244, 67, 54, 0.2)',
+                                            transform: 'scale(0.95)',
+                                            transition: 'all 0.1s ease-out'
+                                        } : {}
+                                    }}
+                                >
+                                    <Delete />
+                                </IconButton>
+                            </CartHeader>
+
+                            {/* 장바구니 목록 - 기존 코드 그대로 유지하되 ref 추가 */}
+                            <CartList
+                                ref={cartListRef}
                                 sx={{
-                                    backgroundColor: cart.length > 0 ? 'rgba(244, 67, 54, 0.1)' : 'transparent',
-                                    '&:active': cart.length > 0 ? {
-                                        backgroundColor: 'rgba(244, 67, 54, 0.2)',
-                                        transform: 'scale(0.95)',
-                                        transition: 'all 0.1s ease-out'
-                                    } : {}
+                                    touchAction: 'none', // Hammer.js 사용을 위해 추가
                                 }}
                             >
-                                <Delete />
-                            </IconButton>
-                        </CartHeader>
-
-                        {/* 장바구니 목록 - 기존 코드 그대로 유지하되 ref 추가 */}
-                        <CartList
-                            ref={cartListRef}
-                            sx={{
-                                touchAction: 'none', // Hammer.js 사용을 위해 추가
-                            }}
-                        >
-                            {cart.length === 0 ? (
-                                <Box sx={{
-                                    height: '100%',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    color: '#888',
-                                    p: 3
-                                }}>
-                                    <ShoppingCart sx={{ fontSize: '3rem', color: '#ddd', mb: 2 }} />
-                                    <Typography sx={{
-                                        fontSize: '1.1rem',
-                                        fontWeight: 500,
-                                        textAlign: 'center',
-                                        lineHeight: 1.5
-                                    }}>
-                                        장바구니가 비어있습니다.<br />
-                                        메뉴를 터치하여 담아주세요.
-                                    </Typography>
-                                </Box>
-                            ) : (
-                                cart.map((item, index) => (
-                                    // 장바구니 아이템 UI 개선 부분
-                                    <ListItem key={index} divider sx={{
-                                        padding: '16px 12px',
+                                {cart.length === 0 ? (
+                                    <Box sx={{
+                                        height: '100%',
                                         display: 'flex',
+                                        flexDirection: 'column',
+                                        justifyContent: 'center',
                                         alignItems: 'center',
-                                        borderBottom: '1px solid #f0f4ff',
-                                        borderRadius: '10px',
-                                        margin: '8px 0',
-                                        backgroundColor: 'white',
-                                        boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-
+                                        color: '#888',
+                                        p: 3
                                     }}>
-                                        {/* 메뉴 이름 - 레이아웃 개선 */}
-                                        <Box sx={{
-                                            flexGrow: 1,
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            pr: 1
+                                        <ShoppingCart sx={{ fontSize: '3rem', color: '#ddd', mb: 2 }} />
+                                        <Typography sx={{
+                                            fontSize: '1.1rem',
+                                            fontWeight: 500,
+                                            textAlign: 'center',
+                                            lineHeight: 1.5
                                         }}>
-                                            <Typography sx={{
-                                                fontWeight: 600,
-                                                fontSize: '1.05rem',
-                                                color: '#333',
-                                                mb: 0.5
-                                            }}>
-                                                {item.name}
-                                            </Typography>
-                                            <Typography sx={{
-                                                fontSize: '0.9rem',
-                                                color: '#2142FF',
-                                                fontWeight: 500
-                                            }}>
-                                                {(item.price * item.quantity).toLocaleString()}원
-                                            </Typography>
-                                        </Box>
-
-                                        {/* 수량 조절 UI 모던하게 개선 */}
-                                        <Box sx={{
+                                            장바구니가 비어있습니다.<br />
+                                            메뉴를 터치하여 담아주세요.
+                                        </Typography>
+                                    </Box>
+                                ) : (
+                                    cart.map((item, index) => (
+                                        // 장바구니 아이템 UI 개선 부분
+                                        <ListItem key={index} divider sx={{
+                                            padding: '16px 12px',
                                             display: 'flex',
                                             alignItems: 'center',
-                                            backgroundColor: '#f5f7ff',
-                                            borderRadius: '8px',
-                                            padding: '4px',
-                                            border: '1px solid #e8ecfb',
+                                            borderBottom: '1px solid #f0f4ff',
+                                            borderRadius: '10px',
+                                            margin: '8px 0',
+                                            backgroundColor: 'white',
+                                            boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+
                                         }}>
-                                            <IconButton
-                                                size="small"
-                                                onClick={(e) => handleQuantityChange(index, -1, e)}
-                                                sx={{
-                                                    padding: '4px',
-                                                    '&:active': {
-                                                        transform: 'scale(0.9)',
-                                                        transition: 'transform 0.1s ease'
-                                                    }
-                                                }}
-                                            >
-                                                <Remove fontSize="small" sx={{ color: '#2142FF' }} />
-                                            </IconButton>
-
-                                            <Typography sx={{
-                                                mx: 1,
-                                                minWidth: '24px',
-                                                textAlign: 'center',
-                                                fontWeight: 600,
-                                                fontSize: '1rem'
+                                            {/* 메뉴 이름 - 레이아웃 개선 */}
+                                            <Box sx={{
+                                                flexGrow: 1,
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                pr: 1
                                             }}>
-                                                {item.quantity}
-                                            </Typography>
+                                                <Typography sx={{
+                                                    fontWeight: 600,
+                                                    fontSize: '1.05rem',
+                                                    color: '#333',
+                                                    mb: 0.5
+                                                }}>
+                                                    {item.name}
+                                                </Typography>
+                                                <Typography sx={{
+                                                    fontSize: '0.9rem',
+                                                    color: '#2142FF',
+                                                    fontWeight: 500
+                                                }}>
+                                                    {(item.price * item.quantity).toLocaleString()}원
+                                                </Typography>
+                                            </Box>
 
+                                            {/* 수량 조절 UI 모던하게 개선 */}
+                                            <Box sx={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                backgroundColor: '#f5f7ff',
+                                                borderRadius: '8px',
+                                                padding: '4px',
+                                                border: '1px solid #e8ecfb',
+                                            }}>
+                                                <IconButton
+                                                    size="small"
+                                                    onClick={(e) => handleQuantityChange(index, -1, e)}
+                                                    sx={{
+                                                        padding: '4px',
+                                                        '&:active': {
+                                                            transform: 'scale(0.9)',
+                                                            transition: 'transform 0.1s ease'
+                                                        }
+                                                    }}
+                                                >
+                                                    <Remove fontSize="small" sx={{ color: '#2142FF' }} />
+                                                </IconButton>
+
+                                                <Typography sx={{
+                                                    mx: 1,
+                                                    minWidth: '24px',
+                                                    textAlign: 'center',
+                                                    fontWeight: 600,
+                                                    fontSize: '1rem'
+                                                }}>
+                                                    {item.quantity}
+                                                </Typography>
+
+                                                <IconButton
+                                                    size="small"
+                                                    onClick={(e) => handleQuantityChange(index, 1, e)}
+                                                    sx={{
+                                                        padding: '4px',
+                                                        '&:active': {
+                                                            transform: 'scale(0.9)',
+                                                            transition: 'transform 0.1s ease'
+                                                        }
+                                                    }}
+                                                >
+                                                    <Add fontSize="small" sx={{ color: '#2142FF' }} />
+                                                </IconButton>
+                                            </Box>
+
+                                            {/* 삭제 버튼 - 터치 최적화 디자인 */}
                                             <IconButton
                                                 size="small"
-                                                onClick={(e) => handleQuantityChange(index, 1, e)}
+                                                onClick={(e) => handleQuantityChange(index, -item.quantity, e)}
                                                 sx={{
-                                                    padding: '4px',
-                                                    '&:active': {
-                                                        transform: 'scale(0.9)',
-                                                        transition: 'transform 0.1s ease'
-                                                    }
+                                                    ml: 1.5,
+                                                    color: '#5d6b82',
+                                                    padding: '10px',  // 터치 영역 확대
+                                                    backgroundColor: 'rgba(232, 236, 245, 0.9)',  // 배경색 추가로 터치 영역 시각화
+                                                    borderRadius: '12px',  // 모서리 둥글게
                                                 }}
                                             >
-                                                <Add fontSize="small" sx={{ color: '#2142FF' }} />
+                                                <Delete
+                                                    fontSize="small"
+                                                    sx={{
+                                                        // 아이콘 자체에도 터치 효과 추가
+                                                        '&:active': {
+                                                            color: '#2142FF'
+                                                        }
+                                                    }}
+                                                />
                                             </IconButton>
-                                        </Box>
+                                        </ListItem>
+                                    ))
+                                )}
+                            </CartList>
 
-                                        {/* 삭제 버튼 - 터치 최적화 디자인 */}
-                                        <IconButton
-                                            size="small"
-                                            onClick={(e) => handleQuantityChange(index, -item.quantity, e)}
-                                            sx={{
-                                                ml: 1.5,
-                                                color: '#5d6b82',
-                                                padding: '10px',  // 터치 영역 확대
-                                                backgroundColor: 'rgba(232, 236, 245, 0.9)',  // 배경색 추가로 터치 영역 시각화
-                                                borderRadius: '12px',  // 모서리 둥글게
-                                            }}
-                                        >
-                                            <Delete
-                                                fontSize="small"
-                                                sx={{
-                                                    // 아이콘 자체에도 터치 효과 추가
-                                                    '&:active': {
-                                                        color: '#2142FF'
-                                                    }
-                                                }}
-                                            />
-                                        </IconButton>
-                                    </ListItem>
-                                ))
-                            )}
-                        </CartList>
+                            <CartFooter>
+                                <Typography variant="h6" align="right">
+                                    총 금액: <span>{totalPrice.toLocaleString()}</span>원
+                                </Typography>
 
-                        <CartFooter>
-                            <Typography variant="h6" align="right">
-                                총 금액: <span>{totalPrice.toLocaleString()}</span>원
-                            </Typography>
-
-                            {/* 구매 버튼 - 접근성 및 배리어프리 UI 향상 */}
-                            <PurchaseButton
-                                variant="contained"
-                                disabled={cart.length === 0}
-                                onClick={() => setOrderDialogOpen(true)}
-                                // 비활성화 상태 스타일 개선
-                                sx={{
-                                    opacity: cart.length === 0 ? 0.6 : 1,
-                                    cursor: cart.length === 0 ? 'not-allowed' : 'pointer',
-                                }}
-                            >
-                                {cart.length === 0 ? '메뉴를 선택해주세요' : `구매하기 (${totalPrice.toLocaleString()}원)`}
-                            </PurchaseButton>
-                        </CartFooter>
-                    </CartContainer>
+                                {/* 구매 버튼 - 접근성 및 배리어프리 UI 향상 */}
+                                <PurchaseButton
+                                    variant="contained"
+                                    disabled={cart.length === 0}
+                                    onClick={() => setOrderDialogOpen(true)}
+                                    // 비활성화 상태 스타일 개선
+                                    sx={{
+                                        opacity: cart.length === 0 ? 0.6 : 1,
+                                        cursor: cart.length === 0 ? 'not-allowed' : 'pointer',
+                                    }}
+                                >
+                                    {cart.length === 0 ? '메뉴를 선택해주세요' : `구매하기 (${totalPrice.toLocaleString()}원)`}
+                                </PurchaseButton>
+                            </CartFooter>
+                        </CartContainer>
+                    </animated.div>
                 </Box>
 
                 {/* 주문 확인 다이얼로그 */}
