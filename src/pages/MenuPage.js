@@ -69,20 +69,19 @@ const MenuPage = () => {
     const menuTrail = useTrail(menuItems.length, {
         from: {
             opacity: 0,
-            transform: 'translateY(10px)'
+            transform: 'translateY(8px)'  // 이동 거리 살짝 줄임
         },
         to: {
             opacity: 1,
             transform: 'translateY(0)'
         },
         config: {
-            tension: 280, // 더 빠른 애니메이션을 위해 값 증가
-            friction: 30,  // 더 빠른 정착을 위해 값 증가
-            mass: 0.8,     // 더 가벼운 움직임을 위해 질량 감소
+            tension: 350,  // 더 빠른 시작
+            friction: 26,  // 약간 조정
+            mass: 0.75,    // 더 가볍게
         },
-        delay: 200,
-        // 한 번에 더 많은 항목이 동시에 애니메이션되도록 설정
-        trail: 15, // 항목 간 지연 시간 감소 (기본값보다 훨씬 낮게)
+        delay: 150,  // 딜레이 줄임
+        trail: 8,    // 더 빠르게 연속 등장하도록 크게 줄임
     });
 
     // 페이지 입장 애니메이션 (좌우 방향으로 변경)
@@ -107,7 +106,27 @@ const MenuPage = () => {
     });
 
 
-    // 장바구니 등장 애니메이션 추가 <천천히>
+    // // 장바구니 등장 애니메이션 - 마지막 카드 등장과 타이밍 맞추기
+    // const cartAnimation = useSpring({
+    //     from: {
+    //         opacity: 0,
+    //         transform: 'translateX(20px) scale(0.98)' // 효과 살짝 줄임
+    //     },
+    //     to: {
+    //         opacity: 1,
+    //         transform: 'translateX(0) scale(1)'
+    //     },
+    //     config: {
+    //         tension: 140,  // 더 빠른 시작
+    //         friction: 24,  // 자연스러운 정착
+    //         mass: 1,       // 기본 질량
+    //     },
+    //     // 메뉴 카드 애니메이션과 타이밍을 맞추기 위한 계산
+    //     // 메뉴 시작 딜레이(150ms) + (trail 딜레이(8ms) × 대략 8-10개 아이템) = ~약 220ms
+    //     delay: 250  // 마지막 카드 등장 직후 나타나도록 설정
+    // });
+
+    // 장바구니 등장 애니메이션 추가 <느리게>
     const cartAnimation = useSpring({
         from: {
             opacity: 0,
@@ -126,26 +145,6 @@ const MenuPage = () => {
         // 페이지 애니메이션 후 조금 지연시켜 등장
         delay: 1000
     });
-
-    // // 장바구니 등장 애니메이션 <느리게>
-    // const cartAnimation = useSpring({
-    //     from: {
-    //         opacity: 0,
-    //         transform: 'translateX(8%)' // 오른쪽에서 더 크게 들어오는 효과
-    //     },
-    //     to: {
-    //         opacity: 1,
-    //         transform: 'translateX(0)'
-    //     },
-    //     config: {
-    //         tension: 110,
-    //         friction: 14,
-    //         duration: 520,
-    //         easing: easings.easeOutQuint
-    //     },
-    //     // 페이지 애니메이션 후 약간 지연시켜 등장
-    //     delay: 150
-    // });
 
     // 행의 높이를 계산하는 함수 - useCallback으로 메모이제이션
     const calculateRowHeight = useCallback(() => {
