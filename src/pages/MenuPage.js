@@ -85,48 +85,45 @@ const MenuPage = () => {
         trail: 15, // 항목 간 지연 시간 감소 (기본값보다 훨씬 낮게)
     });
 
-
-    // 페이지 입장 애니메이션 개선
+    // 페이지 입장 애니메이션 (좌우 방향으로 변경)
     const pageEntrance = useSpring({
         from: {
             opacity: 0,
-            transform: 'translateY(3%)' // 아래에서 위로 자연스럽게 올라오는 효과
+            transform: 'translateX(-3%)' // 왼쪽에서 오른쪽으로 나타나는 효과
         },
         to: {
             opacity: 1,
-            transform: 'translateY(0%)'
+            transform: 'translateX(0%)'
         },
         config: {
-            tension: 170,      // 더 빠른 시작
-            friction: 26,      // 자연스러운 정착
-            mass: 1,
-            duration: 520,     // 적절한 지속 시간
-            easing: easings.easeOutQuint  // 세련된 이징 효과
+            tension: 120,
+            friction: 14,
+            duration: 450,
+            easing: easings.easeOutQuint
         },
         onRest: () => {
             setIsEntering(false);
         }
     });
 
-
-    // 장바구니 등장 애니메이션 개선
+    // 장바구니 등장 애니메이션 (좌우 방향에 맞춤)
     const cartAnimation = useSpring({
         from: {
             opacity: 0,
-            transform: 'translateX(4%)' // 오른쪽에서 왼쪽으로 슬라이드
+            transform: 'translateX(8%)' // 오른쪽에서 더 크게 들어오는 효과
         },
         to: {
             opacity: 1,
             transform: 'translateX(0)'
         },
         config: {
-            tension: 140,
-            friction: 24,
-            duration: 480,
+            tension: 110,
+            friction: 14,
+            duration: 520,
             easing: easings.easeOutQuint
         },
-        // 페이지 애니메이션 후 조금 지연시켜 등장
-        delay: 250  // 지연 시간 단축
+        // 페이지 애니메이션 후 약간 지연시켜 등장
+        delay: 150
     });
 
 

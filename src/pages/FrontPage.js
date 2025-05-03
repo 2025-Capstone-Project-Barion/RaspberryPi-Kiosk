@@ -73,24 +73,18 @@ const FrontPage = () => {
         }))
     );
 
-    // 개선된 페이지 전환 애니메이션
+    // 페이지 전환 애니메이션 (좌우 방향으로 변경)
     const pageTransition = useSpring({
-        // 불투명도 변화 유지하되 더 자연스럽게
         opacity: isLeaving ? 0 : 1,
-        // 슬라이드 효과를 fade out으로 변경 (더 깔끔하고 현대적인 전환)
+        // 좌에서 우로 슬라이드되는 효과
         transform: isLeaving
-            ? 'translateY(5%) scale(0.98)'  // 약간 아래로 내려가며 사라지는 효과
-            : 'translateY(0%) scale(1)',
-        // 훨씬 더 부드러운 애니메이션 설정
+            ? 'translateX(3%) scale(0.98)'  // 오른쪽으로 살짝 이동하며 사라짐
+            : 'translateX(0%) scale(1)',
         config: {
-            // 더 현대적인 이징 적용
-            easing: easings.easeOutCirc,
-            // 부드러운 애니메이션을 위한 값 조정
-            tension: 140,    // 좀 더 빠른 시작
-            friction: 20,    // 부드러운 정착
-            mass: 1,         // 기본 질량값
-            // 애니메이션 시간 조정
-            duration: 480    // 짧게 설정하여 빠르고 깔끔하게
+            easing: easings.easeOutQuint,
+            tension: 120,
+            friction: 14,
+            duration: 450
         },
         onRest: () => {
             if (isLeaving) {
