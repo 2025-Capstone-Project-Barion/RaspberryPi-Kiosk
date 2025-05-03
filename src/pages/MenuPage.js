@@ -85,22 +85,23 @@ const MenuPage = () => {
         trail: 15, // 항목 간 지연 시간 감소 (기본값보다 훨씬 낮게)
     });
 
-    // 페이지 입장 애니메이션
+
+    // 페이지 입장 애니메이션 개선
     const pageEntrance = useSpring({
         from: {
             opacity: 0,
-            transform: 'translateX(3%) scale(0.98)'
+            transform: 'translateY(3%)' // 아래에서 위로 자연스럽게 올라오는 효과
         },
         to: {
             opacity: 1,
-            transform: 'translateX(0%) scale(1)'
+            transform: 'translateY(0%)'
         },
         config: {
-            tension: 60,
-            friction: 16,
+            tension: 170,      // 더 빠른 시작
+            friction: 26,      // 자연스러운 정착
             mass: 1,
-            duration: 700,
-            easing: easings.easeOutQuart
+            duration: 520,     // 적절한 지속 시간
+            easing: easings.easeOutQuint  // 세련된 이징 효과
         },
         onRest: () => {
             setIsEntering(false);
@@ -108,25 +109,26 @@ const MenuPage = () => {
     });
 
 
-    // 장바구니 등장 애니메이션 추가
+    // 장바구니 등장 애니메이션 개선
     const cartAnimation = useSpring({
         from: {
             opacity: 0,
-            transform: 'translateX(30px) scale(0.95)'
+            transform: 'translateX(4%)' // 오른쪽에서 왼쪽으로 슬라이드
         },
         to: {
             opacity: 1,
-            transform: 'translateX(0) scale(1)'
+            transform: 'translateX(0)'
         },
         config: {
-            tension: 80,
-            friction: 20,
-            mass: 1.2,
-            duration: 800
+            tension: 140,
+            friction: 24,
+            duration: 480,
+            easing: easings.easeOutQuint
         },
         // 페이지 애니메이션 후 조금 지연시켜 등장
-        delay: 1050
+        delay: 250  // 지연 시간 단축
     });
+
 
     // 행의 높이를 계산하는 함수 - useCallback으로 메모이제이션
     const calculateRowHeight = useCallback(() => {

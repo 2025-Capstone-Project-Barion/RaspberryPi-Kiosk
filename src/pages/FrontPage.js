@@ -75,40 +75,38 @@ const FrontPage = () => {
 
     // 개선된 페이지 전환 애니메이션
     const pageTransition = useSpring({
-        // 불투명도 변화
+        // 불투명도 변화 유지하되 더 자연스럽게
         opacity: isLeaving ? 0 : 1,
-        // 왼쪽으로 사라지는 슬라이드 효과 (X축으로 -20% 이동, 더 자연스러운 이동)
+        // 슬라이드 효과를 fade out으로 변경 (더 깔끔하고 현대적인 전환)
         transform: isLeaving
-            ? 'translateX(-20%) scale(0.95)'
-            : 'translateX(0%) scale(1)',
-        // 부드러운 애니메이션을 위한 설정
+            ? 'translateY(5%) scale(0.98)'  // 약간 아래로 내려가며 사라지는 효과
+            : 'translateY(0%) scale(1)',
+        // 훨씬 더 부드러운 애니메이션 설정
         config: {
-            // 더 부드러운 이징 적용
-            easing: easings.easeOutQuint,
-            // 더 낮은 tension과 friction으로 부드러움 증가
-            tension: 80, // 낮은 값으로 변경
-            friction: 16, // 적절한 마찰력
-            mass: 1.3, // 질량감 추가
-            // 애니메이션 시간을 더 늘려 여유롭게
-            duration: 700 // 더 긴 시간으로 설정
+            // 더 현대적인 이징 적용
+            easing: easings.easeOutCirc,
+            // 부드러운 애니메이션을 위한 값 조정
+            tension: 140,    // 좀 더 빠른 시작
+            friction: 20,    // 부드러운 정착
+            mass: 1,         // 기본 질량값
+            // 애니메이션 시간 조정
+            duration: 480    // 짧게 설정하여 빠르고 깔끔하게
         },
-        // 애니메이션이 거의 완료될 때(95%) 페이지 이동 시작하여 부드러운 전환
         onRest: () => {
             if (isLeaving) {
-                setTimeout(() => {
-                    navigate('/MenuPage');
-                }, 50); // 약간의 지연 추가
+                navigate('/MenuPage');
             }
         },
     });
 
-    // 오버레이 애니메이션 개선 - 검은색 배경으로 자연스러운 전환
+    // 오버레이 애니메이션 개선 - 더 세련된 블러 효과로 변경
     const overlaySpring = useSpring({
-        opacity: isLeaving ? 0.95 : 0,
-        // 부드러운 이징 적용
+        opacity: isLeaving ? 1 : 0,
+        backdropFilter: isLeaving ? 'blur(5px)' : 'blur(0px)',
+        backgroundColor: isLeaving ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0)',
         config: {
-            easing: easings.easeInOutCubic,
-            duration: 700
+            easing: easings.easeOutQuint,
+            duration: 400
         },
     });
 
