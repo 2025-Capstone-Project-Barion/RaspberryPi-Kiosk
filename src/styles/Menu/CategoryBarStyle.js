@@ -33,7 +33,7 @@ export const CategoryContainer = styled(Box)({
     display: 'flex',
     flexGrow: 1,
     justifyContent: 'flex-end', // 오른쪽 정렬로 변경
-    gap: '12px',
+    gap: '42px',
     paddingLeft: '40px', // 로고와의 간격 확보
 });
 
@@ -93,7 +93,7 @@ export const CategoryButton = styled(Button, {
         transition: 'transform 0.1s ease'
     },
 
-    margin: '4px 6px',
+    margin: '7px 26px',
     transition: 'all 0.2s ease-in-out', // 모든 변화에 애니메이션 적용
 
     // 호버 효과 제거 - 터치 환경 최적화
