@@ -80,7 +80,7 @@ const MenuPage = () => {
             friction: 30,  // 더 빠른 정착을 위해 값 증가
             mass: 0.8,     // 더 가벼운 움직임을 위해 질량 감소
         },
-        delay: 300,
+        delay: 200,
         // 한 번에 더 많은 항목이 동시에 애니메이션되도록 설정
         trail: 15, // 항목 간 지연 시간 감소 (기본값보다 훨씬 낮게)
     });
@@ -106,26 +106,46 @@ const MenuPage = () => {
         }
     });
 
-    // 장바구니 등장 애니메이션 (좌우 방향에 맞춤)
+
+    // 장바구니 등장 애니메이션 추가 <천천히>
     const cartAnimation = useSpring({
         from: {
             opacity: 0,
-            transform: 'translateX(8%)' // 오른쪽에서 더 크게 들어오는 효과
+            transform: 'translateX(30px) scale(0.95)'
         },
         to: {
             opacity: 1,
-            transform: 'translateX(0)'
+            transform: 'translateX(0) scale(1)'
         },
         config: {
-            tension: 110,
-            friction: 14,
-            duration: 520,
-            easing: easings.easeOutQuint
+            tension: 80,
+            friction: 20,
+            mass: 1.2,
+            duration: 500
         },
-        // 페이지 애니메이션 후 약간 지연시켜 등장
-        delay: 150
+        // 페이지 애니메이션 후 조금 지연시켜 등장
+        delay: 1000
     });
 
+    // // 장바구니 등장 애니메이션 <느리게>
+    // const cartAnimation = useSpring({
+    //     from: {
+    //         opacity: 0,
+    //         transform: 'translateX(8%)' // 오른쪽에서 더 크게 들어오는 효과
+    //     },
+    //     to: {
+    //         opacity: 1,
+    //         transform: 'translateX(0)'
+    //     },
+    //     config: {
+    //         tension: 110,
+    //         friction: 14,
+    //         duration: 520,
+    //         easing: easings.easeOutQuint
+    //     },
+    //     // 페이지 애니메이션 후 약간 지연시켜 등장
+    //     delay: 150
+    // });
 
     // 행의 높이를 계산하는 함수 - useCallback으로 메모이제이션
     const calculateRowHeight = useCallback(() => {
