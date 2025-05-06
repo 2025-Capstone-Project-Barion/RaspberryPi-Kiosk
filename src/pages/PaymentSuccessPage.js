@@ -238,7 +238,7 @@ const PaymentSuccessPage = () => {
                                     fontSize: '1rem',
                                 }}
                             >
-                                주문이 접수되었습니다. 잠시 후 맛있는 식사를 즐기세요.
+                                주문이 접수되었습니다. 즐거운 하루 되세요!
                             </Typography>
                         </Box>
 
@@ -315,7 +315,7 @@ const PaymentSuccessPage = () => {
                 }}
             >
                 <Typography variant="body2" sx={{ color: '#64748b', textAlign: 'center' }}>
-                    결제 시스템 © {new Date().getFullYear()} 키오스크 솔루션
+                    Barion Kiosk © {new Date().getFullYear()} Made By WJLEE22
                 </Typography>
             </motion.div>
         </Box>
