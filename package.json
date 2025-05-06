@@ -8,6 +8,8 @@
     "@mui/icons-material": "^6.4.7",
     "@mui/material": "^6.4.7",
     "@react-spring/web": "^9.7.5",
+    "@tosspayments/tosspayments-sdk": "^2.3.4",
+    "framer-motion": "^12.10.0",
     "hammerjs": "^2.0.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

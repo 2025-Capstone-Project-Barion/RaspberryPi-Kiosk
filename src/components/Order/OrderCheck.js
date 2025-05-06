@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { Typography, Box, Divider } from '@mui/material';
 import Hammer from 'hammerjs'; // Hammer.js 임포트 - 라즈베리파이의 드레그 스크롤 미지원을 SW적으로 해결-> 터치로 스크롤 구현을 위한 라이브러리
+import { v4 as uuidv4 } from 'uuid';
 import {
     OrderCheckContainer,
     OrderCheckHeader,
@@ -12,7 +13,8 @@ import {
     PaymentButton
 } from '../../styles/Order/OrderCheckStyle';
 
-const OrderCheck = ({ cartItems, onClose, onPayment }) => {
+const OrderCheck = ({ cartItems, onClose }) => {
+
     // 주문 항목 리스트 ref 추가
     const orderItemsListRef = useRef(null);
     // Hammer.js 인스턴스 저장용 ref
@@ -222,8 +224,19 @@ const OrderCheck = ({ cartItems, onClose, onPayment }) => {
                     돌아가기
                 </BackButton>
 
-                {/* 결제하기 버튼 */}
-                <PaymentButton onClick={onPayment} sx={{
+                <PaymentButton onClick={() => {
+                    // 주문 ID 생성
+                    const newOrderId = uuidv4();
+
+                    // 로컬 스토리지에 주문 정보 저장
+                    localStorage.setItem('orderItems', JSON.stringify(cartItems));
+                    localStorage.setItem('totalPrice', totalPrice.toString());
+                    localStorage.setItem('orderId', newOrderId);
+
+                    onClose && onClose(); // 다이얼로그 닫기
+                    // 결제 페이지로 이동
+                    window.location.href = '/payment';
+                }} sx={{
                     padding: '16px 32px',
                     fontSize: '1.1rem',
                     fontWeight: 700,
