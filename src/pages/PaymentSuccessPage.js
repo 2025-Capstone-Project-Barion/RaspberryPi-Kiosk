@@ -45,10 +45,10 @@ const PaymentSuccessPage = () => {
             });
 
             // 백엔드로 주문 정보 전송하는 코드 (주석처리)
-            /*
+
             // 백엔드 서버 API 엔드포인트 설정
-            const API_ENDPOINT = 'http://localhost:8080/api/orders'; // 실제 스프링부트 서버 주소로 변경
-            
+            const API_ENDPOINT = 'https://webhook.site/1c4a8c10-7a98-44b6-ae2c-3810122202c7'; // 실제 스프링부트 서버 주소로 변경
+
             // 전송할 데이터 구성 (필요한 정보만 포함)
             const orderPayload = {
                 orderId: orderData.orderId,
@@ -61,7 +61,7 @@ const PaymentSuccessPage = () => {
                 })),
                 orderDate: new Date().toISOString() // 주문 일시 추가
             };
-            
+
             // fetch API를 사용하여 백엔드로 데이터 전송
             fetch(API_ENDPOINT, {
                 method: 'POST',
@@ -70,21 +70,20 @@ const PaymentSuccessPage = () => {
                 },
                 body: JSON.stringify(orderPayload)
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('주문 정보 전송 성공:', data);
-            })
-            .catch(error => {
-                console.error('주문 정보 전송 실패:', error);
-                // 에러 처리는 여기서 하면 됩니다.
-                // 실제 서비스에서는 재시도 로직이나 사용자 알림 기능을 추가할 수 있습니다.
-            });
-            */
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    // JSON 파싱 없이, 상태 코드만 확인
+                    console.log('주문 정보 전송 성공, status:', response.status);
+                    // 만약 응답 텍스트를 보고 싶다면:
+                    // return response.text();
+                })
+                // .then(text => console.log('응답 본문:', text))
+                .catch(error => {
+                    console.error('주문 정보 전송 실패:', error);
+                });
+
         }, 3000);
 
         return () => clearTimeout(loadingTimer);
