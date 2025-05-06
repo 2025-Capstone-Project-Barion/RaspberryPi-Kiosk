@@ -1,196 +1,276 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Button, Paper, CircularProgress } from '@mui/material';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Box, Typography, CircularProgress } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { useOrder } from '../contexts/OrderContext';
+// framer-motion 설치 필요 (npm install framer-motion)
+import { motion } from 'framer-motion';
 
 const PaymentSuccessPage = () => {
     const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
     const [loading, setLoading] = useState(true);
-    const [paymentData, setPaymentData] = useState(null);
-    const [paymentConfirmed, setPaymentConfirmed] = useState(false);
+    const [countdown, setCountdown] = useState(5);
+    const { orderItems, totalPrice, orderId, clearOrderInfo } = useOrder();
 
-    // 쿼리 파라미터에서 결제 정보 추출
-    const orderId = searchParams.get('orderId');
-    const paymentKey = searchParams.get('paymentKey');
-    const amount = searchParams.get('amount');
-
+    // 처음 2-3초 동안 로딩 화면 표시
     useEffect(() => {
-        // 로컬 스토리지에서 주문 정보 가져오기
-        const orderItems = JSON.parse(localStorage.getItem('orderItems') || '[]');
-        const storedTotalPrice = parseInt(localStorage.getItem('totalPrice') || '0', 10);
-        const receivedAmount = parseInt(amount || '0', 10);
+        const loadingTimer = setTimeout(() => {
+            setLoading(false);
 
-        console.log('금액 불일치:', receivedAmount, storedTotalPrice);
+            // 주문 정보 콘솔에 출력 (백엔드로 전송할 데이터)
+            console.log('백엔드로 전송할 주문 데이터:', {
+                orderId,
+                totalPrice,
+                orderItems: orderItems.map(item => ({
+                    name: item.name,
+                    quantity: item.quantity,
+                    price: item.price,
+                    subtotal: item.price * item.quantity
+                }))
+            });
 
-        // 결제 정보 객체 생성
-        const paymentInfo = {
-            paymentKey,
-            orderId,
-            amount: receivedAmount,
-            orderItems: orderItems.map(item => ({
-                name: item.name,
-                price: item.price,
-                quantity: item.quantity
-            }))
-        };
+        }, 2500); // 2.5초 후 로딩 완료
 
+        return () => clearTimeout(loadingTimer);
+    }, [orderId, orderItems, totalPrice]);
 
-        // 테스트 환경에서는 결제 승인 API 호출을 모방
-        const confirmPayment = async () => {
-            try {
-                // 실제로는 서버에 요청을 보내 결제 승인 API를 호출해야 함
-                // 테스트 환경에서는 성공했다고 가정
-                console.log('결제 승인 요청 데이터:', {
-                    paymentKey,
-                    orderId,
-                    amount: receivedAmount
-                });
+    // 카운트다운 및 자동 홈 이동
+    useEffect(() => {
+        if (loading) return;
 
-                // 결제 성공 처리
-                setPaymentData(paymentInfo);
-                setPaymentConfirmed(true);
+        const timer = setInterval(() => {
+            setCountdown(prev => {
+                if (prev <= 1) {
+                    clearInterval(timer);
+                    // 주문 정보 초기화
+                    clearOrderInfo();
+                    // 홈으로 이동
+                    navigate('/');
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
 
-                // 로컬 스토리지 정리
-                localStorage.removeItem('orderItems');
-                localStorage.removeItem('totalPrice');
-            } catch (error) {
-                console.error('결제 승인 실패:', error);
-                navigate('/payment/fail?message=결제 승인 실패&code=CONFIRM_FAILED');
-            } finally {
-                setLoading(false);
-            }
-        };
+        return () => clearInterval(timer);
+    }, [loading, navigate, clearOrderInfo]);
 
-        confirmPayment();
-    }, [navigate, orderId, paymentKey, amount]);
-
-    // 홈으로 이동 함수
-    const goToHome = () => {
-        navigate('/');
-    };
-
-
+    // 로딩 화면
     if (loading) {
         return (
-            <Box sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '100vh',
-                gap: 2
-            }}>
-                <CircularProgress />
-                <Typography>결제를 완료하고 있습니다...</Typography>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100vh',
+                    gap: 2,
+                    background: 'linear-gradient(to bottom right, #ffffff, #f7f9ff)',
+                }}
+            >
+                <Box sx={{ mb: 4 }}>
+                    <CircularProgress size={70} sx={{ color: '#2142FF' }} />
+                </Box>
+                <Typography
+                    variant="h5"
+                    sx={{
+                        fontWeight: 600,
+                        color: '#2142FF',
+                        textAlign: 'center'
+                    }}
+                >
+                    결제를 완료하고 있습니다
+                </Typography>
+                <Typography
+                    variant="body1"
+                    sx={{
+                        mt: 2,
+                        color: '#666',
+                        textAlign: 'center'
+                    }}
+                >
+                    잠시만 기다려주세요...
+                </Typography>
             </Box>
         );
     }
+
     return (
-        <Box sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '48px 24px',
-            maxWidth: '700px',
-            margin: '0 auto',
-        }}>
-            <CheckCircleIcon sx={{
-                fontSize: '80px',
-                color: '#2142FF',
-                mb: 3
-            }} />
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '100vh',
+                padding: '32px',
+                background: 'linear-gradient(to bottom right, #ffffff, #f7f9ff)',
+            }}
+        >
+            <motion.div
+                initial={{ scale: 0.5, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: 'spring', stiffness: 100, damping: 15 }}
+            >
+                <CheckCircleIcon
+                    sx={{
+                        fontSize: '120px',
+                        color: '#2142FF',
+                        mb: 3,
+                    }}
+                />
+            </motion.div>
 
-            <Typography variant="h4" sx={{
-                fontWeight: 700,
-                mb: 2,
-                textAlign: 'center'
-            }}>
-                {paymentConfirmed
-                    ? '결제가 완료되었습니다'
-                    : '결제 진행 중입니다'}
-            </Typography>
+            <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.3 }}
+            >
+                <Typography
+                    variant="h3"
+                    sx={{
+                        fontWeight: 700,
+                        mb: 2,
+                        textAlign: 'center',
+                    }}
+                >
+                    결제가 완료되었습니다
+                </Typography>
+            </motion.div>
 
-            <Typography variant="body1" sx={{
-                mb: 4,
-                textAlign: 'center',
-                color: '#666'
-            }}>
-                {paymentConfirmed
-                    ? '주문이 성공적으로 처리되었습니다. 감사합니다!'
-                    : '결제가 진행 중입니다. 잠시만 기다려주세요.'}
-            </Typography>
+            <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.5 }}
+            >
+                <Typography
+                    variant="body1"
+                    sx={{
+                        fontSize: '1.2rem',
+                        mb: 5,
+                        textAlign: 'center',
+                        color: '#555',
+                    }}
+                >
+                    주문이 성공적으로 처리되었습니다
+                </Typography>
+            </motion.div>
 
-            {paymentData && (
-                <>
-                    <Box sx={{
+            <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.7 }}
+                style={{ width: '100%', maxWidth: '500px' }}
+            >
+                <Box
+                    sx={{
                         width: '100%',
                         p: 3,
-                        bgcolor: '#f7f9ff',
-                        borderRadius: '16px',
-                        mb: 4
-                    }}>
-                        <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
-                            결제 정보
-                        </Typography>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                            <Typography color="text.secondary">주문번호</Typography>
-                            <Typography>{paymentData?.orderId}</Typography>
-                        </Box>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                            <Typography color="text.secondary">결제금액</Typography>
-                            <Typography>{paymentData?.amount.toLocaleString()}원</Typography>
-                        </Box>
-                    </Box>
+                        mb: 4,
+                        bgcolor: 'rgba(255, 255, 255, 0.7)',
+                        borderRadius: '20px',
+                        boxShadow: '0 10px 35px rgba(33, 66, 255, 0.1)',
+                        backdropFilter: 'blur(10px)'
+                    }}
+                >
+                    <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#2142FF' }}>
+                        주문 요약
+                    </Typography>
 
-                    <Paper
-                        elevation={0}
-                        sx={{
-                            width: '100%',
-                            p: 2,
-                            mb: 4,
-                            bgcolor: '#f0f4ff',
-                            border: '1px solid #d0d7ff',
-                            borderRadius: '8px',
-                            fontFamily: 'monospace'
-                        }}
-                    >
-                        <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: '#2142FF' }}>
-                            전송할 데이터 (JSON)
-                        </Typography>
+                    {orderItems.map((item, index) => (
                         <Box
-                            component="pre"
+                            key={index}
                             sx={{
-                                overflowX: 'auto',
-                                fontSize: '0.85rem',
-                                p: 1,
-                                m: 0
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                mb: 1.5,
+                                pb: index !== orderItems.length - 1 ? 1.5 : 0,
+                                borderBottom: index !== orderItems.length - 1 ? '1px dashed #e0e0e0' : 'none'
                             }}
                         >
-                            {JSON.stringify(paymentData, null, 2)}
+                            <Typography sx={{ fontWeight: 500 }}>
+                                {item.name} x {item.quantity}
+                            </Typography>
+                            <Typography sx={{ fontWeight: 600 }}>
+                                {(item.price * item.quantity).toLocaleString()}원
+                            </Typography>
                         </Box>
-                    </Paper>
-                </>
-            )}
+                    ))}
 
-            <Button
-                variant="contained"
-                onClick={goToHome}
-                sx={{
-                    bgcolor: '#2142FF',
-                    py: 1.5,
-                    px: 4,
-                    borderRadius: '12px',
-                    fontSize: '1rem',
-                    fontWeight: 600,
-                    '&:hover': {
-                        bgcolor: '#1a35cc'
-                    }
-                }}
+                    <Box sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        mt: 2.5,
+                        pt: 2,
+                        borderTop: '2px solid #e8eaf6',
+                        alignItems: 'center'
+                    }}>
+                        <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#222' }}>
+                            총 결제금액
+                        </Typography>
+                        <Typography
+                            variant="h5"
+                            sx={{
+                                fontWeight: 800,
+                                color: '#2142FF',
+                                letterSpacing: '-0.5px'
+                            }}
+                        >
+                            {totalPrice.toLocaleString()}원
+                        </Typography>
+                    </Box>
+                </Box>
+            </motion.div>
+
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1 }}
             >
-                홈으로 돌아가기
-            </Button>
+                <Box
+                    sx={{
+                        position: 'relative',
+                        mt: 3,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center'
+                    }}
+                >
+                    <Typography variant="body2" sx={{ color: '#666', mb: 2 }}>
+                        {countdown}초 후 첫 화면으로 이동합니다
+                    </Typography>
+
+                    <Box
+                        sx={{
+                            width: '100px',
+                            height: '100px',
+                            position: 'relative',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}
+                    >
+                        <CircularProgress
+                            variant="determinate"
+                            value={(countdown / 5) * 100}
+                            size={80}
+                            thickness={4}
+                            sx={{ color: '#2142FF' }}
+                        />
+                        <Typography
+                            variant="h4"
+                            sx={{
+                                position: 'absolute',
+                                fontWeight: 700,
+                                color: '#2142FF'
+                            }}
+                        >
+                            {countdown}
+                        </Typography>
+                    </Box>
+                </Box>
+            </motion.div>
         </Box>
     );
 };
