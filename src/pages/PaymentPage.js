@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Typography, CircularProgress, Box } from '@mui/material';
+import { CircularProgress, Box, Typography } from '@mui/material';
 import { loadTossPayments, ANONYMOUS } from "@tosspayments/tosspayments-sdk";
 import { useNavigate } from 'react-router-dom';
-// Context 제거
-// import { useOrder } from '../contexts/OrderContext';
 import {
     PaymentContainer,
-    PaymentHeader,
-    OrderSummaryBox,
     PaymentWidgetContainer,
     ButtonContainer,
     PaymentButton
@@ -125,41 +121,23 @@ const PaymentPage = () => {
         return (
             <Box sx={{
                 display: 'flex',
+                flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                height: '100vh'
+                height: '100vh',
+                gap: 3,
+                background: 'linear-gradient(to bottom right, #ffffff, #f7f9ff)'
             }}>
-                <CircularProgress />
+                <CircularProgress size={70} sx={{ color: '#2142FF' }} />
+                <Typography variant="h5" sx={{ fontWeight: 600, color: '#2142FF' }}>
+                    결제 준비 중...
+                </Typography>
             </Box>
         );
     }
 
     return (
         <PaymentContainer>
-            <PaymentHeader>
-                <Typography variant="h5" sx={{ fontWeight: 700 }}>
-                    결제 진행
-                </Typography>
-            </PaymentHeader>
-
-            <OrderSummaryBox>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
-                    주문 정보
-                </Typography>
-                {orderData.orderItems.map((item, index) => (
-                    <Box key={index} sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                        <Typography>{item.name} x {item.quantity}</Typography>
-                        <Typography>{(item.price * item.quantity).toLocaleString()}원</Typography>
-                    </Box>
-                ))}
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2, pt: 2, borderTop: '1px dashed #ddd' }}>
-                    <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>총 결제금액</Typography>
-                    <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#2142FF' }}>
-                        {orderData.totalPrice.toLocaleString()}원
-                    </Typography>
-                </Box>
-            </OrderSummaryBox>
-
             <PaymentWidgetContainer>
                 <div id="payment-method"></div>
             </PaymentWidgetContainer>
@@ -169,7 +147,7 @@ const PaymentPage = () => {
                     disabled={!ready}
                     onClick={handlePaymentRequest}
                 >
-                    결제하기
+                    {orderData.totalPrice.toLocaleString()}원 결제하기
                 </PaymentButton>
             </ButtonContainer>
         </PaymentContainer>
