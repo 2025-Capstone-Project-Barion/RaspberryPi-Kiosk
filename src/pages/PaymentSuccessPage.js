@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, CircularProgress, Paper, Divider } from '@mui/material';
+import { Box, Typography, CircularProgress, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle'; // CheckCircleIcon으로 변경
-import PaidOutlinedIcon from '@mui/icons-material/PaidOutlined';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import { motion } from 'framer-motion';
 
 const PaymentSuccessPage = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
-    const [countdown, setCountdown] = useState(10); // 10초로 변경
+    const [countdown, setCountdown] = useState(10);
     const [orderData, setOrderData] = useState({
         totalPrice: 0,
         orderId: ''
@@ -31,7 +30,7 @@ const PaymentSuccessPage = () => {
         const loadingTimer = setTimeout(() => {
             setLoading(false);
             console.log('결제 완료:', orderData);
-        }, 4000); // 4초 후 로딩 종료
+        }, 3000);
 
         return () => clearTimeout(loadingTimer);
     }, [orderData]);
@@ -47,19 +46,22 @@ const PaymentSuccessPage = () => {
         return () => clearInterval(timer);
     }, [loading]);
 
-    // 화면 이동 처리
+    // 화면 이동 처리 부분 수정
     useEffect(() => {
         if (countdown !== 0) return;
 
-        // 로컬스토리지 정리
-        localStorage.removeItem('orderItems');
-        localStorage.removeItem('totalPrice');
-        localStorage.removeItem('orderId');
+        // 1.2초 지연 후 네비게이트. 프로그래스바 0초 남기고 정확히 이동하기 위함.
+        const timeout = setTimeout(() => {
+            localStorage.removeItem('orderItems');
+            localStorage.removeItem('totalPrice');
+            localStorage.removeItem('orderId');
+            navigate('/');
+        }, 1200);
 
-        navigate('/');
+        return () => clearTimeout(timeout);
     }, [countdown, navigate]);
 
-    // 기존 로딩 화면으로 복원, 텍스트 크기만 키움
+    // 로딩 화면
     if (loading) {
         return (
             <Box
@@ -69,15 +71,15 @@ const PaymentSuccessPage = () => {
                     justifyContent: 'center',
                     alignItems: 'center',
                     height: '100vh',
-                    gap: 3, // 간격 약간 키움
+                    gap: 3,
                     background: 'linear-gradient(to bottom right, #ffffff, #f7f9ff)',
                 }}
             >
                 <Box sx={{ mb: 4 }}>
-                    <CircularProgress size={80} sx={{ color: '#2142FF' }} /> {/* 크기 키움 */}
+                    <CircularProgress size={80} sx={{ color: '#2142FF' }} />
                 </Box>
                 <Typography
-                    variant="h4" // h5에서 h4로 변경하여 크기 키움
+                    variant="h4"
                     sx={{
                         fontWeight: 600,
                         color: '#2142FF',
@@ -87,7 +89,7 @@ const PaymentSuccessPage = () => {
                     결제를 완료하고 있습니다
                 </Typography>
                 <Typography
-                    variant="h6" // body1에서 h6로 변경하여 크기 키움
+                    variant="h6"
                     sx={{
                         mt: 2,
                         color: '#666',
@@ -113,7 +115,7 @@ const PaymentSuccessPage = () => {
                 background: 'linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%)',
             }}
         >
-            {/* 성공 아이콘 애니메이션 - CheckCircleIcon으로 변경 */}
+            {/* 성공 아이콘 애니메이션 */}
             <motion.div
                 initial={{ scale: 0, rotate: -180 }}
                 animate={{ scale: 1, rotate: 0 }}
@@ -157,7 +159,7 @@ const PaymentSuccessPage = () => {
                         fontWeight: 800,
                         color: '#1e293b',
                         textAlign: 'center',
-                        marginBottom: '0.5rem',
+                        marginBottom: '1.5rem',  // 0.5rem에서 1.5rem으로 증가
                         fontSize: { xs: '2rem', md: '2.5rem' }
                     }}
                 >
@@ -170,7 +172,7 @@ const PaymentSuccessPage = () => {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.8 }}
-                style={{ width: '100%', maxWidth: '550px', marginTop: '2rem' }}
+                style={{ width: '100%', maxWidth: '550px', marginTop: '3.5rem' }}  // 2rem에서 3.5rem으로 증가
             >
                 <Paper
                     elevation={3}
@@ -179,78 +181,52 @@ const PaymentSuccessPage = () => {
                         overflow: 'hidden',
                         backgroundColor: '#ffffff',
                         boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                        transform: 'translateY(-10px)', // 전체 카드를 위로 이동
                     }}
                 >
-                    {/* 결제 금액 섹션 */}
+                    {/* 감사 인사 섹션 */}
                     <Box
                         sx={{
-                            padding: '1.8rem',
+                            padding: '2rem',
                             backgroundColor: '#1a56db',
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
+                            textAlign: 'center',
                         }}
                     >
                         <Typography
-                            variant="subtitle1"
+                            variant="h5"
                             sx={{
-                                color: 'rgba(255, 255, 255, 0.8)',
-                                marginBottom: '0.5rem',
-                                fontSize: '1.1rem',
+                                color: '#ffffff',
+                                fontWeight: 700,
+                                marginBottom: '0.6rem',
+                                fontSize: '1.5rem'
                             }}
                         >
-                            총 결제 금액
+                            주문해 주셔서 감사합니다
                         </Typography>
 
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <PaidOutlinedIcon sx={{ fontSize: '2rem', color: '#ffffff' }} />
-                            <Typography
-                                variant="h3"
-                                sx={{
-                                    fontWeight: 700,
-                                    color: '#ffffff',
-                                    fontSize: { xs: '2.2rem', md: '2.8rem' },
-                                }}
-                            >
-                                {orderData.totalPrice.toLocaleString()}원
-                            </Typography>
-                        </Box>
+                        <Typography
+                            variant="subtitle1"
+                            sx={{
+                                color: 'rgba(255, 255, 255, 0.9)',
+                                fontSize: '1.1rem',
+                                fontWeight: 500,
+                            }}
+                        >
+                            주문이 접수되었습니다. 즐거운 하루 되세요!
+                        </Typography>
                     </Box>
 
-                    <Box sx={{ padding: '2rem' }}>
-                        {/* 주문 감사 메시지 */}
-                        <Box sx={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-                            <Typography
-                                variant="h6"
-                                sx={{
-                                    fontWeight: 600,
-                                    color: '#1e293b',
-                                    fontSize: '1.3rem',
-                                    marginBottom: '0.5rem',
-                                }}
-                            >
-                                주문해 주셔서 감사합니다
-                            </Typography>
-                            <Typography
-                                variant="body1"
-                                sx={{
-                                    color: '#64748b',
-                                    fontSize: '1rem',
-                                }}
-                            >
-                                주문이 접수되었습니다. 즐거운 하루 되세요!
-                            </Typography>
-                        </Box>
-
-                        <Divider sx={{ margin: '1rem 0' }} />
-
-                        {/* 카운트다운 섹션 - 카운트다운 10초로 변경 */}
-                        <Box sx={{ textAlign: 'center', marginTop: '1.5rem' }}>
+                    <Box sx={{ padding: '1.8rem' }}>
+                        {/* 카운트다운 섹션 */}
+                        <Box sx={{ textAlign: 'center' }}>
                             <Box sx={{
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                marginBottom: '1rem',
+                                marginBottom: '1.2rem',
                                 gap: '0.5rem',
                             }}>
                                 <AccessTimeFilledIcon sx={{ color: '#1a56db', fontSize: '1.5rem' }} />
@@ -266,7 +242,7 @@ const PaymentSuccessPage = () => {
                                 </Typography>
                             </Box>
 
-                            {/* 카운트다운 프로그레스 바 - 10초로 수정 */}
+                            {/* 카운트다운 프로그레스 바 */}
                             <Box sx={{ position: 'relative', marginTop: '1rem' }}>
                                 <motion.div
                                     initial={{ width: '100%' }}
@@ -296,16 +272,11 @@ const PaymentSuccessPage = () => {
                 </Paper>
             </motion.div>
 
-            {/* 라이센스 추가 아이콘 효과 */}
+            {/* 라이센스 텍스트 */}
             <motion.div
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{
-                    type: "spring",
-                    stiffness: 200,
-                    damping: 15,
-                    delay: 1.5
-                }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 1.8 }}
                 style={{
                     position: 'absolute',
                     bottom: '20px',
@@ -314,7 +285,7 @@ const PaymentSuccessPage = () => {
                     justifyContent: 'center'
                 }}
             >
-                <Typography variant="body2" sx={{ color: '#64748b', textAlign: 'center' }}>
+                <Typography variant="body2" sx={{ color: '#64748b', textAlign: 'center', fontWeight: 500 }}>
                     Barion Kiosk © {new Date().getFullYear()} Made By WJLEE22
                 </Typography>
             </motion.div>
