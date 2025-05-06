@@ -31,6 +31,7 @@ const FrontPage = () => {
         // 결제 관련 데이터 초기화
         localStorage.removeItem('orderItems');
         localStorage.removeItem('totalPrice');
+        localStorage.removeItem('orderId'); // 이 부분 추가 필요
     }, []);
 
     // // 이미지 사전 로드 (메뉴 페이지 이미지)

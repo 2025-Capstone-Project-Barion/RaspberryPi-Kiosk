@@ -2,15 +2,38 @@ import React, { useEffect, useState } from 'react';
 import { Box, Typography, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { useOrder } from '../contexts/OrderContext';
-// framer-motion 설치 필요 (npm install framer-motion)
+// Context 제거하고 로컬 스토리지 사용
+// import { useOrder } from '../contexts/OrderContext';
 import { motion } from 'framer-motion';
 
 const PaymentSuccessPage = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [countdown, setCountdown] = useState(5);
-    const { orderItems, totalPrice, orderId, clearOrderInfo } = useOrder();
+    // Context 대신 로컬 상태 사용
+    const [orderData, setOrderData] = useState({
+        orderItems: [],
+        totalPrice: 0,
+        orderId: ''
+    });
+
+    // 로컬 스토리지에서 데이터 로드
+    useEffect(() => {
+        try {
+            // 로컬 스토리지에서 주문 정보 불러오기
+            const items = JSON.parse(localStorage.getItem('orderItems') || '[]');
+            const price = parseInt(localStorage.getItem('totalPrice') || '0');
+            const id = localStorage.getItem('orderId') || '';
+
+            setOrderData({
+                orderItems: items,
+                totalPrice: price,
+                orderId: id
+            });
+        } catch (error) {
+            console.error('주문 데이터 로딩 오류:', error);
+        }
+    }, []);
 
     // 처음 2-3초 동안 로딩 화면 표시
     useEffect(() => {
@@ -19,9 +42,9 @@ const PaymentSuccessPage = () => {
 
             // 주문 정보 콘솔에 출력 (백엔드로 전송할 데이터)
             console.log('백엔드로 전송할 주문 데이터:', {
-                orderId,
-                totalPrice,
-                orderItems: orderItems.map(item => ({
+                orderId: orderData.orderId,
+                totalPrice: orderData.totalPrice,
+                orderItems: orderData.orderItems.map(item => ({
                     name: item.name,
                     quantity: item.quantity,
                     price: item.price,
@@ -32,30 +55,35 @@ const PaymentSuccessPage = () => {
         }, 2500); // 2.5초 후 로딩 완료
 
         return () => clearTimeout(loadingTimer);
-    }, [orderId, orderItems, totalPrice]);
+    }, [orderData]);
 
-    // 카운트다운 및 자동 홈 이동
+    // 카운트다운과 네비게이션을 분리한 개선된 코드
+
+    // 1) 순수하게 카운트다운만 담당하는 effect
     useEffect(() => {
         if (loading) return;
 
         const timer = setInterval(() => {
-            setCountdown(prev => {
-                if (prev <= 1) {
-                    clearInterval(timer);
-                    // 주문 정보 초기화
-                    clearOrderInfo();
-                    // 홈으로 이동
-                    navigate('/');
-                    return 0;
-                }
-                return prev - 1;
-            });
+            setCountdown(prev => Math.max(prev - 1, 0));
         }, 1000);
 
         return () => clearInterval(timer);
-    }, [loading, navigate, clearOrderInfo]);
+    }, [loading]);
 
-    // 로딩 화면
+    // 2) countdown 변화 감지하여 네비게이션 처리하는 별도 effect
+    useEffect(() => {
+        if (countdown !== 0) return;
+
+        // 로컬스토리지 정리
+        localStorage.removeItem('orderItems');
+        localStorage.removeItem('totalPrice');
+        localStorage.removeItem('orderId');
+
+        // 렌더링이 완료된 후 네비게이션 수행
+        navigate('/');
+    }, [countdown, navigate]);
+
+    // 로딩 화면 (기존 코드 유지)
     if (loading) {
         return (
             <Box
@@ -178,15 +206,15 @@ const PaymentSuccessPage = () => {
                         주문 요약
                     </Typography>
 
-                    {orderItems.map((item, index) => (
+                    {orderData.orderItems.map((item, index) => (
                         <Box
                             key={index}
                             sx={{
                                 display: 'flex',
                                 justifyContent: 'space-between',
                                 mb: 1.5,
-                                pb: index !== orderItems.length - 1 ? 1.5 : 0,
-                                borderBottom: index !== orderItems.length - 1 ? '1px dashed #e0e0e0' : 'none'
+                                pb: index !== orderData.orderItems.length - 1 ? 1.5 : 0,
+                                borderBottom: index !== orderData.orderItems.length - 1 ? '1px dashed #e0e0e0' : 'none'
                             }}
                         >
                             <Typography sx={{ fontWeight: 500 }}>
@@ -217,7 +245,7 @@ const PaymentSuccessPage = () => {
                                 letterSpacing: '-0.5px'
                             }}
                         >
-                            {totalPrice.toLocaleString()}원
+                            {orderData.totalPrice.toLocaleString()}원
                         </Typography>
                     </Box>
                 </Box>

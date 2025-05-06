@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Typography, CircularProgress, Box } from '@mui/material';
 import { loadTossPayments, ANONYMOUS } from "@tosspayments/tosspayments-sdk";
 import { useNavigate } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
+// Context 제거
+// import { useOrder } from '../contexts/OrderContext';
 import {
     PaymentContainer,
     PaymentHeader,
@@ -14,45 +15,55 @@ import {
 
 const PaymentPage = () => {
     const [loading, setLoading] = useState(true);
-    const [orderData, setOrderData] = useState(null);
-    const [ready, setReady] = useState(false); // 결제 준비 상태
-    const [widgets, setWidgets] = useState(null); // 결제 위젯 저장
+    const [ready, setReady] = useState(false);
+    const [widgets, setWidgets] = useState(null);
     const navigate = useNavigate();
 
-    // 로컬 스토리지에서 주문 정보 가져오기
+    // Context 대신 로컬 상태 사용
+    const [orderData, setOrderData] = useState({
+        orderItems: [],
+        totalPrice: 0,
+        orderId: ''
+    });
+
+    // 로컬 스토리지에서 주문 정보 로드
     useEffect(() => {
-        const orderItems = JSON.parse(localStorage.getItem('orderItems') || '[]');
-        const totalPrice = parseInt(localStorage.getItem('totalPrice') || '0', 10);
+        try {
+            // 로컬 스토리지에서 주문 정보 불러오기
+            const items = JSON.parse(localStorage.getItem('orderItems') || '[]');
+            const price = parseInt(localStorage.getItem('totalPrice') || '0');
+            const id = localStorage.getItem('orderId') || '';
 
-        console.log('로컬 스토리지에서 가져온 금액:', totalPrice, typeof totalPrice);
+            setOrderData({
+                orderItems: items,
+                totalPrice: price,
+                orderId: id
+            });
 
-        if (orderItems.length === 0 || totalPrice === 0) {
+            // 주문 정보 확인
+            if (!items.length || !price || !id) {
+                navigate('/MenuPage');
+                return;
+            }
+
+            setLoading(false);
+        } catch (error) {
+            console.error('주문 데이터 로딩 오류:', error);
             navigate('/MenuPage');
-            return;
         }
-
-        // 주문 정보 설정
-        setOrderData({
-            items: orderItems,
-            totalPrice: totalPrice,
-            orderId: uuidv4()
-        });
-
-        setLoading(false);
     }, [navigate]);
 
-    // 결제위젯 초기화 (참고 코드 방식으로 변경)
+    // 결제위젯 초기화
     useEffect(() => {
-        if (!orderData) return;
+        if (loading) return;
 
         async function fetchPaymentWidgets() {
             try {
                 const clientKey = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm';
                 const tossPayments = await loadTossPayments(clientKey);
 
-                // 위젯 초기화
                 const widgets = tossPayments.widgets({
-                    customerKey: ANONYMOUS, // ANONYMOUS 상수 사용
+                    customerKey: ANONYMOUS,
                 });
 
                 setWidgets(widgets);
@@ -62,33 +73,23 @@ const PaymentPage = () => {
         }
 
         fetchPaymentWidgets();
-    }, [orderData]);
+    }, [loading]);
 
     // 결제위젯 렌더링
     useEffect(() => {
-        if (!widgets || !orderData) return;
+        if (!widgets || loading) return;
 
         async function renderPaymentWidgets() {
             try {
-                // 금액 객체 생성 (참고 코드와 동일한 형태)
-                const amount = {
+                await widgets.setAmount({
                     currency: "KRW",
                     value: orderData.totalPrice
-                };
+                });
 
-                // 금액 설정
-                await widgets.setAmount(amount);
-
-                // UI 렌더링 (참고 코드와 동일한 방식으로 변경)
-                await Promise.all([
-                    widgets.renderPaymentMethods({
-                        selector: "#payment-method",
-                        variantKey: "DEFAULT",
-                    }),
-                    widgets.renderAgreement({
-                        selector: "#agreement",
-                    }),
-                ]);
+                await widgets.renderPaymentMethods({
+                    selector: "#payment-method",
+                    variantKey: "DEFAULT",
+                });
 
                 setReady(true);
             } catch (error) {
@@ -97,17 +98,18 @@ const PaymentPage = () => {
         }
 
         renderPaymentWidgets();
-    }, [widgets, orderData]);
+    }, [widgets, loading, orderData.totalPrice]);
 
     // 결제 요청 처리 함수
     const handlePaymentRequest = async () => {
-        if (!widgets || !ready || !orderData) return;
+        if (!widgets || !ready) return;
 
         try {
-            const orderName = orderData.items.length > 1
-                ? `${orderData.items[0].name} 외 ${orderData.items.length - 1}건`
-                : orderData.items[0].name;
+            const orderName = orderData.orderItems.length > 1
+                ? `${orderData.orderItems[0].name} 외 ${orderData.orderItems.length - 1}건`
+                : orderData.orderItems[0].name;
 
+            // 결제 요청
             await widgets.requestPayment({
                 orderId: orderData.orderId,
                 orderName: orderName,
@@ -140,12 +142,11 @@ const PaymentPage = () => {
                 </Typography>
             </PaymentHeader>
 
-            {/* 주문 내역 표시 */}
             <OrderSummaryBox>
                 <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
                     주문 정보
                 </Typography>
-                {orderData?.items.map((item, index) => (
+                {orderData.orderItems.map((item, index) => (
                     <Box key={index} sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                         <Typography>{item.name} x {item.quantity}</Typography>
                         <Typography>{(item.price * item.quantity).toLocaleString()}원</Typography>
@@ -154,20 +155,15 @@ const PaymentPage = () => {
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2, pt: 2, borderTop: '1px dashed #ddd' }}>
                     <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>총 결제금액</Typography>
                     <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#2142FF' }}>
-                        {orderData?.totalPrice.toLocaleString()}원
+                        {orderData.totalPrice.toLocaleString()}원
                     </Typography>
                 </Box>
             </OrderSummaryBox>
 
             <PaymentWidgetContainer>
-                {/* 결제 위젯 컨테이너 - ID를 수정된 방식으로 변경 */}
                 <div id="payment-method"></div>
-
-                {/* 이용약관 위젯 컨테이너 - ID 변경 */}
-                <div id="agreement"></div>
             </PaymentWidgetContainer>
 
-            {/* 결제하기 버튼 */}
             <ButtonContainer>
                 <PaymentButton
                     disabled={!ready}

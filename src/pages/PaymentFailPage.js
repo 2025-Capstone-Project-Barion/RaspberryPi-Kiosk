@@ -13,6 +13,11 @@ const PaymentFailPage = () => {
 
     // 메뉴 페이지로 돌아가기
     const goToMenuPage = () => {
+        // 주문 정보 초기화 (로컬 스토리지 비우기)
+        localStorage.removeItem('orderItems');
+        localStorage.removeItem('totalPrice');
+        localStorage.removeItem('orderId');
+
         navigate('/MenuPage');
     };
 
