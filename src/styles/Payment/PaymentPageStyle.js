@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
 
-// 전체 페이지 컨테이너 - 화면 전체를 채우도록 수정
+// 전체 페이지 컨테이너 - 이전 스타일
 export const PaymentContainer = styled(Box)({
     display: 'flex',
     flexDirection: 'column',
@@ -15,12 +15,12 @@ export const PaymentContainer = styled(Box)({
     position: 'relative'
 });
 
-// 페이지 헤더 - 더 작게 만들기
+// 페이지 헤더 - 이전 스타일
 export const PaymentHeader = styled(Box)({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: '12px 32px', // 패딩 감소
+    padding: '20px 32px',  // 원래 크기로 복원
     backgroundColor: '#ffffff',
     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
     zIndex: 10,
@@ -39,13 +39,13 @@ export const HeaderTitle = styled(Box)({
     }
 });
 
-// 위젯 컨테이너 - 최대한 크게 보이도록 수정
+// 위젯 컨테이너 - 현재 큰 크기 유지
 export const PaymentWidgetContainer = styled(Box)({
     flex: 1,
     width: '100%',
-    maxWidth: '1200px', // 최대 너비 증가
+    maxWidth: '1200px', // 큰 너비 유지
     margin: '0 auto',
-    padding: '12px 24px', // 상하 패딩 감소
+    padding: '12px 24px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -55,27 +55,27 @@ export const PaymentWidgetContainer = styled(Box)({
         borderRadius: '16px',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         overflow: 'hidden',
-        minHeight: '500px', // 높이 증가
-        padding: '20px', // 내부 패딩 증가
+        minHeight: '500px', // 높이 유지
+        padding: '20px',
         // 토스 결제 위젯 iframe에 적용될 스타일
         '& iframe': {
             width: '100% !important',
             minHeight: '500px !important',
-            transform: 'scale(1.05)', // 약간 크게 스케일링
+            transform: 'scale(1.05)',
             transformOrigin: 'top center',
         }
     }
 });
 
-// 주문 요약 섹션 - 간격 줄이기
+// 주문 요약 섹션 - 이전 스타일
 export const OrderSummary = styled(Box)({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: '12px 32px', // 패딩 감소
+    padding: '16px 32px',  // 원래 크기로 복원
     backgroundColor: '#f0f5ff',
     borderRadius: '12px',
-    margin: '0 24px 12px', // 하단 마진 감소
+    margin: '0 24px 16px',  // 원래 마진으로 복원
     boxShadow: '0 2px 8px rgba(33, 66, 255, 0.1)',
 });
 
@@ -99,15 +99,15 @@ export const TotalPrice = styled(Box)({
     color: '#2142FF',
 });
 
-// 버튼 컨테이너 - 패딩 감소
+// 버튼 컨테이너 - 이전 스타일
 export const ButtonContainer = styled(Box)({
     width: '100%',
-    padding: '16px', // 패딩 감소
+    padding: '20px',  // 원래 패딩으로 복원
     backgroundColor: '#ffffff',
     boxShadow: '0 -4px 12px rgba(0, 0, 0, 0.05)',
 });
 
-// 결제 버튼 - 키오스크 스타일로 수정
+// 결제 버튼 - 이전 스타일
 export const PaymentButton = styled('button')({
     backgroundColor: '#2142FF',
     color: 'white',
