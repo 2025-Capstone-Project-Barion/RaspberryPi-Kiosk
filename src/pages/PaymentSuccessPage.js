@@ -31,7 +31,7 @@ const PaymentSuccessPage = () => {
         const loadingTimer = setTimeout(() => {
             setLoading(false);
             console.log('결제 완료:', orderData);
-        }, 2000);
+        }, 4000); // 4초 후 로딩 종료
 
         return () => clearTimeout(loadingTimer);
     }, [orderData]);
