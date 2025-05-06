@@ -11,7 +11,8 @@ const PaymentSuccessPage = () => {
     const [countdown, setCountdown] = useState(10);
     const [orderData, setOrderData] = useState({
         totalPrice: 0,
-        orderId: ''
+        orderId: '',
+        orderItems: []
     });
 
     // 로컬 스토리지에서 데이터 로드
@@ -19,7 +20,8 @@ const PaymentSuccessPage = () => {
         try {
             const price = parseInt(localStorage.getItem('totalPrice') || '0');
             const id = localStorage.getItem('orderId') || '';
-            setOrderData({ totalPrice: price, orderId: id });
+            const items = JSON.parse(localStorage.getItem('orderItems') || '[]');
+            setOrderData({ totalPrice: price, orderId: id, orderItems: items });
         } catch (error) {
             console.error('데이터 로딩 오류:', error);
         }
@@ -29,7 +31,60 @@ const PaymentSuccessPage = () => {
     useEffect(() => {
         const loadingTimer = setTimeout(() => {
             setLoading(false);
-            console.log('결제 완료:', orderData);
+
+            // 주문 정보 콘솔에 출력 (백엔드로 전송할 데이터)
+            console.log('백엔드로 전송할 주문 데이터:', {
+                orderId: orderData.orderId,
+                totalPrice: orderData.totalPrice,
+                orderItems: orderData.orderItems.map(item => ({
+                    name: item.name,
+                    quantity: item.quantity,
+                    price: item.price,
+                    subtotal: item.price * item.quantity
+                }))
+            });
+
+            // 백엔드로 주문 정보 전송하는 코드 (주석처리)
+            /*
+            // 백엔드 서버 API 엔드포인트 설정
+            const API_ENDPOINT = 'http://localhost:8080/api/orders'; // 실제 스프링부트 서버 주소로 변경
+            
+            // 전송할 데이터 구성 (필요한 정보만 포함)
+            const orderPayload = {
+                orderId: orderData.orderId,
+                totalPrice: orderData.totalPrice,
+                orderItems: orderData.orderItems.map(item => ({
+                    name: item.name,
+                    quantity: item.quantity,
+                    price: item.price,
+                    subtotal: item.price * item.quantity
+                })),
+                orderDate: new Date().toISOString() // 주문 일시 추가
+            };
+            
+            // fetch API를 사용하여 백엔드로 데이터 전송
+            fetch(API_ENDPOINT, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(orderPayload)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('주문 정보 전송 성공:', data);
+            })
+            .catch(error => {
+                console.error('주문 정보 전송 실패:', error);
+                // 에러 처리는 여기서 하면 됩니다.
+                // 실제 서비스에서는 재시도 로직이나 사용자 알림 기능을 추가할 수 있습니다.
+            });
+            */
         }, 3000);
 
         return () => clearTimeout(loadingTimer);
