@@ -26,20 +26,27 @@ const FrontPage = () => {
     const [activeTouch, setActiveTouch] = useState(null);
     const particles = generateParticles();
 
-    // 이미지 사전 로드 (메뉴 페이지 이미지)
+    // 첫 화면에서 로컬스토리지 초기화 로직 추가
     useEffect(() => {
-        const preloadImages = [
-            '/static/media/coffee1.jpg',
-            '/static/media/coffee2.jpg',
-            '/static/media/dessert1.jpg',
-            '/static/media/beverage1.jpg',
-        ];
-
-        preloadImages.forEach(src => {
-            const img = new Image();
-            img.src = src;
-        });
+        // 결제 관련 데이터 초기화
+        localStorage.removeItem('orderItems');
+        localStorage.removeItem('totalPrice');
     }, []);
+
+    // // 이미지 사전 로드 (메뉴 페이지 이미지)
+    // useEffect(() => {
+    //     const preloadImages = [
+    //         '/static/media/coffee1.jpg',
+    //         '/static/media/coffee2.jpg',
+    //         '/static/media/dessert1.jpg',
+    //         '/static/media/beverage1.jpg',
+    //     ];
+
+    //     preloadImages.forEach(src => {
+    //         const img = new Image();
+    //         img.src = src;
+    //     });
+    // }, []);
 
     // 파티클 애니메이션
     const particleSprings = useSprings(
