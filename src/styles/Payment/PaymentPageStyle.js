@@ -15,12 +15,12 @@ export const PaymentContainer = styled(Box)({
     position: 'relative'
 });
 
-// 페이지 헤더 추가
+// 페이지 헤더 - 더 작게 만들기
 export const PaymentHeader = styled(Box)({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: '20px 32px',
+    padding: '12px 32px', // 패딩 감소
     backgroundColor: '#ffffff',
     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
     zIndex: 10,
@@ -39,13 +39,13 @@ export const HeaderTitle = styled(Box)({
     }
 });
 
-// 위젯 컨테이너 - 화면의 대부분을 차지하도록 수정
+// 위젯 컨테이너 - 최대한 크게 보이도록 수정
 export const PaymentWidgetContainer = styled(Box)({
     flex: 1,
     width: '100%',
-    maxWidth: '900px',
+    maxWidth: '1200px', // 최대 너비 증가
     margin: '0 auto',
-    padding: '24px',
+    padding: '12px 24px', // 상하 패딩 감소
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -55,20 +55,27 @@ export const PaymentWidgetContainer = styled(Box)({
         borderRadius: '16px',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         overflow: 'hidden',
-        minHeight: '400px',
-        padding: '16px'
+        minHeight: '500px', // 높이 증가
+        padding: '20px', // 내부 패딩 증가
+        // 토스 결제 위젯 iframe에 적용될 스타일
+        '& iframe': {
+            width: '100% !important',
+            minHeight: '500px !important',
+            transform: 'scale(1.05)', // 약간 크게 스케일링
+            transformOrigin: 'top center',
+        }
     }
 });
 
-// 주문 요약 섹션 추가
+// 주문 요약 섹션 - 간격 줄이기
 export const OrderSummary = styled(Box)({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: '16px 32px',
+    padding: '12px 32px', // 패딩 감소
     backgroundColor: '#f0f5ff',
     borderRadius: '12px',
-    margin: '0 24px 16px',
+    margin: '0 24px 12px', // 하단 마진 감소
     boxShadow: '0 2px 8px rgba(33, 66, 255, 0.1)',
 });
 
@@ -92,10 +99,10 @@ export const TotalPrice = styled(Box)({
     color: '#2142FF',
 });
 
-// 버튼 컨테이너 - 하단에 고정되도록 수정
+// 버튼 컨테이너 - 패딩 감소
 export const ButtonContainer = styled(Box)({
     width: '100%',
-    padding: '20px',
+    padding: '16px', // 패딩 감소
     backgroundColor: '#ffffff',
     boxShadow: '0 -4px 12px rgba(0, 0, 0, 0.05)',
 });
