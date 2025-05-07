@@ -16,7 +16,7 @@ const PaymentFailPage = () => {
         // 주문 정보 초기화 (로컬 스토리지 비우기)
         localStorage.removeItem('orderItems');
         localStorage.removeItem('totalPrice');
-        localStorage.removeItem('orderId');
+        localStorage.removeItem('tossId');
 
         navigate('/MenuPage');
     };

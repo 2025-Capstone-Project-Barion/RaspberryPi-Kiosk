@@ -22,7 +22,7 @@ const PaymentPage = () => {
     // 로컬 스토리지에서 필요한 데이터만 직접 가져오기
     const orderItems = JSON.parse(localStorage.getItem('orderItems') || '[]');
     const totalPrice = parseInt(localStorage.getItem('totalPrice') || '0');
-    const orderId = localStorage.getItem('orderId') || '';
+    const tossId = localStorage.getItem('tossId') || '';
 
     // 결제위젯 초기화
     useEffect(() => {
@@ -81,7 +81,7 @@ const PaymentPage = () => {
                 : orderItems[0].name;
 
             await widgets.requestPayment({
-                orderId: orderId,
+                tossId: tossId,
                 orderName: orderName,
                 successUrl: `${window.location.origin}/payment/success`,
                 failUrl: `${window.location.origin}/payment/fail`,

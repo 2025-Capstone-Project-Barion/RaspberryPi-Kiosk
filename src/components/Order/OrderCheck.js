@@ -226,12 +226,12 @@ const OrderCheck = ({ cartItems, onClose }) => {
 
                 <PaymentButton onClick={() => {
                     // 주문 ID 생성
-                    const newOrderId = uuidv4();
+                    const newTossId = uuidv4();
 
                     // 로컬 스토리지에 주문 정보 저장
                     localStorage.setItem('orderItems', JSON.stringify(cartItems));
                     localStorage.setItem('totalPrice', totalPrice.toString());
-                    localStorage.setItem('orderId', newOrderId);
+                    localStorage.setItem('tossId', newTossId);
 
                     onClose && onClose(); // 다이얼로그 닫기
                     // 결제 페이지로 이동

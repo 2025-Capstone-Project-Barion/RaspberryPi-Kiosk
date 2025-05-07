@@ -11,7 +11,7 @@ const PaymentSuccessPage = () => {
     const [countdown, setCountdown] = useState(10);
     const [orderData, setOrderData] = useState({
         totalPrice: 0,
-        orderId: '',
+        tossId: '',
         orderItems: []
     });
 
@@ -19,9 +19,9 @@ const PaymentSuccessPage = () => {
     useEffect(() => {
         try {
             const price = parseInt(localStorage.getItem('totalPrice') || '0');
-            const id = localStorage.getItem('orderId') || '';
+            const id = localStorage.getItem('tossId') || '';
             const items = JSON.parse(localStorage.getItem('orderItems') || '[]');
-            setOrderData({ totalPrice: price, orderId: id, orderItems: items });
+            setOrderData({ totalPrice: price, tossId: id, orderItems: items });
         } catch (error) {
             console.error('데이터 로딩 오류:', error);
         }
@@ -34,7 +34,7 @@ const PaymentSuccessPage = () => {
 
             // 주문 정보 콘솔에 출력 (백엔드로 전송할 데이터)
             console.log('백엔드로 전송할 주문 데이터:', {
-                orderId: orderData.orderId,
+                tossId: orderData.tossId,
                 totalPrice: orderData.totalPrice,
                 orderItems: orderData.orderItems.map(item => ({
                     name: item.name,
@@ -51,7 +51,7 @@ const PaymentSuccessPage = () => {
 
             // 전송할 데이터 구성 (필요한 정보만 포함)
             const orderPayload = {
-                orderId: orderData.orderId,
+                tossId: orderData.tossId,
                 totalPrice: orderData.totalPrice,
                 orderItems: orderData.orderItems.map(item => ({
                     name: item.name,
@@ -108,7 +108,7 @@ const PaymentSuccessPage = () => {
         const timeout = setTimeout(() => {
             localStorage.removeItem('orderItems');
             localStorage.removeItem('totalPrice');
-            localStorage.removeItem('orderId');
+            localStorage.removeItem('tossId');
             navigate('/');
         }, 1200);
 
