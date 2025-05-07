@@ -7,12 +7,12 @@ export const categories = [
     {
         id: 'coffee',
         name: 'Coffee',
-        description: '다양한 커피 메뉴'
+        description: '커피종류'
     },
     {
         id: 'nonCoffee',
         name: 'Non Coffee',
-        description: '논커피 음료'
+        description: '논커피종류'
     },
     {
         id: 'dessert',
@@ -39,7 +39,7 @@ export const menuItems = {
             description: '깊은 풍미의 에스프레소와 물의 조화',
             image: americanoImg,
             category: 'coffee',
-            available: true
+            //available: true
         },
         {
             id: 'coffee-2',
@@ -48,7 +48,7 @@ export const menuItems = {
             description: '진하고 강렬한 커피의 기본',
             image: americanoImg,
             category: 'coffee',
-            available: true
+            //available: true
         },
         {
             id: 'coffee-3',
@@ -57,7 +57,7 @@ export const menuItems = {
             description: '시원하고 깔끔한 맛의 아이스커피',
             image: americanoImg,
             category: 'coffee',
-            available: true
+            //available: true
         },
         {
             id: 'coffee-4',
@@ -66,7 +66,7 @@ export const menuItems = {
             description: '차가운 물로 오랫동안 추출한 깔끔한 커피',
             image: americanoImg,
             category: 'coffee',
-            available: true
+            //available: true
         },
         {
             id: 'coffee-5',
@@ -75,7 +75,7 @@ export const menuItems = {
             description: '정성스럽게 한 잔씩 내린 프리미엄 커피',
             image: americanoImg,
             category: 'coffee',
-            available: true
+            //available: true
         },
 
         // 2. 우유 베이스 커피 (라떼류)
@@ -86,7 +86,7 @@ export const menuItems = {
             description: '진한 에스프레소와 부드러운 우유의 만남',
             image: americanoImg,
             category: 'coffee',
-            available: true
+            //available: true
         },
         {
             id: 'coffee-7',
@@ -95,7 +95,7 @@ export const menuItems = {
             description: '부드러운 바닐라의 향과 에스프레소의 조화',
             image: americanoImg,
             category: 'coffee',
-            available: true
+            //available: true
         },
         {
             id: 'coffee-8',
@@ -104,7 +104,7 @@ export const menuItems = {
             description: '풍성한 우유 거품이 특징인 부드러운 커피',
             image: americanoImg,
             category: 'coffee',
-            available: true
+            //available: true
         },
         {
             id: 'coffee-9',
@@ -113,7 +113,7 @@ export const menuItems = {
             description: '연유의 달콤함과 에스프레소의 풍미',
             image: americanoImg,
             category: 'coffee',
-            available: true
+            //available: true
         },
         {
             id: 'coffee-10',
@@ -122,7 +122,7 @@ export const menuItems = {
             description: '진한 에스프레소와 실키한 우유의 조화',
             image: americanoImg,
             category: 'coffee',
-            available: true
+            //available: true
         },
         {
             id: 'coffee-11',
@@ -131,7 +131,7 @@ export const menuItems = {
             description: '달콤한 연유가 들어간 부드러운 라떼',
             image: americanoImg,
             category: 'coffee',
-            available: true
+            //available: true
         },
         {
             id: 'coffee-12',
@@ -140,7 +140,7 @@ export const menuItems = {
             description: '상큼한 코코넛 맛이 어우러진 라떼',
             image: americanoImg,
             category: 'coffee',
-            available: true
+            //available: true
         },
 
         // 3. 모카/초콜릿 계열
@@ -151,7 +151,7 @@ export const menuItems = {
             description: '달콤한 초콜릿과 에스프레소의 환상적인 조합',
             image: americanoImg,
             category: 'coffee',
-            available: true
+            //available: true
         },
         {
             id: 'coffee-14',
@@ -160,7 +160,7 @@ export const menuItems = {
             description: '상쾌한 민트와 초콜릿의 조화',
             image: americanoImg,
             category: 'coffee',
-            available: true
+            //available: true
         },
         {
             id: 'coffee-15',
@@ -169,7 +169,7 @@ export const menuItems = {
             description: '부드러운 화이트 초콜릿과 에스프레소의 만남',
             image: americanoImg,
             category: 'coffee',
-            available: true
+            //available: true
         },
 
         // 4. 스페셜 커피
@@ -180,7 +180,7 @@ export const menuItems = {
             description: '바닐라 아이스크림에 에스프레소를 부은 디저트 커피',
             image: americanoImg,
             category: 'coffee',
-            available: true
+            //available: true
         },
         {
             id: 'coffee-17',
@@ -189,7 +189,7 @@ export const menuItems = {
             description: '달콤한 카라멜과 에스프레소의 조화',
             image: americanoImg,
             category: 'coffee',
-            available: true
+            //available: true
         },
         {
             id: 'coffee-18',
@@ -198,7 +198,7 @@ export const menuItems = {
             description: '빈티지한 독일식 커피 음료',
             image: americanoImg,
             category: 'coffee',
-            available: true
+            //available: true
         },
         {
             id: 'coffee-19',
@@ -207,7 +207,7 @@ export const menuItems = {
             description: '휘핑크림이 올라간 고급스러운 커피',
             image: americanoImg,
             category: 'coffee',
-            available: true
+            //available: true
         }
     ],
 
@@ -220,7 +220,7 @@ export const menuItems = {
             description: '홍차와 우유의 클래식한 조합',
             image: berryImg,
             category: 'nonCoffee',
-            available: true
+            //available: true
         },
 
         {
@@ -230,7 +230,7 @@ export const menuItems = {
             description: '부드러운 밀크티와 쫄깃한 타피오카 펄의 조화',
             image: berryImg,
             category: 'nonCoffee',
-            available: true
+            //available: true
         },
 
         {
@@ -240,7 +240,7 @@ export const menuItems = {
             description: '부드럽고 달콤한 진한 초콜릿 음료',
             image: berryImg,
             category: 'nonCoffee',
-            available: true
+            //available: true
         },
 
         {
@@ -250,7 +250,7 @@ export const menuItems = {
             description: '따뜻하고 건강한 생강 향의 차',
             image: berryImg,
             category: 'nonCoffee',
-            available: true
+            //available: true
         },
 
         {
@@ -260,7 +260,7 @@ export const menuItems = {
             description: '은은한 라벤더 향이 가득한 허브차',
             image: berryImg,
             category: 'nonCoffee',
-            available: true
+            //available: true
         },
 
         {
@@ -270,7 +270,7 @@ export const menuItems = {
             description: '상큼한 유자 맛이 가득한 따뜻한 차',
             image: berryImg,
             category: 'nonCoffee',
-            available: true
+            //available: true
         },
 
         {
@@ -280,7 +280,7 @@ export const menuItems = {
             description: '진한 녹차와 부드러운 우유의 조합',
             image: berryImg,
             category: 'nonCoffee',
-            available: true
+            //available: true
         },
 
         {
@@ -290,7 +290,7 @@ export const menuItems = {
             description: '달콤한 고구마 맛이 듬뿍 들어간 라떼',
             image: berryImg,
             category: 'nonCoffee',
-            available: true
+            //available: true
         },
 
         {
@@ -300,7 +300,7 @@ export const menuItems = {
             description: '고소한 곡물 향이 가득한 라떼',
             image: berryImg,
             category: 'nonCoffee',
-            available: true
+            //available: true
         },
 
         {
@@ -310,7 +310,7 @@ export const menuItems = {
             description: '향긋한 복숭아향의 시원한 아이스티',
             image: berryImg,
             category: 'nonCoffee',
-            available: true
+            //available: true
         },
 
         {
@@ -320,7 +320,7 @@ export const menuItems = {
             description: '달콤하고 시원한 초콜릿 블렌디드 음료',
             image: berryImg,
             category: 'nonCoffee',
-            available: true
+            //available: true
         },
 
         {
@@ -330,7 +330,7 @@ export const menuItems = {
             description: '고소한 곡물 맛이 가득한 전통 음료',
             image: berryImg,
             category: 'nonCoffee',
-            available: true
+            //available: true
         },
 
         {
@@ -340,7 +340,7 @@ export const menuItems = {
             description: '신선한 딸기의 상큼함이 가득한 스무디',
             image: berryImg,
             category: 'nonCoffee',
-            available: true
+            //available: true
         },
 
         {
@@ -350,7 +350,7 @@ export const menuItems = {
             description: '달콤한 망고의 풍미가 가득한 스무디',
             image: berryImg,
             category: 'nonCoffee',
-            available: true
+            //available: true
         },
 
 
@@ -361,7 +361,7 @@ export const menuItems = {
             description: '상큼한 자몽의 맛이 가득한 시원한 에이드',
             image: berryImg,
             category: 'nonCoffee',
-            available: true
+            //available: true
         },
 
         {
@@ -371,7 +371,7 @@ export const menuItems = {
             description: '상큼한 레몬의 맛이 가득한 시원한 에이드',
             image: berryImg,
             category: 'nonCoffee',
-            available: true
+            //available: true
         },
 
         {
@@ -381,7 +381,7 @@ export const menuItems = {
             description: '상큼한 청포도의 맛이 가득한 에이드',
             image: berryImg,
             category: 'nonCoffee',
-            available: true
+            //available: true
         },
 
         {
@@ -391,7 +391,7 @@ export const menuItems = {
             description: '상큼한 유자 맛이 가득한 에이드',
             image: berryImg,
             category: 'nonCoffee',
-            available: true
+            //available: true
         },
 
         {
@@ -401,7 +401,7 @@ export const menuItems = {
             description: '신선한 포도의 달콤함이 가득한 주스',
             image: berryImg,
             category: 'nonCoffee',
-            available: true
+            //available: true
         },
 
         {
@@ -411,7 +411,7 @@ export const menuItems = {
             description: '신선한 토마토의 건강한 맛',
             image: berryImg,
             category: 'nonCoffee',
-            available: true
+            //available: true
         },
 
         {
@@ -421,7 +421,7 @@ export const menuItems = {
             description: '상큼한 사과의 자연스러운 달콤함',
             image: berryImg,
             category: 'nonCoffee',
-            available: true
+            //available: true
         }
     ],
 
@@ -434,7 +434,7 @@ export const menuItems = {
             description: '다양한 맛의 부드럽고 달콤한 마카롱 5종 세트',
             image: latteImg,
             category: 'dessert',
-            available: true
+            //available: true
         },
 
         {
@@ -444,7 +444,7 @@ export const menuItems = {
             description: '부드럽고 달콤한 커스터드 푸딩',
             image: latteImg,
             category: 'dessert',
-            available: true
+            //available: true
         },
 
         {
@@ -454,7 +454,7 @@ export const menuItems = {
             description: '달콤하고 쫀득한 전통 한국 디저트',
             image: latteImg,
             category: 'dessert',
-            available: true
+            //available: true
         },
 
         {
@@ -464,7 +464,7 @@ export const menuItems = {
             description: '크로와상과 와플의 만남, 바삭하고 달콤한 크로플',
             image: latteImg,
             category: 'dessert',
-            available: true
+            //available: true
         },
 
         {
@@ -474,7 +474,7 @@ export const menuItems = {
             description: '부드럽고 진한 치즈의 풍미가 일품인 클래식 디저트',
             image: latteImg,
             category: 'dessert',
-            available: true
+            //available: true
         },
 
         {
@@ -484,7 +484,7 @@ export const menuItems = {
             description: '진한 초콜릿 맛이 가득한 달콤한 브라우니',
             image: latteImg,
             category: 'dessert',
-            available: true
+            //available: true
         },
 
         {
@@ -494,7 +494,7 @@ export const menuItems = {
             description: '버터 향이 풍부한 프랑스식 마들렌',
             image: latteImg,
             category: 'dessert',
-            available: true
+            //available: true
         },
 
         {
@@ -504,7 +504,7 @@ export const menuItems = {
             description: '커피 향이 가득한 이탈리안 클래식 디저트',
             image: latteImg,
             category: 'dessert',
-            available: true
+            //available: true
         },
 
         {
@@ -514,7 +514,7 @@ export const menuItems = {
             description: '버터의 풍미가 가득한 영국식 스콘',
             image: latteImg,
             category: 'dessert',
-            available: true
+            //available: true
         },
 
         {
@@ -524,7 +524,7 @@ export const menuItems = {
             description: '겉은 바삭하고 속은 촉촉한 수제 와플',
             image: latteImg,
             category: 'dessert',
-            available: true
+            //available: true
         },
 
         {
@@ -534,7 +534,7 @@ export const menuItems = {
             description: '바삭한 페이스트리 속 촉촉한 커스터드 크림이 들어간 타르트',
             image: latteImg,
             category: 'dessert',
-            available: true
+            //available: true
         },
 
         {
@@ -544,7 +544,7 @@ export const menuItems = {
             description: '달콤한 사과 필링이 가득한 파이',
             image: latteImg,
             category: 'dessert',
-            available: true
+            //available: true
         }
     ],
 
@@ -557,7 +557,7 @@ export const menuItems = {
             description: '쫄깃한 식감이 특징인 도넛 모양의 빵',
             image: honeyBreadImg,
             category: 'bakery',
-            available: true
+            //available: true
         },
 
         {
@@ -567,7 +567,7 @@ export const menuItems = {
             description: '겉은 바삭하고 속은 부드러운 짭짤한 빵',
             image: honeyBreadImg,
             category: 'bakery',
-            available: true
+            //available: true
         },
 
         {
@@ -577,7 +577,7 @@ export const menuItems = {
             description: '달콤한 커피 향이 가득한 부드러운 빵',
             image: honeyBreadImg,
             category: 'bakery',
-            available: true
+            //available: true
         },
 
         {
@@ -587,7 +587,7 @@ export const menuItems = {
             description: '겉은 바삭하고 속은 쫄깃한 프랑스식 빵',
             image: honeyBreadImg,
             category: 'bakery',
-            available: true
+            //available: true
         },
 
         {
@@ -597,7 +597,7 @@ export const menuItems = {
             description: '바삭한 겉과 부드러운 속의 조화가 일품인 프랑스 빵',
             image: honeyBreadImg,
             category: 'bakery',
-            available: true
+            //available: true
         },
 
         {
@@ -607,7 +607,7 @@ export const menuItems = {
             description: '진한 초콜릿 맛이 가득한 머핀',
             image: honeyBreadImg,
             category: 'bakery',
-            available: true
+            //available: true
         },
 
         {
@@ -617,7 +617,7 @@ export const menuItems = {
             description: '달콤한 팥앙금이 들어간 부드러운 빵',
             image: honeyBreadImg,
             category: 'bakery',
-            available: true
+            //available: true
         },
 
         {
@@ -627,7 +627,7 @@ export const menuItems = {
             description: '부드러운 크림이 가득한 빵',
             image: honeyBreadImg,
             category: 'bakery',
-            available: true
+            //available: true
         },
         {
             id: 'bakery-9',
@@ -636,7 +636,7 @@ export const menuItems = {
             description: '신선한 야채와 햄을 넣은 샌드위치',
             image: honeyBreadImg,
             category: 'bakery',
-            available: true
+            //available: true
         },
         {
             id: 'bakery-10',
@@ -645,7 +645,7 @@ export const menuItems = {
             description: '달콤한 맛이 일품인 꼬인 모양의 빵',
             image: honeyBreadImg,
             category: 'bakery',
-            available: true
+            //available: true
         },
 
         {
@@ -655,7 +655,7 @@ export const menuItems = {
             description: '달콤한 소보로 토핑이 올라간 부드러운 빵',
             image: honeyBreadImg,
             category: 'bakery',
-            available: true
+            //available: true
         },
 
         {
@@ -665,7 +665,7 @@ export const menuItems = {
             description: '치즈와 토핑이 가득한 피자 스타일의 빵',
             image: honeyBreadImg,
             category: 'bakery',
-            available: true
+            //available: true
         },
 
         {
@@ -676,7 +676,7 @@ export const menuItems = {
             description: '달콤한 꿀과 부드러운 빵의 조화',
             image: honeyBreadImg,
             category: 'bakery',
-            available: true
+            //available: true
         },
 
         {
@@ -686,7 +686,7 @@ export const menuItems = {
             description: '고급스러운 밤 크림의 풍미가 가득한 빵',
             image: honeyBreadImg,
             category: 'bakery',
-            available: true
+            //available: true
         },
 
         {
@@ -696,7 +696,7 @@ export const menuItems = {
             description: '바삭한 이탈리아식 치아바타',
             image: honeyBreadImg,
             category: 'bakery',
-            available: true
+            //available: true
         },
 
         {
@@ -706,7 +706,7 @@ export const menuItems = {
             description: '건강한 호밀의 풍미가 가득한 빵',
             image: honeyBreadImg,
             category: 'bakery',
-            available: true
+            //available: true
         }
 
     ]
