@@ -81,7 +81,7 @@ const PaymentPage = () => {
                 : orderItems[0].name;
 
             await widgets.requestPayment({
-                tossId: tossId,
+                orderId: tossId,
                 orderName: orderName,
                 successUrl: `${window.location.origin}/payment/success`,
                 failUrl: `${window.location.origin}/payment/fail`,
