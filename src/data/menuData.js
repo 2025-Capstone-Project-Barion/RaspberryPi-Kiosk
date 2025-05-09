@@ -6,23 +6,19 @@ import honeyBreadImg from '../assets/Image/MenuImages/허니브레드.png';
 export const categories = [
     {
         id: 'coffee',
-        name: 'Coffee',
-        description: '커피종류'
+        name: 'Coffee'
     },
     {
         id: 'nonCoffee',
-        name: 'Non Coffee',
-        description: '논커피종류'
+        name: 'Non Coffee'
     },
     {
         id: 'dessert',
-        name: 'Dessert',
-        description: '디저트'
+        name: 'Dessert'
     },
     {
         id: 'bakery',
-        name: 'Bakery',
-        description: '베이커리'
+        name: 'Bakery'
     }
 ];
 
