@@ -34,14 +34,15 @@ const PaymentSuccessPage = () => {
 
             // 주문 정보 콘솔에 출력 (백엔드로 전송할 데이터)
             console.log('백엔드로 전송할 주문 데이터:', {
-                //tossId: orderData.tossId,
+                storeId: 0,
                 orderDate: new Date().toISOString(),
-                totalPrice: orderData.totalPrice,
-                orderItems: orderData.orderItems.map(item => ({
-                    name: item.name,
+                totalAmount: orderData.totalPrice,
+                items: orderData.orderItems.map(item => ({
+                    menuId: item.menuId,
+                    menuName: item.menuName,
                     quantity: item.quantity,
-                    price: item.price,
-                    subtotal: item.price * item.quantity
+                    unitPrice: item.price,
+                    totalPrice: item.price * item.quantity
                 }))
             });
 
@@ -50,16 +51,17 @@ const PaymentSuccessPage = () => {
             // 백엔드 서버 API 엔드포인트 설정
             const API_ENDPOINT = 'https://webhook.site/1c4a8c10-7a98-44b6-ae2c-3810122202c7'; // 실제 스프링부트 서버 주소로 변경
 
-            // 전송할 데이터 구성 (필요한 정보만 포함)
+            // 전송할 데이터 구성 부분 수정
             const orderPayload = {
-                //tossId: orderData.tossId,
-                orderDate: new Date().toISOString(), //  ISO 8601 형식 주문 일시
-                totalPrice: orderData.totalPrice,
-                orderItems: orderData.orderItems.map(item => ({
-                    name: item.name,
+                storeId: 0,
+                orderDate: new Date().toISOString(),
+                totalAmount: orderData.totalPrice,
+                items: orderData.orderItems.map(item => ({
+                    menuId: item.menuId,
+                    menuName: item.menuName,
                     quantity: item.quantity,
-                    price: item.price,
-                    subtotal: item.price * item.quantity
+                    unitPrice: item.price,
+                    totalPrice: item.price * item.quantity
                 }))
             };
 
