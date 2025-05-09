@@ -144,7 +144,7 @@ export const MenuImageContainer = styled(Box)({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: '14px', // 여백 증가 (12px → 14px)
-    backgroundColor: '#ffffff', // 배경색 약간 밝게
+    //backgroundColor: '#ffffff', // 배경색 흰색. 굳이 필요 없음.
     borderRadius: '12px', // 모서리 둥글기 증가
     overflow: 'hidden',
 

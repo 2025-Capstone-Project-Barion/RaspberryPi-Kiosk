@@ -67,10 +67,10 @@ const MenuPage = () => {
 
     // 장바구니에 아이템 추가 함수
     const handleAddToCart = (item) => {
-        const existingItem = cart.find(cartItem => cartItem.id === item.id);
+        const existingItem = cart.find(cartItem => cartItem.menuId === item.menuId);
         if (existingItem) {
             setCart(cart.map(cartItem =>
-                cartItem.id === item.id
+                cartItem.menuId === item.menuId
                     ? { ...cartItem, quantity: cartItem.quantity + 1 }
                     : cartItem
             ));
