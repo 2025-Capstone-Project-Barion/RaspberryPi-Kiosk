@@ -1,709 +1,667 @@
-import americanoImg from '../assets/Image/MenuImages/아메리카노.png';
-import berryImg from '../assets/Image/MenuImages/베리스무디.png';
-import latteImg from '../assets/Image/MenuImages/카페라떼.png';
-import honeyBreadImg from '../assets/Image/MenuImages/허니브레드.png';
+// 이미지 import (WebP 형식)
+import 아메리카노Img from '../assets/Image/MenuImages/아메리카노.webp';
+import 에스프레소Img from '../assets/Image/MenuImages/에스프레소.webp';
+import 아이스커피Img from '../assets/Image/MenuImages/아이스커피.webp';
+import 콜드브루Img from '../assets/Image/MenuImages/콜드브루.webp';
+import 핸드드립Img from '../assets/Image/MenuImages/핸드드립.webp';
+import 카페라떼Img from '../assets/Image/MenuImages/카페라떼.webp';
+import 바닐라라떼Img from '../assets/Image/MenuImages/바닐라라떼.webp';
+import 카푸치노Img from '../assets/Image/MenuImages/카푸치노.webp';
+import 돌체라떼Img from '../assets/Image/MenuImages/돌체라떼.webp';
+import 플랫화이트Img from '../assets/Image/MenuImages/플랫화이트.webp';
+import 연유라떼Img from '../assets/Image/MenuImages/연유라떼.webp';
+import 코코넛라떼Img from '../assets/Image/MenuImages/코코넛라떼.webp';
+import 카페모카Img from '../assets/Image/MenuImages/카페모카.webp';
+import 민트모카Img from '../assets/Image/MenuImages/민트모카.webp';
+import 화이트모카Img from '../assets/Image/MenuImages/화이트모카.webp';
 
+import 밀크티Img from '../assets/Image/MenuImages/밀크티.webp';
+import 버블티Img from '../assets/Image/MenuImages/버블티.webp';
+import 핫초코Img from '../assets/Image/MenuImages/핫초코.webp';
+import 생강차Img from '../assets/Image/MenuImages/생강차.webp';
+import 라벤더티Img from '../assets/Image/MenuImages/라벤더티.webp';
+import 유자차Img from '../assets/Image/MenuImages/유자차.webp';
+import 녹차라떼Img from '../assets/Image/MenuImages/녹차라떼.webp';
+import 고구마라떼Img from '../assets/Image/MenuImages/고구마라떼.webp';
+import 곡물라떼Img from '../assets/Image/MenuImages/곡물라떼.webp';
+import 아이스티Img from '../assets/Image/MenuImages/아이스티.webp';
+import 프라페Img from '../assets/Image/MenuImages/프라페.webp';
+import 미숫가루Img from '../assets/Image/MenuImages/미숫가루.webp';
+import 딸기스무디Img from '../assets/Image/MenuImages/딸기스무디.webp';
+import 망고스무디Img from '../assets/Image/MenuImages/망고스무디.webp';
+import 자몽에이드Img from '../assets/Image/MenuImages/자몽에이드.webp';
+import 레몬에이드Img from '../assets/Image/MenuImages/레몬에이드.webp';
+import 청포도에이드Img from '../assets/Image/MenuImages/청포도에이드.webp';
+
+import 마카롱Img from '../assets/Image/MenuImages/마카롱.webp';
+import 푸딩Img from '../assets/Image/MenuImages/푸딩.webp';
+import 약과Img from '../assets/Image/MenuImages/약과.webp';
+import 크로플Img from '../assets/Image/MenuImages/크로플.webp';
+import 치즈케이크Img from '../assets/Image/MenuImages/치즈케이크.webp';
+import 브라우니Img from '../assets/Image/MenuImages/브라우니.webp';
+import 마들렌Img from '../assets/Image/MenuImages/마들렌.webp';
+import 티라미수Img from '../assets/Image/MenuImages/티라미수.webp';
+
+import 베이글Img from '../assets/Image/MenuImages/베이글.webp';
+import 소금빵Img from '../assets/Image/MenuImages/소금빵.webp';
+import 모카번Img from '../assets/Image/MenuImages/모카번.webp';
+import 바게트Img from '../assets/Image/MenuImages/바게트.webp';
+import 크로아상Img from '../assets/Image/MenuImages/크로아상.webp';
+import 초코머핀Img from '../assets/Image/MenuImages/초코머핀.webp';
+import 단팥빵Img from '../assets/Image/MenuImages/단팥빵.webp';
+import 크림빵Img from '../assets/Image/MenuImages/크림빵.webp';
+import 샌드위치Img from '../assets/Image/MenuImages/샌드위치.webp';
+import 꽈배기Img from '../assets/Image/MenuImages/꽈배기.webp';
+import 소보로빵Img from '../assets/Image/MenuImages/소보로빵.webp';
+import 피자빵Img from '../assets/Image/MenuImages/피자빵.webp';
+
+/**
+ * API 명세에 맞춘 카테고리 데이터
+ */
 export const categories = [
     {
-        id: 'coffee',
-        name: 'Coffee'
+        categoryId: 0,
+        categoryName: 'Coffee'
     },
     {
-        id: 'nonCoffee',
-        name: 'Non Coffee'
+        categoryId: 1,
+        categoryName: 'Non Coffee'
     },
     {
-        id: 'dessert',
-        name: 'Dessert'
+        categoryId: 2,
+        categoryName: 'Dessert'
     },
     {
-        id: 'bakery',
-        name: 'Bakery'
+        categoryId: 3,
+        categoryName: 'Bakery'
     }
 ];
 
-//default menu items
-// 각 카테고리별 기본 메뉴 아이템들. 추후 백엔드 DB에서 메뉴가 추가/삭제시 실시간으로 이 menuItems를 업데이트 할 수 있도록 백엔드 API 연동 필요.
+/**
+ * API 명세에 맞춘 메뉴 데이터
+ */
 export const menuItems = {
 
-    coffee: [
-        // 1. 에스프레소 기반 커피
+    content: [
+        // Coffee (category: 0)
+        // menuId: 0 ~ 18 까지가 커피 카테고리 메뉴
+        // menuId: 0 ~ 14 까지가 고정 디폴트 메뉴(추가, 삭제, 수정 불가)
+        // menuId: 15 ~ 18 까지가 유동 메뉴(추가, 삭제, 수정 가능) 수정은 가격, 설명, 이미지만 가능.
         {
-            id: 'coffee-1',
-            name: '아메리카노',
+            menuId: 0,
+            category: 0,
+            menuName: "아메리카노",
             price: 3500,
-            description: '깊은 풍미의 에스프레소와 물의 조화',
-            image: americanoImg,
-            category: 'coffee',
-            //available: true
+            description: "깊은 풍미의 에스프레소와 물의 조화",
+            menuImage: 아메리카노Img
         },
         {
-            id: 'coffee-2',
-            name: '에스프레소',
+            menuId: 1,
+            category: 0,
+            menuName: "에스프레소",
             price: 3000,
-            description: '진하고 강렬한 커피의 기본',
-            image: americanoImg,
-            category: 'coffee',
-            //available: true
+            description: "진하고 강렬한 커피의 기본",
+            menuImage: 에스프레소Img
         },
         {
-            id: 'coffee-3',
-            name: '아이스커피',
+            menuId: 2,
+            category: 0,
+            menuName: "아이스커피",
             price: 4000,
-            description: '시원하고 깔끔한 맛의 아이스커피',
-            image: americanoImg,
-            category: 'coffee',
-            //available: true
+            description: "시원하고 깔끔한 맛의 아이스커피",
+            menuImage: 아이스커피Img
         },
         {
-            id: 'coffee-4',
-            name: '콜드브루',
+            menuId: 3,
+            category: 0,
+            menuName: "콜드브루",
             price: 4800,
-            description: '차가운 물로 오랫동안 추출한 깔끔한 커피',
-            image: americanoImg,
-            category: 'coffee',
-            //available: true
+            description: "차가운 물로 오랫동안 추출한 깔끔한 커피",
+            menuImage: 콜드브루Img
         },
         {
-            id: 'coffee-5',
-            name: '핸드드립',
+            menuId: 4,
+            category: 0,
+            menuName: "핸드드립",
             price: 5500,
-            description: '정성스럽게 한 잔씩 내린 프리미엄 커피',
-            image: americanoImg,
-            category: 'coffee',
-            //available: true
+            description: "정성스럽게 한 잔씩 내린 프리미엄 커피",
+            menuImage: 핸드드립Img
         },
-
-        // 2. 우유 베이스 커피 (라떼류)
         {
-            id: 'coffee-6',
-            name: '카페라떼',
+            menuId: 5,
+            category: 0,
+            menuName: "카페라떼",
             price: 4000,
-            description: '진한 에스프레소와 부드러운 우유의 만남',
-            image: americanoImg,
-            category: 'coffee',
-            //available: true
+            description: "진한 에스프레소와 부드러운 우유의 만남",
+            menuImage: 카페라떼Img
         },
         {
-            id: 'coffee-7',
-            name: '바닐라라떼',
+            menuId: 6,
+            category: 0,
+            menuName: "바닐라라떼",
             price: 4300,
-            description: '부드러운 바닐라의 향과 에스프레소의 조화',
-            image: americanoImg,
-            category: 'coffee',
-            //available: true
+            description: "부드러운 바닐라의 향과 에스프레소의 조화",
+            menuImage: 바닐라라떼Img
         },
         {
-            id: 'coffee-8',
-            name: '카푸치노',
+            menuId: 7,
+            category: 0,
+            menuName: "카푸치노",
             price: 4700,
-            description: '풍성한 우유 거품이 특징인 부드러운 커피',
-            image: americanoImg,
-            category: 'coffee',
-            //available: true
+            description: "풍성한 우유 거품이 특징인 부드러운 커피",
+            menuImage: 카푸치노Img
         },
         {
-            id: 'coffee-9',
-            name: '돌체라떼',
+            menuId: 8,
+            category: 0,
+            menuName: "돌체라떼",
             price: 5000,
-            description: '연유의 달콤함과 에스프레소의 풍미',
-            image: americanoImg,
-            category: 'coffee',
-            //available: true
+            description: "연유의 달콤함과 에스프레소의 풍미",
+            menuImage: 돌체라떼Img
         },
         {
-            id: 'coffee-10',
-            name: '플랫화이트',
+            menuId: 9,
+            category: 0,
+            menuName: "플랫화이트",
             price: 4200,
-            description: '진한 에스프레소와 실키한 우유의 조화',
-            image: americanoImg,
-            category: 'coffee',
-            //available: true
+            description: "진한 에스프레소와 실키한 우유의 조화",
+            menuImage: 플랫화이트Img
         },
         {
-            id: 'coffee-11',
-            name: '연유라떼',
+            menuId: 10,
+            category: 0,
+            menuName: "연유라떼",
             price: 4500,
-            description: '달콤한 연유가 들어간 부드러운 라떼',
-            image: americanoImg,
-            category: 'coffee',
-            //available: true
+            description: "달콤한 연유가 들어간 부드러운 라떼",
+            menuImage: 연유라떼Img
         },
         {
-            id: 'coffee-12',
-            name: '코코넛라떼',
+            menuId: 11,
+            category: 0,
+            menuName: "코코넛라떼",
             price: 4700,
-            description: '상큼한 코코넛 맛이 어우러진 라떼',
-            image: americanoImg,
-            category: 'coffee',
-            //available: true
+            description: "상큼한 코코넛 맛이 어우러진 라떼",
+            menuImage: 코코넛라떼Img
         },
-
-        // 3. 모카/초콜릿 계열
         {
-            id: 'coffee-13',
-            name: '카페모카',
+            menuId: 12,
+            category: 0,
+            menuName: "카페모카",
             price: 4500,
-            description: '달콤한 초콜릿과 에스프레소의 환상적인 조합',
-            image: americanoImg,
-            category: 'coffee',
-            //available: true
+            description: "달콤한 초콜릿과 에스프레소의 환상적인 조합",
+            menuImage: 카페모카Img
         },
         {
-            id: 'coffee-14',
-            name: '민트모카',
+            menuId: 13,
+            category: 0,
+            menuName: "민트모카",
             price: 4900,
-            description: '상쾌한 민트와 초콜릿의 조화',
-            image: americanoImg,
-            category: 'coffee',
-            //available: true
+            description: "상쾌한 민트와 초콜릿의 조화",
+            menuImage: 민트모카Img
         },
         {
-            id: 'coffee-15',
-            name: '화이트모카',
+            menuId: 14,
+            category: 0,
+            menuName: "화이트모카",
             price: 5000,
-            description: '부드러운 화이트 초콜릿과 에스프레소의 만남',
-            image: americanoImg,
-            category: 'coffee',
-            //available: true
+            description: "부드러운 화이트 초콜릿과 에스프레소의 만남",
+            menuImage: 화이트모카Img
         },
 
-        // 4. 스페셜 커피
+        // 유동 메뉴 - Coffee 카테고리
+        /*
         {
-            id: 'coffee-16',
-            name: '아포가토',
+            menuId: 15,
+            category: 0,
+            menuName: "아포가토",
             price: 5800,
-            description: '바닐라 아이스크림에 에스프레소를 부은 디저트 커피',
-            image: americanoImg,
-            category: 'coffee',
-            //available: true
+            description: "바닐라 아이스크림에 에스프레소를 부은 디저트 커피",
+            menuImage: 아포가토Img
         },
         {
-            id: 'coffee-17',
-            name: '마키아토',
+            menuId: 16,
+            category: 0,
+            menuName: "마키아토",
             price: 5000,
-            description: '달콤한 카라멜과 에스프레소의 조화',
-            image: americanoImg,
-            category: 'coffee',
-            //available: true
+            description: "달콤한 카라멜과 에스프레소의 조화",
+            menuImage: 마키아토Img
         },
         {
-            id: 'coffee-18',
-            name: '아인슈페너',
+            menuId: 17,
+            category: 0,
+            menuName: "아인슈페너",
             price: 5200,
-            description: '빈티지한 독일식 커피 음료',
-            image: americanoImg,
-            category: 'coffee',
-            //available: true
+            description: "빈티지한 독일식 커피 음료",
+            menuImage: 아인슈페너Img
         },
         {
-            id: 'coffee-19',
-            name: '비엔나커피',
+            menuId: 18,
+            category: 0,
+            menuName: "비엔나커피",
             price: 4800,
-            description: '휘핑크림이 올라간 고급스러운 커피',
-            image: americanoImg,
-            category: 'coffee',
-            //available: true
-        }
-    ],
+            description: "휘핑크림이 올라간 고급스러운 커피",
+            menuImage: 비엔나커피Img
+        },
+        */
 
-    nonCoffee: [
-
+        // Non Coffee (category: 1)
+        // menuId: 19 ~ 39 까지가 논커피 카테고리 메뉴
+        // menuId: 19 ~ 35 까지가 고정 디폴트 메뉴(추가, 삭제, 수정 불가)
+        // menuId: 36 ~ 39 까지가 유동 메뉴(추가, 삭제, 수정 가능) 수정은 가격, 설명, 이미지만 가능.
         {
-            id: 'non-1',
-            name: '밀크티',
+            menuId: 19,
+            category: 1,
+            menuName: "밀크티",
             price: 4300,
-            description: '홍차와 우유의 클래식한 조합',
-            image: berryImg,
-            category: 'nonCoffee',
-            //available: true
+            description: "홍차와 우유의 클래식한 조합",
+            menuImage: 밀크티Img
         },
-
         {
-            id: 'non-2',
-            name: '버블티',
+            menuId: 20,
+            category: 1,
+            menuName: "버블티",
             price: 5000,
-            description: '부드러운 밀크티와 쫄깃한 타피오카 펄의 조화',
-            image: berryImg,
-            category: 'nonCoffee',
-            //available: true
+            description: "부드러운 밀크티와 쫄깃한 타피오카 펄의 조화",
+            menuImage: 버블티Img
         },
-
         {
-            id: 'non-3',
-            name: '핫초코',
+            menuId: 21,
+            category: 1,
+            menuName: "핫초코",
             price: 4500,
-            description: '부드럽고 달콤한 진한 초콜릿 음료',
-            image: berryImg,
-            category: 'nonCoffee',
-            //available: true
+            description: "부드럽고 달콤한 진한 초콜릿 음료",
+            menuImage: 핫초코Img
         },
-
         {
-            id: 'non-4',
-            name: '생강차',
+            menuId: 22,
+            category: 1,
+            menuName: "생강차",
             price: 4500,
-            description: '따뜻하고 건강한 생강 향의 차',
-            image: berryImg,
-            category: 'nonCoffee',
-            //available: true
+            description: "따뜻하고 건강한 생강 향의 차",
+            menuImage: 생강차Img
         },
-
         {
-            id: 'non-5',
-            name: '라벤더 티',
+            menuId: 23,
+            category: 1,
+            menuName: "라벤더 티",
             price: 4500,
-            description: '은은한 라벤더 향이 가득한 허브차',
-            image: berryImg,
-            category: 'nonCoffee',
-            //available: true
+            description: "은은한 라벤더 향이 가득한 허브차",
+            menuImage: 라벤더티Img
         },
-
         {
-            id: 'non-6',
-            name: '유자차',
+            menuId: 24,
+            category: 1,
+            menuName: "유자차",
             price: 5000,
-            description: '상큼한 유자 맛이 가득한 따뜻한 차',
-            image: berryImg,
-            category: 'nonCoffee',
-            //available: true
+            description: "상큼한 유자 맛이 가득한 따뜻한 차",
+            menuImage: 유자차Img
         },
-
         {
-            id: 'non-7',
-            name: '녹차 라떼',
+            menuId: 25,
+            category: 1,
+            menuName: "녹차 라떼",
             price: 4800,
-            description: '진한 녹차와 부드러운 우유의 조합',
-            image: berryImg,
-            category: 'nonCoffee',
-            //available: true
+            description: "진한 녹차와 부드러운 우유의 조합",
+            menuImage: 녹차라떼Img
         },
-
         {
-            id: 'non-8',
-            name: '고구마 라떼',
+            menuId: 26,
+            category: 1,
+            menuName: "고구마 라떼",
             price: 4700,
-            description: '달콤한 고구마 맛이 듬뿍 들어간 라떼',
-            image: berryImg,
-            category: 'nonCoffee',
-            //available: true
+            description: "달콤한 고구마 맛이 듬뿍 들어간 라떼",
+            menuImage: 고구마라떼Img
         },
-
         {
-            id: 'non-9',
-            name: '곡물 라떼',
+            menuId: 27,
+            category: 1,
+            menuName: "곡물 라떼",
             price: 4500,
-            description: '고소한 곡물 향이 가득한 라떼',
-            image: berryImg,
-            category: 'nonCoffee',
-            //available: true
+            description: "고소한 곡물 향이 가득한 라떼",
+            menuImage: 곡물라떼Img
         },
-
         {
-            id: 'non-10',
-            name: '아이스티',
+            menuId: 28,
+            category: 1,
+            menuName: "아이스티",
             price: 4500,
-            description: '향긋한 복숭아향의 시원한 아이스티',
-            image: berryImg,
-            category: 'nonCoffee',
-            //available: true
+            description: "향긋한 복숭아향의 시원한 아이스티",
+            menuImage: 아이스티Img
         },
-
         {
-            id: 'non-11',
-            name: '프라페',
+            menuId: 29,
+            category: 1,
+            menuName: "프라페",
             price: 5500,
-            description: '달콤하고 시원한 초콜릿 블렌디드 음료',
-            image: berryImg,
-            category: 'nonCoffee',
-            //available: true
+            description: "달콤하고 시원한 초콜릿 블렌디드 음료",
+            menuImage: 프라페Img
         },
-
         {
-            id: 'non-12',
-            name: '미숫가루',
+            menuId: 30,
+            category: 1,
+            menuName: "미숫가루",
             price: 4500,
-            description: '고소한 곡물 맛이 가득한 전통 음료',
-            image: berryImg,
-            category: 'nonCoffee',
-            //available: true
+            description: "고소한 곡물 맛이 가득한 전통 음료",
+            menuImage: 미숫가루Img
         },
-
         {
-            id: 'non-13',
-            name: '딸기 스무디',
+            menuId: 31,
+            category: 1,
+            menuName: "딸기 스무디",
             price: 5500,
-            description: '신선한 딸기의 상큼함이 가득한 스무디',
-            image: berryImg,
-            category: 'nonCoffee',
-            //available: true
+            description: "신선한 딸기의 상큼함이 가득한 스무디",
+            menuImage: 딸기스무디Img
         },
-
         {
-            id: 'non-14',
-            name: '망고 스무디',
+            menuId: 32,
+            category: 1,
+            menuName: "망고 스무디",
             price: 5500,
-            description: '달콤한 망고의 풍미가 가득한 스무디',
-            image: berryImg,
-            category: 'nonCoffee',
-            //available: true
+            description: "달콤한 망고의 풍미가 가득한 스무디",
+            menuImage: 망고스무디Img
         },
-
-
         {
-            id: 'non-15',
-            name: '자몽 에이드',
+            menuId: 33,
+            category: 1,
+            menuName: "자몽 에이드",
             price: 4800,
-            description: '상큼한 자몽의 맛이 가득한 시원한 에이드',
-            image: berryImg,
-            category: 'nonCoffee',
-            //available: true
+            description: "상큼한 자몽의 맛이 가득한 시원한 에이드",
+            menuImage: 자몽에이드Img
         },
-
         {
-            id: 'non-16',
-            name: '레몬 에이드',
+            menuId: 34,
+            category: 1,
+            menuName: "레몬 에이드",
             price: 4800,
-            description: '상큼한 레몬의 맛이 가득한 시원한 에이드',
-            image: berryImg,
-            category: 'nonCoffee',
-            //available: true
+            description: "상큼한 레몬의 맛이 가득한 시원한 에이드",
+            menuImage: 레몬에이드Img
         },
-
         {
-            id: 'non-17',
-            name: '청포도 에이드',
+            menuId: 35,
+            category: 1,
+            menuName: "청포도 에이드",
             price: 4800,
-            description: '상큼한 청포도의 맛이 가득한 에이드',
-            image: berryImg,
-            category: 'nonCoffee',
-            //available: true
+            description: "상큼한 청포도의 맛이 가득한 에이드",
+            menuImage: 청포도에이드Img
         },
 
+        // 유동 메뉴 - Non Coffee 카테고리
+        /*
         {
-            id: 'non-18',
-            name: '유자 에이드',
+            menuId: 36,
+            category: 1,
+            menuName: "유자 에이드",
             price: 4800,
-            description: '상큼한 유자 맛이 가득한 에이드',
-            image: berryImg,
-            category: 'nonCoffee',
-            //available: true
+            description: "상큼한 유자 맛이 가득한 에이드",
+            menuImage: 유자에이드Img
         },
-
         {
-            id: 'non-19',
-            name: '포도 주스',
+            menuId: 37,
+            category: 1,
+            menuName: "포도 주스",
             price: 4000,
-            description: '신선한 포도의 달콤함이 가득한 주스',
-            image: berryImg,
-            category: 'nonCoffee',
-            //available: true
+            description: "신선한 포도의 달콤함이 가득한 주스",
+            menuImage: 포도주스Img
         },
-
         {
-            id: 'non-20',
-            name: '토마토 주스',
+            menuId: 38,
+            category: 1,
+            menuName: "토마토 주스",
             price: 4000,
-            description: '신선한 토마토의 건강한 맛',
-            image: berryImg,
-            category: 'nonCoffee',
-            //available: true
+            description: "신선한 토마토의 건강한 맛",
+            menuImage: 토마토주스Img
         },
-
         {
-            id: 'non-21',
-            name: '사과 주스',
+            menuId: 39,
+            category: 1,
+            menuName: "사과 주스",
             price: 4000,
-            description: '상큼한 사과의 자연스러운 달콤함',
-            image: berryImg,
-            category: 'nonCoffee',
-            //available: true
-        }
-    ],
+            description: "상큼한 사과의 자연스러운 달콤함",
+            menuImage: 사과주스Img
+        },
+        */
 
-    dessert: [
-        // dessert 카테고리 항목 - 카페라떼 이미지 사용
+        // Dessert (category: 2)
+        // menuId: 40 ~ 51 까지가 디저트 카테고리 메뉴
+        // menuId: 40 ~ 47 까지가 고정 디폴트 메뉴(추가, 삭제, 수정 불가)
+        // menuId: 48 ~ 51 까지가 유동 메뉴(추가, 삭제, 수정 가능) 수정은 가격, 설명, 이미지만 가능.
         {
-            id: 'dessert-1',
-            name: '마카롱',
+            menuId: 40,
+            category: 2,
+            menuName: "마카롱",
             price: 4500,
-            description: '다양한 맛의 부드럽고 달콤한 마카롱 5종 세트',
-            image: latteImg,
-            category: 'dessert',
-            //available: true
+            description: "다양한 맛의 부드럽고 달콤한 마카롱 5종 세트",
+            menuImage: 마카롱Img
         },
-
         {
-            id: 'dessert-2',
-            name: '푸딩',
+            menuId: 41,
+            category: 2,
+            menuName: "푸딩",
             price: 3800,
-            description: '부드럽고 달콤한 커스터드 푸딩',
-            image: latteImg,
-            category: 'dessert',
-            //available: true
+            description: "부드럽고 달콤한 커스터드 푸딩",
+            menuImage: 푸딩Img
         },
-
         {
-            id: 'dessert-3',
-            name: '약과',
+            menuId: 42,
+            category: 2,
+            menuName: "약과",
             price: 4000,
-            description: '달콤하고 쫀득한 전통 한국 디저트',
-            image: latteImg,
-            category: 'dessert',
-            //available: true
+            description: "달콤하고 쫀득한 전통 한국 디저트",
+            menuImage: 약과Img
         },
-
         {
-            id: 'dessert-4',
-            name: '크로플',
+            menuId: 43,
+            category: 2,
+            menuName: "크로플",
             price: 4500,
-            description: '크로와상과 와플의 만남, 바삭하고 달콤한 크로플',
-            image: latteImg,
-            category: 'dessert',
-            //available: true
+            description: "크로와상과 와플의 만남, 바삭하고 달콤한 크로플",
+            menuImage: 크로플Img
         },
-
         {
-            id: 'dessert-5',
-            name: '치즈케이크',
+            menuId: 44,
+            category: 2,
+            menuName: "치즈케이크",
             price: 5200,
-            description: '부드럽고 진한 치즈의 풍미가 일품인 클래식 디저트',
-            image: latteImg,
-            category: 'dessert',
-            //available: true
+            description: "부드럽고 진한 치즈의 풍미가 일품인 클래식 디저트",
+            menuImage: 치즈케이크Img
         },
-
         {
-            id: 'dessert-6',
-            name: '브라우니',
+            menuId: 45,
+            category: 2,
+            menuName: "브라우니",
             price: 4800,
-            description: '진한 초콜릿 맛이 가득한 달콤한 브라우니',
-            image: latteImg,
-            category: 'dessert',
-            //available: true
+            description: "진한 초콜릿 맛이 가득한 달콤한 브라우니",
+            menuImage: 브라우니Img
         },
-
         {
-            id: 'dessert-7',
-            name: '마들렌',
+            menuId: 46,
+            category: 2,
+            menuName: "마들렌",
             price: 3500,
-            description: '버터 향이 풍부한 프랑스식 마들렌',
-            image: latteImg,
-            category: 'dessert',
-            //available: true
+            description: "버터 향이 풍부한 프랑스식 마들렌",
+            menuImage: 마들렌Img
         },
-
         {
-            id: 'dessert-8',
-            name: '티라미수',
+            menuId: 47,
+            category: 2,
+            menuName: "티라미수",
             price: 5800,
-            description: '커피 향이 가득한 이탈리안 클래식 디저트',
-            image: latteImg,
-            category: 'dessert',
-            //available: true
+            description: "커피 향이 가득한 이탈리안 클래식 디저트",
+            menuImage: 티라미수Img
         },
 
+        // 유동 메뉴 - Dessert 카테고리
+        /*
         {
-            id: 'dessert-9',
-            name: '스콘',
+            menuId: 48,
+            category: 2,
+            menuName: "스콘",
             price: 3800,
-            description: '버터의 풍미가 가득한 영국식 스콘',
-            image: latteImg,
-            category: 'dessert',
-            //available: true
+            description: "버터의 풍미가 가득한 영국식 스콘",
+            menuImage: 스콘Img
         },
-
         {
-            id: 'dessert-10',
-            name: '와플',
+            menuId: 49,
+            category: 2,
+            menuName: "와플",
             price: 6000,
-            description: '겉은 바삭하고 속은 촉촉한 수제 와플',
-            image: latteImg,
-            category: 'dessert',
-            //available: true
+            description: "겉은 바삭하고 속은 촉촉한 수제 와플",
+            menuImage: 와플Img
         },
-
         {
-            id: 'dessert-11',
-            name: '에그타르트',
+            menuId: 50,
+            category: 2,
+            menuName: "에그타르트",
             price: 5000,
-            description: '바삭한 페이스트리 속 촉촉한 커스터드 크림이 들어간 타르트',
-            image: latteImg,
-            category: 'dessert',
-            //available: true
+            description: "바삭한 페이스트리 속 촉촉한 커스터드 크림이 들어간 타르트",
+            menuImage: 에그타르트Img
         },
-
         {
-            id: 'dessert-12',
-            name: '애플 파이',
+            menuId: 51,
+            category: 2,
+            menuName: "애플 파이",
             price: 4800,
-            description: '달콤한 사과 필링이 가득한 파이',
-            image: latteImg,
-            category: 'dessert',
-            //available: true
-        }
-    ],
-
-    bakery: [
-        // bakery 카테고리 항목 - 허니브레드 이미지 사용
-        {
-            id: 'bakery-1',
-            name: '베이글',
-            price: 3500,
-            description: '쫄깃한 식감이 특징인 도넛 모양의 빵',
-            image: honeyBreadImg,
-            category: 'bakery',
-            //available: true
+            description: "달콤한 사과 필링이 가득한 파이",
+            menuImage: 애플파이Img
         },
+        */
 
+        // Bakery (category: 3)
+        // menuId: 52 ~ 67 까지가 베이커리 카테고리 메뉴
+        // menuId: 52 ~ 63 까지가 고정 디폴트 메뉴(추가, 삭제, 수정 불가)
+        // menuId: 64 ~ 67 까지가 유동 메뉴(추가, 삭제, 수정 가능) 수정은 가격, 설명, 이미지만 가능.
         {
-            id: 'bakery-2',
-            name: '소금빵',
+            menuId: 52,
+            category: 3,
+            menuName: "베이글",
+            price: 3500,
+            description: "쫄깃한 식감이 특징인 도넛 모양의 빵",
+            menuImage: 베이글Img
+        },
+        {
+            menuId: 53,
+            category: 3,
+            menuName: "소금빵",
             price: 3800,
-            description: '겉은 바삭하고 속은 부드러운 짭짤한 빵',
-            image: honeyBreadImg,
-            category: 'bakery',
-            //available: true
+            description: "겉은 바삭하고 속은 부드러운 짭짤한 빵",
+            menuImage: 소금빵Img
         },
-
         {
-            id: 'bakery-3',
-            name: '모카번',
+            menuId: 54,
+            category: 3,
+            menuName: "모카번",
             price: 4000,
-            description: '달콤한 커피 향이 가득한 부드러운 빵',
-            image: honeyBreadImg,
-            category: 'bakery',
-            //available: true
+            description: "달콤한 커피 향이 가득한 부드러운 빵",
+            menuImage: 모카번Img
         },
-
         {
-            id: 'bakery-4',
-            name: '바게트',
+            menuId: 55,
+            category: 3,
+            menuName: "바게트",
             price: 3500,
-            description: '겉은 바삭하고 속은 쫄깃한 프랑스식 빵',
-            image: honeyBreadImg,
-            category: 'bakery',
-            //available: true
+            description: "겉은 바삭하고 속은 쫄깃한 프랑스식 빵",
+            menuImage: 바게트Img
         },
-
         {
-            id: 'bakery-5',
-            name: '크로아상',
+            menuId: 56,
+            category: 3,
+            menuName: "크로아상",
             price: 3800,
-            description: '바삭한 겉과 부드러운 속의 조화가 일품인 프랑스 빵',
-            image: honeyBreadImg,
-            category: 'bakery',
-            //available: true
+            description: "바삭한 겉과 부드러운 속의 조화가 일품인 프랑스 빵",
+            menuImage: 크로아상Img
         },
-
         {
-            id: 'bakery-6',
-            name: '초코머핀',
+            menuId: 57,
+            category: 3,
+            menuName: "초코머핀",
             price: 4000,
-            description: '진한 초콜릿 맛이 가득한 머핀',
-            image: honeyBreadImg,
-            category: 'bakery',
-            //available: true
+            description: "진한 초콜릿 맛이 가득한 머핀",
+            menuImage: 초코머핀Img
         },
-
         {
-            id: 'bakery-7',
-            name: '단팥빵',
+            menuId: 58,
+            category: 3,
+            menuName: "단팥빵",
             price: 3500,
-            description: '달콤한 팥앙금이 들어간 부드러운 빵',
-            image: honeyBreadImg,
-            category: 'bakery',
-            //available: true
+            description: "달콤한 팥앙금이 들어간 부드러운 빵",
+            menuImage: 단팥빵Img
         },
-
         {
-            id: 'bakery-8',
-            name: '크림빵',
+            menuId: 59,
+            category: 3,
+            menuName: "크림빵",
             price: 4500,
-            description: '부드러운 크림이 가득한 빵',
-            image: honeyBreadImg,
-            category: 'bakery',
-            //available: true
+            description: "부드러운 크림이 가득한 빵",
+            menuImage: 크림빵Img
         },
         {
-            id: 'bakery-9',
-            name: '샌드위치',
+            menuId: 60,
+            category: 3,
+            menuName: "샌드위치",
             price: 5800,
-            description: '신선한 야채와 햄을 넣은 샌드위치',
-            image: honeyBreadImg,
-            category: 'bakery',
-            //available: true
+            description: "신선한 야채와 햄을 넣은 샌드위치",
+            menuImage: 샌드위치Img
         },
         {
-            id: 'bakery-10',
-            name: '꽈배기',
+            menuId: 61,
+            category: 3,
+            menuName: "꽈배기",
             price: 3800,
-            description: '달콤한 맛이 일품인 꼬인 모양의 빵',
-            image: honeyBreadImg,
-            category: 'bakery',
-            //available: true
+            description: "달콤한 맛이 일품인 꼬인 모양의 빵",
+            menuImage: 꽈배기Img
         },
-
         {
-            id: 'bakery-11',
-            name: '소보로빵',
+            menuId: 62,
+            category: 3,
+            menuName: "소보로빵",
             price: 3800,
-            description: '달콤한 소보로 토핑이 올라간 부드러운 빵',
-            image: honeyBreadImg,
-            category: 'bakery',
-            //available: true
+            description: "달콤한 소보로 토핑이 올라간 부드러운 빵",
+            menuImage: 소보로빵Img
         },
-
         {
-            id: 'bakery-12',
-            name: '피자빵',
+            menuId: 63,
+            category: 3,
+            menuName: "피자빵",
             price: 4800,
-            description: '치즈와 토핑이 가득한 피자 스타일의 빵',
-            image: honeyBreadImg,
-            category: 'bakery',
-            //available: true
+            description: "치즈와 토핑이 가득한 피자 스타일의 빵",
+            menuImage: 피자빵Img
         },
 
+        // 유동 메뉴 - Bakery 카테고리
+        /*
         {
-            // 허니브레드
-            id: 'bakery-13',
-            name: '허니브레드',
+            menuId: 64,
+            category: 3,
+            menuName: "허니브레드",
             price: 7000,
-            description: '달콤한 꿀과 부드러운 빵의 조화',
-            image: honeyBreadImg,
-            category: 'bakery',
-            //available: true
+            description: "달콤한 꿀과 부드러운 빵의 조화",
+            menuImage: 허니브레드Img
         },
-
         {
-            id: 'bakery-14',
-            name: '몽블랑',
+            menuId: 65,
+            category: 3,
+            menuName: "몽블랑",
             price: 5500,
-            description: '고급스러운 밤 크림의 풍미가 가득한 빵',
-            image: honeyBreadImg,
-            category: 'bakery',
-            //available: true
+            description: "고급스러운 밤 크림의 풍미가 가득한 빵",
+            menuImage: 몽블랑Img
         },
-
         {
-            id: 'bakery-15',
-            name: '치아바타',
+            menuId: 66,
+            category: 3,
+            menuName: "치아바타",
             price: 4000,
-            description: '바삭한 이탈리아식 치아바타',
-            image: honeyBreadImg,
-            category: 'bakery',
-            //available: true
+            description: "바삭한 이탈리아식 치아바타",
+            menuImage: 치아바타Img
         },
-
         {
-            id: 'bakery-16',
-            name: '호밀빵',
+            menuId: 67,
+            category: 3,
+            menuName: "호밀빵",
             price: 3500,
-            description: '건강한 호밀의 풍미가 가득한 빵',
-            image: honeyBreadImg,
-            category: 'bakery',
-            //available: true
+            description: "건강한 호밀의 풍미가 가득한 빵",
+            menuImage: 호밀빵Img
         }
+        */
 
     ]
 };
