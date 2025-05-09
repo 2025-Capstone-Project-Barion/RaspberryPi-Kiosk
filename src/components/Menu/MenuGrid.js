@@ -207,7 +207,7 @@ const MenuGrid = ({ menuItems, onAddToCart, isEntering }) => {
 
         // 이미지 로드 완료 후 다시 체크
         setTimeout(updateScrollButtonStates, 500);
-    }, [menuItems.length]); // menuItems.length만 의존성으로 추가 - 카테고리 변경 시에만 실행
+    }, [menuItems.length, updateScrollButtonStates]); // menuItems.length만 의존성으로 추가 - 카테고리 변경 시에만 실행
 
     // 2. 스크롤 이벤트 리스너 설정을 위한 useEffect
     useEffect(() => {
