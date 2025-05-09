@@ -35,6 +35,7 @@ const PaymentSuccessPage = () => {
             // 주문 정보 콘솔에 출력 (백엔드로 전송할 데이터)
             console.log('백엔드로 전송할 주문 데이터:', {
                 //tossId: orderData.tossId,
+                orderDate: new Date().toISOString(),
                 totalPrice: orderData.totalPrice,
                 orderItems: orderData.orderItems.map(item => ({
                     name: item.name,
@@ -52,11 +53,7 @@ const PaymentSuccessPage = () => {
             // 전송할 데이터 구성 (필요한 정보만 포함)
             const orderPayload = {
                 //tossId: orderData.tossId,
-                //orderDate: new Date().toISOString(), // 주문 일시 추가
-                orderDate: new Date(Date.now() + 9 * 60 * 60 * 1000)
-                    .toISOString()
-                    .replace('T', ' ')
-                    .substring(0, 19), // 'YYYY-MM-DD HH:MM:SS' 형태로 변환
+                orderDate: new Date().toISOString(), //  ISO 8601 형식 주문 일시
                 totalPrice: orderData.totalPrice,
                 orderItems: orderData.orderItems.map(item => ({
                     name: item.name,
