@@ -196,7 +196,7 @@ const MenuGrid = ({ menuItems, onAddToCart, isEntering }) => {
         setCanScrollDown(canScrollMore);
     }, [calculateRowHeight]); // calculateRowHeight를 의존성 배열에 추가
 
-    // 메뉴 아이템이 변경될 때마다 스크롤을 맨 위로 이동
+    // 1. 카테고리 변경 시에만 스크롤을 맨 위로 이동하는 useEffect
     useEffect(() => {
         if (menuGridRef.current) {
             menuGridRef.current.scrollTop = 0;
@@ -205,6 +205,12 @@ const MenuGrid = ({ menuItems, onAddToCart, isEntering }) => {
         // 약간의 지연 후 스크롤 버튼 상태 업데이트
         setTimeout(updateScrollButtonStates, 100);
 
+        // 이미지 로드 완료 후 다시 체크
+        setTimeout(updateScrollButtonStates, 500);
+    }, [menuItems.length]); // menuItems.length만 의존성으로 추가 - 카테고리 변경 시에만 실행
+
+    // 2. 스크롤 이벤트 리스너 설정을 위한 useEffect
+    useEffect(() => {
         // 현재 ref 값을 변수에 저장
         const currentMenuGrid = menuGridRef.current;
 
@@ -222,9 +228,6 @@ const MenuGrid = ({ menuItems, onAddToCart, isEntering }) => {
         if (currentMenuGrid) {
             currentMenuGrid.addEventListener('scroll', handleScroll, { passive: true });
             currentMenuGrid.addEventListener('touchmove', handleScroll, { passive: true });
-
-            // 이미지 로드 완료 후 다시 체크
-            setTimeout(updateScrollButtonStates, 500);
         }
 
         return () => {
@@ -238,7 +241,7 @@ const MenuGrid = ({ menuItems, onAddToCart, isEntering }) => {
                 scrollTimer.current = null;
             }
         };
-    }, [menuItems, updateScrollButtonStates]); // menuItems, updateScrollButtonStates 추가
+    }, [updateScrollButtonStates]); // updateScrollButtonStates만 의존성으로 추가
 
     // Hammer.js를 이용한 터치 스크롤 구현
     useEffect(() => {
