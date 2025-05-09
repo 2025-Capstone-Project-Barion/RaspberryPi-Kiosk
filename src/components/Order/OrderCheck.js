@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { Typography, Box, Divider } from '@mui/material';
 import Hammer from 'hammerjs'; // Hammer.js 임포트 - 라즈베리파이의 드레그 스크롤 미지원을 SW적으로 해결-> 터치로 스크롤 구현을 위한 라이브러리
 import { v4 as uuidv4 } from 'uuid';
@@ -127,7 +127,7 @@ const OrderCheck = ({ cartItems, onClose }) => {
                             fontSize: '1.1rem',
                             color: '#222'
                         }}>
-                            {item.name}
+                            {item.menuName}
                         </Typography>
 
                         {/* 수량 - 배지 스타일 */}

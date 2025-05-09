@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Router from './routes/Router';
 import { GlobalStyles } from './styles/GlobalStyles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';

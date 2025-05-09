@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { KeyboardArrowUp, KeyboardArrowDown } from '@mui/icons-material';
 import { useTrail, animated } from '@react-spring/web';
 import Hammer from 'hammerjs';
@@ -321,31 +321,31 @@ const MenuGrid = ({ menuItems, onAddToCart, isEntering }) => {
                 {menuTrail.map((style, index) => {
                     const item = menuItems[index];
                     return (
-                        <animated.div key={item.id} style={style}>
+                        <animated.div key={item.menuId} style={style}>
                             <MenuCard
                                 className="menu-card"
-                                onTouchStart={(e) => handleCardTouchStart(item.id, e)}
+                                onTouchStart={(e) => handleCardTouchStart(item.menuId, e)}
                                 onTouchMove={handleCardTouchMove}
                                 onTouchEnd={(e) => handleCardTouchEnd(item, e)}
                                 onClick={(e) => handleCardClick(item, e)}
                                 sx={{
-                                    transform: activeCardId === item.id ? 'scale(0.98)' : 'scale(1)',
-                                    borderColor: activeCardId === item.id ? '#2142FF' : '#f0f2fa',
+                                    transform: activeCardId === item.menuId ? 'scale(0.98)' : 'scale(1)',
+                                    borderColor: activeCardId === item.menuId ? '#2142FF' : '#f0f2fa',
                                     transition: 'transform 0.15s ease-out, border-color 0.15s ease-out',
                                 }}
                             >
                                 <MenuImageContainer>
-                                    {item.image && (
+                                    {item.menuImage && (
                                         <img
-                                            src={item.image}
-                                            alt={item.name}
+                                            src={item.menuImage}
+                                            alt={item.menuName}
                                             className="menu-image"
                                         />
                                     )}
                                 </MenuImageContainer>
                                 <MenuInfo>
                                     <div>
-                                        <MenuName>{item.name}</MenuName>
+                                        <MenuName>{item.menuName}</MenuName>
                                         <MenuDescription>{item.description}</MenuDescription>
                                     </div>
                                     <MenuPrice>{item.price.toLocaleString()}원</MenuPrice>

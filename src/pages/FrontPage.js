@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSpring, useSprings, animated, easings } from '@react-spring/web';
 import styles from '../styles/Front/frontPage.module.css';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import FrontPage from '../pages/FrontPage';
 import MenuPage from '../pages/MenuPage';

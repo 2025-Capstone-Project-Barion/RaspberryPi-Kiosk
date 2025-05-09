@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { Typography, Box, IconButton, ListItem, Badge } from '@mui/material';
 import { Add, Remove, Delete, ShoppingCart } from '@mui/icons-material';
 import { animated } from '@react-spring/web';
@@ -177,7 +177,7 @@ const CartPanel = ({ cart, onQuantityChange, onClearCart, onCheckout, animationS
                                         color: '#333',
                                         mb: 0.5
                                     }}>
-                                        {item.name}
+                                        {item.menuName}
                                     </Typography>
                                     <Typography sx={{
                                         fontSize: '0.9rem',

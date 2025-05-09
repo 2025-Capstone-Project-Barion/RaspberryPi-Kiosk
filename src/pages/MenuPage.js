@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useSpring, animated } from '@react-spring/web';
 import { Box } from '@mui/material';
 import { categories, getMenuItems } from '../data/menuData';
@@ -15,7 +15,7 @@ import { AppContainer } from '../styles/Menu/AppContainerStyle';
 
 const MenuPage = () => {
     // 디폴트 카테고리는 커피로 설정(메뉴페이지로 들어왔을 때 보이는 카테고리)
-    const [selectedCategory, setSelectedCategory] = useState('coffee');
+    const [selectedCategory, setSelectedCategory] = useState(0); // 0 = Coffee 카테고리로 시작
     const [cart, setCart] = useState([]);
     // 기존 state 아래에 다이얼로그 상태 추가
     const [orderDialogOpen, setOrderDialogOpen] = useState(false);

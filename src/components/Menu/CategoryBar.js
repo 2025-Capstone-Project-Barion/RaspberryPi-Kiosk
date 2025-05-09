@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTrail, animated } from '@react-spring/web';
 import {
     CategoryWrapper,
@@ -42,12 +41,12 @@ const CategoryBar = ({ categories, selectedCategory, onSelectCategory, logoSrc }
             {/* 카테고리 영역 */}
             <CategoryContainer>
                 {categoryTrail.map((style, index) => (
-                    <animated.div key={categories[index].id} style={style}>
+                    <animated.div key={categories[index].categoryId} style={style}>
                         <CategoryButton
-                            onClick={() => onSelectCategory(categories[index].id)}
-                            active={selectedCategory === categories[index].id}
+                            onClick={() => onSelectCategory(categories[index].categoryId)}
+                            active={selectedCategory === categories[index].categoryId}
                         >
-                            {categories[index].name}
+                            {categories[index].categoryName}
                         </CategoryButton>
                     </animated.div>
                 ))}

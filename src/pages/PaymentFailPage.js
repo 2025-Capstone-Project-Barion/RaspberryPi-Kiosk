@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import ErrorIcon from '@mui/icons-material/Error';

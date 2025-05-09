@@ -667,8 +667,8 @@ export const menuItems = {
 };
 
 // 추후 API 연동을 위한 함수들
-export const getMenuItems = (category) => {
-    return menuItems[category] || [];
+export const getMenuItems = (categoryId) => {
+    return menuItems.content.filter(item => item.category === categoryId);
 };
 
 export const getAllCategories = () => {
