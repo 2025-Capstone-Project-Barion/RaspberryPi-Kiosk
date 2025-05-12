@@ -1,3 +1,5 @@
+// 오디오 관련 코드 주석 처리 및 querySelector 수정
+
 import React, { useState, useEffect, useRef } from 'react';
 import { usePorcupine } from '@picovoice/porcupine-react';
 import { useRhino } from '@picovoice/rhino-react';
@@ -8,11 +10,9 @@ import { useVoiceCommand } from './VoiceCommandContext';
 import './VoiceCommandStyles.css';
 
 /**
- * 음성 명령 시스템의 UI를 포털로 표시하는 컴포넌트
- * 다른 UI 요소들 위에 오버레이됩니다.
+ * 음성 명령 UI를 Portal로 표시하는 컴포넌트
  */
 const VoiceCommandPortal = ({ children }) => {
-    // 포털 타겟 요소 생성 또는 가져오기
     const getOrCreatePortalRoot = () => {
         let portalRoot = document.getElementById('voice-command-portal');
         if (!portalRoot) {
@@ -28,7 +28,6 @@ const VoiceCommandPortal = ({ children }) => {
 
 /**
  * 음성 명령 시스템 핵심 컴포넌트
- * Picovoice의 Porcupine(웨이크워드 감지)과 Rhino(음성 명령 인식) 기반
  */
 const VoiceCommandSystem = () => {
     const navigate = useNavigate();
@@ -47,6 +46,9 @@ const VoiceCommandSystem = () => {
     const [wakewordDetected, setWakewordDetected] = useState(false);
     const [error, setError] = useState(null);
 
+    // 초기화 중복 방지 플래그
+    const isInitialized = useRef(false);
+
     // 클릭 피드백 상태
     const [clickFeedback, setClickFeedback] = useState(null);
 
@@ -54,7 +56,7 @@ const VoiceCommandSystem = () => {
     const commandTimeoutRef = useRef(null);
     const wakewordTimeoutRef = useRef(null);
 
-    // 오디오 피드백용 레퍼런스
+    // 오디오 피드백용 레퍼런스 (주석 처리하지 않고 유지)
     const wakeAudioRef = useRef(null);
     const successAudioRef = useRef(null);
 
@@ -111,8 +113,11 @@ const VoiceCommandSystem = () => {
         }
     }, [wakewordError, commandError, wakewordErrorMsg, commandErrorMsg]);
 
-    // 1. Porcupine 초기화 (웨이크워드 감지)
+    // 1. Porcupine 초기화 (웨이크워드 감지) - 중복 방지
     useEffect(() => {
+        // 이미 초기화된 경우 건너뛰기
+        if (isInitialized.current) return;
+
         console.log("웨이크워드 감지 시스템 초기화 중...");
 
         const initWakewordSystem = async () => {
@@ -127,6 +132,9 @@ const VoiceCommandSystem = () => {
                 // 웨이크워드 감지 시작
                 await startWakeword();
                 console.log('웨이크워드 감지 시작됨');
+
+                // 초기화 완료 플래그 설정
+                isInitialized.current = true;
             } catch (e) {
                 console.error('웨이크워드 감지 초기화 실패:', e);
                 setError(`초기화 실패: ${e.message}`);
@@ -147,6 +155,8 @@ const VoiceCommandSystem = () => {
 
     // 2. Rhino 초기화 (음성 명령 인식)
     useEffect(() => {
+        if (isInitialized.current) return;
+
         console.log("음성 명령 인식 시스템 초기화 중...");
 
         const initCommandSystem = async () => {
@@ -177,10 +187,12 @@ const VoiceCommandSystem = () => {
             console.log(`웨이크워드 '${keywordDetection.label}' 감지됨!`);
             setWakewordDetected(true);
 
-            // 오디오 피드백 재생
+            // 오디오 피드백 재생 코드 주석 처리
+            /* 
             if (wakeAudioRef.current && voiceFeedbackEnabled) {
-                wakeAudioRef.current.play().catch(e => console.error('오디오 재생 실패:', e));
+              wakeAudioRef.current.play().catch(e => console.error('오디오 재생 실패:', e));
             }
+            */
 
             // 이미 진행 중인 타이머가 있으면 취소
             clearTimeouts();
@@ -205,12 +217,14 @@ const VoiceCommandSystem = () => {
             // 부모 컴포넌트로 결과 전달
             handleVoiceCommand(internalCommandResult);
 
-            // 성공 오디오 피드백
+            // 성공 오디오 피드백 코드 주석 처리
+            /*
             if (successAudioRef.current && internalCommandResult.isUnderstood && voiceFeedbackEnabled) {
-                successAudioRef.current.play().catch(e => console.error('오디오 재생 실패:', e));
+              successAudioRef.current.play().catch(e => console.error('오디오 재생 실패:', e));
             }
+            */
 
-            // 인식 완료 후 웨이크워드 감지 모드로 복귀 (즉시 호출하지 않고 약간 지연)
+            // 인식 완료 후 웨이크워드 감지 모드로 복귀 (약간 지연)
             setTimeout(() => {
                 resetToWakewordMode();
             }, 500); // 0.5초 지연
@@ -278,7 +292,18 @@ const VoiceCommandSystem = () => {
         }
     };
 
-    // 8. 시각적 클릭 피드백 생성 함수
+    // 8. 텍스트 내용으로 버튼을 찾는 헬퍼 함수
+    const findButtonByText = (textOptions) => {
+        const buttons = Array.from(document.querySelectorAll('button'));
+        return buttons.find(button => {
+            if (!button || !button.textContent) return false;
+
+            const buttonText = button.textContent.toLowerCase();
+            return textOptions.some(text => buttonText.includes(text.toLowerCase()));
+        });
+    };
+
+    // 9. 시각적 클릭 피드백 생성 함수
     const createClickFeedback = (element) => {
         if (!element || !voiceFeedbackEnabled) return;
 
@@ -305,7 +330,7 @@ const VoiceCommandSystem = () => {
         element.click();
     };
 
-    // 9. 음성 명령에 반응하여 UI 요소 클릭 처리
+    // 10. 음성 명령에 반응하여 UI 요소 클릭 처리
     useEffect(() => {
         if (!commandResult || !commandResult.isUnderstood) return;
 
@@ -321,7 +346,9 @@ const VoiceCommandSystem = () => {
             if (intent === '메뉴화면이동') {
                 // "주문하러 가기" 버튼 찾아서 클릭
                 setTimeout(() => {
-                    const orderButton = document.querySelector('.orderButton, button:contains("주문하러"), button:contains("주문 시작")');
+                    // 수정된 버튼 찾기 로직
+                    const orderButton = findButtonByText(['주문하러', '주문 시작', '시작하기']);
+
                     if (orderButton) {
                         console.log('첫 화면 "주문하러 가기" 버튼 클릭');
                         createClickFeedback(orderButton);
@@ -337,52 +364,21 @@ const VoiceCommandSystem = () => {
         else if (pathname === '/MenuPage') {
             switch (intent) {
                 case '스크롤업':
-                    // 위로 스크롤 버튼 찾아서 클릭
-                    setTimeout(() => {
-                        const scrollUpButton = document.querySelector('button[aria-label="위로 스크롤"]');
-                        if (scrollUpButton) {
-                            console.log('메뉴 화면 "위로 스크롤" 버튼 클릭');
-                            createClickFeedback(scrollUpButton);
-                        } else {
-                            // 버튼을 찾을 수 없으면 이벤트 직접 발생
-                            window.dispatchEvent(new CustomEvent('voice-scroll-up'));
-                        }
-                    }, 300);
+                    // 직접 이벤트 발생
+                    window.dispatchEvent(new CustomEvent('voice-scroll-up'));
                     break;
 
                 case '스크롤다운':
-                    // 아래로 스크롤 버튼 찾아서 클릭
-                    setTimeout(() => {
-                        const scrollDownButton = document.querySelector('button[aria-label="아래로 스크롤"]');
-                        if (scrollDownButton) {
-                            console.log('메뉴 화면 "아래로 스크롤" 버튼 클릭');
-                            createClickFeedback(scrollDownButton);
-                        } else {
-                            // 버튼을 찾을 수 없으면 이벤트 직접 발생
-                            window.dispatchEvent(new CustomEvent('voice-scroll-down'));
-                        }
-                    }, 300);
+                    // 직접 이벤트 발생
+                    window.dispatchEvent(new CustomEvent('voice-scroll-down'));
                     break;
 
                 case '카테고리이동':
                     if (slots && slots.카테고리) {
-                        // 카테고리 버튼 찾아서 클릭
-                        setTimeout(() => {
-                            const categoryButtons = document.querySelectorAll('.category-button, [role="tab"]');
-                            let targetButton = null;
-
-                            categoryButtons.forEach(button => {
-                                const buttonText = button.textContent.toLowerCase();
-                                if (buttonText.includes(slots.카테고리.toLowerCase())) {
-                                    targetButton = button;
-                                }
-                            });
-
-                            if (targetButton) {
-                                console.log(`메뉴 화면 "${slots.카테고리}" 카테고리 버튼 클릭`);
-                                createClickFeedback(targetButton);
-                            }
-                        }, 300);
+                        // 직접 이벤트 발생
+                        window.dispatchEvent(new CustomEvent('voice-change-category', {
+                            detail: { category: slots.카테고리 }
+                        }));
                     }
                     break;
 
@@ -390,69 +386,32 @@ const VoiceCommandSystem = () => {
                 case '논커피주문':
                 case '디저트주문':
                 case '베이커리주문':
-                    // 해당 메뉴 찾아서 클릭
-                    const categoryType = intent.replace('주문', ''); // 카테고리 타입 추출
-                    const menuName = slots[categoryType]; // 슬롯에서 메뉴명 가져오기
+                    // 커피 주문 처리 - 이벤트 기반으로 변경
+                    const categoryType = intent.replace('주문', '');
+                    const menuName = slots[categoryType];
+                    const quantity = slots.수량 ? convertKoreanNumberToDigit(slots.수량) : 1;
 
                     if (menuName) {
-                        setTimeout(() => {
-                            // 모든 메뉴 카드 요소 찾기
-                            const menuItems = document.querySelectorAll('.menu-card');
-                            let targetMenuItem = null;
-
-                            menuItems.forEach(item => {
-                                // 메뉴 이름을 포함하는 요소 찾기
-                                const nameElement = item.querySelector('*:not(img)'); // 이미지 제외
-                                if (nameElement && nameElement.textContent.includes(menuName)) {
-                                    targetMenuItem = item;
-                                }
-                            });
-
-                            if (targetMenuItem) {
-                                console.log(`메뉴 화면 "${menuName}" 메뉴 카드 클릭`);
-                                // 수량이 지정되었으면 여러 번 클릭
-                                const quantity = slots.수량 ? parseInt(convertKoreanNumberToDigit(slots.수량)) || 1 : 1;
-
-                                const clickInterval = setInterval(() => {
-                                    const clickCount = parseInt(targetMenuItem.dataset.clickCount || 0) + 1;
-                                    targetMenuItem.dataset.clickCount = clickCount;
-
-                                    createClickFeedback(targetMenuItem);
-
-                                    if (clickCount >= quantity) {
-                                        clearInterval(clickInterval);
-                                        // 클릭 카운트 초기화
-                                        setTimeout(() => {
-                                            delete targetMenuItem.dataset.clickCount;
-                                        }, 1000);
-                                    }
-                                }, 500);
+                        // 메뉴 아이템 찾기 및 주문 처리를 위한 사용자 정의 이벤트 발생
+                        window.dispatchEvent(new CustomEvent('voice-order-menu', {
+                            detail: {
+                                categoryType,
+                                menuName,
+                                quantity
                             }
-                        }, 300);
+                        }));
                     }
                     break;
 
                 case '장바구니비우기':
-                    // 장바구니 비우기 버튼 찾아서 클릭
-                    setTimeout(() => {
-                        const clearCartButton = document.querySelector('.MuiIconButton-colorError');
-                        if (clearCartButton) {
-                            console.log('메뉴 화면 "장바구니 비우기" 버튼 클릭');
-                            createClickFeedback(clearCartButton);
-                        }
-                    }, 300);
+                    // 장바구니 비우기 - 이벤트 기반으로 변경
+                    window.dispatchEvent(new CustomEvent('voice-clear-cart'));
                     break;
 
                 case '구매요청':
                 case '결제요청':
-                    // 구매하기 버튼 찾아서 클릭
-                    setTimeout(() => {
-                        const purchaseButton = document.querySelector('button:contains("구매하기")');
-                        if (purchaseButton) {
-                            console.log('메뉴 화면 "구매하기" 버튼 클릭');
-                            createClickFeedback(purchaseButton);
-                        }
-                    }, 300);
+                    // 구매하기/결제하기 - 이벤트 기반으로 변경
+                    window.dispatchEvent(new CustomEvent('voice-checkout'));
                     break;
             }
         }
@@ -460,27 +419,12 @@ const VoiceCommandSystem = () => {
         // 결제 화면에서의 명령 처리
         else if (pathname === '/payment') {
             if (intent === '결제요청') {
-                // 결제하기 버튼 찾아서 클릭
-                setTimeout(() => {
-                    const payButton = document.querySelector('button:contains("결제")');
-                    if (payButton) {
-                        console.log('결제 화면 "결제하기" 버튼 클릭');
-                        createClickFeedback(payButton);
-                    }
-                }, 300);
+                // 결제 진행 이벤트 발생
+                window.dispatchEvent(new CustomEvent('voice-process-payment'));
             }
             else if (intent === '토글닫기') {
-                // 뒤로가기(취소) 버튼 찾아서 클릭
-                setTimeout(() => {
-                    const backButton = document.querySelector('button:contains("취소"), button:contains("돌아가기")');
-                    if (backButton) {
-                        console.log('결제 화면 "돌아가기" 버튼 클릭');
-                        createClickFeedback(backButton);
-                    } else {
-                        console.log('결제 화면에서 돌아가기 버튼을 찾을 수 없음, 직접 페이지 이동');
-                        navigate(-1); // 이전 페이지로 이동
-                    }
-                }, 300);
+                // 뒤로가기 이벤트 발생
+                navigate(-1);
             }
         }
 
@@ -488,9 +432,7 @@ const VoiceCommandSystem = () => {
         else if (pathname === '/payment/success') {
             if (intent === '메뉴화면이동') {
                 // 메인으로 돌아가기
-                setTimeout(() => {
-                    navigate('/'); // 첫 화면으로 이동
-                }, 300);
+                navigate('/');
             }
         }
 
@@ -542,9 +484,9 @@ const VoiceCommandSystem = () => {
 
     return (
         <VoiceCommandPortal>
-            {/* 오디오 피드백 */}
-            <audio ref={wakeAudioRef} src="/sounds/wake.mp3" preload="auto" />
-            <audio ref={successAudioRef} src="/sounds/success.mp3" preload="auto" />
+            {/* 오디오 참조는 유지하되 소스는 비워두기 */}
+            <audio ref={wakeAudioRef} preload="none" />
+            <audio ref={successAudioRef} preload="none" />
 
             {/* 음성 인식 시각화 */}
             <AnimatePresence>

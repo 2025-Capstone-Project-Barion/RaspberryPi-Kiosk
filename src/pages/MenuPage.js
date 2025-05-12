@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSpring, animated } from '@react-spring/web';
 import { Box } from '@mui/material';
 import { categories, getMenuItems } from '../data/menuData';
@@ -105,6 +105,58 @@ const MenuPage = () => {
         // 결제 후 장바구니 비우기
         setCart([]);
     };
+
+    // 기존 useEffect 아래에 추가
+
+    // 음성 명령 이벤트 리스너
+    useEffect(() => {
+        // 메뉴 주문 이벤트 처리
+        const handleVoiceOrderMenu = (event) => {
+            const { categoryType, menuName, quantity } = event.detail;
+            console.log(`음성 명령으로 메뉴 주문: ${menuName} ${quantity}개`);
+
+            // 카테고리에 맞는 메뉴 찾기
+            let foundItem = null;
+            const menuItems = getMenuItems(selectedCategory);
+
+            // 메뉴 이름 포함 여부로 찾기 (부분 일치)
+            foundItem = menuItems.find(item =>
+                item.menuName.toLowerCase().includes(menuName.toLowerCase()) ||
+                menuName.toLowerCase().includes(item.menuName.toLowerCase())
+            );
+
+            if (foundItem) {
+                // 찾은 메뉴 quantity만큼 장바구니에 추가
+                for (let i = 0; i < quantity; i++) {
+                    handleAddToCart(foundItem);
+                }
+            }
+        };
+
+        // 장바구니 비우기 이벤트 처리
+        const handleVoiceClearCart = () => {
+            console.log('음성 명령으로 장바구니 비우기');
+            setCart([]);
+        };
+
+        // 결제하기 이벤트 처리
+        const handleVoiceCheckout = () => {
+            console.log('음성 명령으로 결제 진행');
+            setOrderDialogOpen(true);
+        };
+
+        // 이벤트 리스너 등록
+        window.addEventListener('voice-order-menu', handleVoiceOrderMenu);
+        window.addEventListener('voice-clear-cart', handleVoiceClearCart);
+        window.addEventListener('voice-checkout', handleVoiceCheckout);
+
+        // 정리 함수
+        return () => {
+            window.removeEventListener('voice-order-menu', handleVoiceOrderMenu);
+            window.removeEventListener('voice-clear-cart', handleVoiceClearCart);
+            window.removeEventListener('voice-checkout', handleVoiceCheckout);
+        };
+    }, [selectedCategory]); // selectedCategory 의존성 추가
 
     return (
         <animated.div style={pageEntrance}>
