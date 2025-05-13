@@ -97,8 +97,8 @@ const PaymentPage = () => {
     // 주문명 생성
     const orderName = orderItems.length > 0
         ? (orderItems.length > 1
-            ? `${orderItems[0].name} 외 ${orderItems.length - 1}건`
-            : orderItems[0].name)
+            ? `${orderItems[0].menuName} 외 ${orderItems.length - 1}건`
+            : orderItems[0].menuName)
         : '주문';
 
     return (
