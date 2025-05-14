@@ -9,22 +9,22 @@ import MicIcon from '@mui/icons-material/Mic';
 import TouchAppIcon from '@mui/icons-material/TouchApp';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
-// 배경 애니메이션 파티클 데이터
-const PARTICLES = 35;
-const generateParticles = () => {
-    return Array.from({ length: PARTICLES }, () => ({
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        size: 3 + Math.random() * 8,
-        opacity: 0.15 + Math.random() * 0.3,
-    }));
-};
+// // 배경 애니메이션 파티클 데이터
+// const PARTICLES = 35;
+// const generateParticles = () => {
+//     return Array.from({ length: PARTICLES }, () => ({
+//         x: Math.random() * 100,
+//         y: Math.random() * 100,
+//         size: 3 + Math.random() * 8,
+//         opacity: 0.15 + Math.random() * 0.3,
+//     }));
+// };
 
 const FrontPage = () => {
     const navigate = useNavigate();
     const [isLeaving, setIsLeaving] = useState(false);
     const [activeTouch, setActiveTouch] = useState(null);
-    const particles = generateParticles();
+    //const particles = generateParticles();
 
     // 첫 화면에서 로컬스토리지 초기화 로직 추가
     useEffect(() => {
@@ -50,36 +50,36 @@ const FrontPage = () => {
     // }, []);
 
     // 파티클 애니메이션
-    const particleSprings = useSprings(
-        PARTICLES,
-        particles.map(particle => ({
-            from: {
-                x: particle.x,
-                y: particle.y,
-                opacity: 0,
-                scale: 0.3,
-            },
-            to: async (next) => {
-                // 초기 페이드인
-                await next({
-                    opacity: particle.opacity,
-                    scale: 1,
-                    config: { tension: 80, friction: 10 }
-                });
+    // const particleSprings = useSprings(
+    //     PARTICLES,
+    //     particles.map(particle => ({
+    //         from: {
+    //             x: particle.x,
+    //             y: particle.y,
+    //             opacity: 0,
+    //             scale: 0.3,
+    //         },
+    //         to: async (next) => {
+    //             // 초기 페이드인
+    //             await next({
+    //                 opacity: particle.opacity,
+    //                 scale: 1,
+    //                 config: { tension: 80, friction: 10 }
+    //             });
 
-                // 계속 움직이는 애니메이션 - 성능 최적화
-                while (true) {
-                    await next({
-                        x: particle.x + (Math.random() * 15 - 7.5),
-                        y: particle.y + (Math.random() * 15 - 7.5),
-                        opacity: 0.1 + Math.random() * 0.4,
-                        scale: 0.8 + Math.random() * 0.4,
-                        config: { duration: 6000 + Math.random() * 4000 }
-                    });
-                }
-            },
-        }))
-    );
+    //             // 계속 움직이는 애니메이션 - 성능 최적화
+    //             while (true) {
+    //                 await next({
+    //                     x: particle.x + (Math.random() * 15 - 7.5),
+    //                     y: particle.y + (Math.random() * 15 - 7.5),
+    //                     opacity: 0.1 + Math.random() * 0.4,
+    //                     scale: 0.8 + Math.random() * 0.4,
+    //                     config: { duration: 6000 + Math.random() * 4000 }
+    //                 });
+    //             }
+    //         },
+    //     }))
+    // );
 
     // 페이지 전환 애니메이션 (좌우 방향으로 변경)
     const pageTransition = useSpring({
@@ -199,7 +199,7 @@ const FrontPage = () => {
     return (
         <animated.div style={pageTransition} className={styles.container}>
             <animated.div className={styles.overlay} style={overlaySpring} />
-            {/* 배경 파티클 */}
+            {/* 배경 파티클 
             {particleSprings.map((props, i) => (
                 <animated.div
                     key={i}
@@ -213,7 +213,7 @@ const FrontPage = () => {
                         height: `${particles[i].size}px`,
                     }}
                 />
-            ))}
+            ))}*/}
 
             <div className={styles.content}>
                 {/* 좌측 브랜드 섹션 */}
