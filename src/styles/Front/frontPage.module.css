@@ -27,17 +27,6 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
   background: linear-gradient(135deg, #2c38d1 0%, #5a63f7 100%);
 }
 
-/* 배경 파티클 - 더 눈에 띄는 효과 */
-.particle {
-  position: absolute;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.7);
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-  filter: blur(1.5px);
-  pointer-events: none;
-  z-index: 1;
-}
-
 /* 메인 콘텐츠 레이아웃 */
 .content {
   position: relative;
@@ -62,13 +51,13 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
 /* 물결 효과 제거함 */
 
 .logoContainer {
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
   position: relative;
   z-index: 2;
 }
 
 .logo {
-  width: 220px;
+  width: 260px;
   height: auto;
   filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
 }
@@ -77,11 +66,12 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
   text-align: left;
   position: relative;
   z-index: 2;
+  margin-bottom: 0.8rem; /* 새로 추가 */
 }
 
 /* 브랜드명 강조 */
 .brandName {
-  font-size: 5rem;
+  font-size: 5.5rem;
   font-weight: 700;
   margin: 0;
   letter-spacing: -1px;
@@ -100,7 +90,7 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
 }
 
 .tagline {
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: 400;
   opacity: 0.9;
   margin: 0;
@@ -128,20 +118,12 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
 }
 
 .description {
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   line-height: 1.8;
   opacity: 0.85;
-  max-width: 500px;
+  max-width: 650px; /* 500px에서 650px로 확대 */
+  margin-top: 2rem; /* 더 큰 상단 여백 */
 }
-
-/* 하이라이트 텍스트 스타일 - 더 눈에 띄는 밑줄 */
-/* .highlightText {
-  font-weight: 600;
-  position: relative;
-  border-bottom: 3px solid rgba(255, 255, 255, 0.8); 
-  padding-bottom: 2px;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); 
-} */
 
 /* 우측 주문 섹션 - 개선 */
 .orderSection {
