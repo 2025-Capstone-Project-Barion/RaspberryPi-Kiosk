@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSpring, useSprings, animated, easings } from '@react-spring/web';
 import styles from '../styles/Front/frontPage.module.css';
@@ -182,9 +182,9 @@ const FrontPage = () => {
     });
     */
 
-    const handleStartOrder = () => {
+    const handleStartOrder = useCallback(() => {
         setIsLeaving(true);
-    };
+    }, []);
 
     // 터치 이벤트 핸들러
     const handleTouchStart = (id) => {

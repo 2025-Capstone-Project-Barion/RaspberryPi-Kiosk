@@ -20,6 +20,11 @@ const OrderCheck = ({ cartItems, onClose }) => {
     // Hammer.js 인스턴스 저장용 ref
     const orderHammerRef = useRef(null);
 
+    // 총 주문 수량 계산
+    const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+    // 총 금액 계산
+    const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
     // Hammer.js 초기화 및 설정
     useEffect(() => {
         // 기존 Hammer 인스턴스 정리
@@ -92,13 +97,7 @@ const OrderCheck = ({ cartItems, onClose }) => {
             window.removeEventListener('voice-dialog-close', handleDialogClose);
             window.removeEventListener('voice-payment-request', handlePaymentRequest);
         };
-    }, [onClose, cartItems]); // totalPrice 의존성 추가 필요
-
-    // 총 주문 수량 계산
-    const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-
-    // 총 금액 계산
-    const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    }, [onClose, cartItems, totalPrice]); // totalPrice 의존성 추가 필요
 
     return (
         <OrderCheckContainer>
