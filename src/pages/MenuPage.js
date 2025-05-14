@@ -110,26 +110,109 @@ const MenuPage = () => {
 
     // 음성 명령 이벤트 리스너
     useEffect(() => {
-        // 메뉴 주문 이벤트 처리
+        // 카테고리 이동 이벤트 처리 추가
+        const handleVoiceCategoryChange = (event) => {
+            const { category } = event.detail;
+            console.log(`음성 명령으로 카테고리 이동: ${category}`);
+
+            // 카테고리명으로 인덱스 찾기
+            const categoryIndex = categories.findIndex(
+                cat => cat.name.toLowerCase().includes(category.toLowerCase())
+            );
+
+            if (categoryIndex !== -1) {
+                setSelectedCategory(categoryIndex);
+                console.log(`카테고리 변경됨: ${categories[categoryIndex].name}`);
+            }
+        };
+
+        // 메뉴 주문 이벤트 처리 수정
         const handleVoiceOrderMenu = (event) => {
+            // eslint-disable-next-line no-unused-vars
             const { categoryType, menuName, quantity } = event.detail;
             console.log(`음성 명령으로 메뉴 주문: ${menuName} ${quantity}개`);
 
-            // 카테고리에 맞는 메뉴 찾기
-            let foundItem = null;
-            const menuItems = getMenuItems(selectedCategory);
+            // 모든 카테고리의 메뉴 아이템 가져오기
+            const allMenuItems = [];
+            for (let i = 0; i < categories.length; i++) {
+                allMenuItems.push(...getMenuItems(i));
+            }
 
             // 메뉴 이름 포함 여부로 찾기 (부분 일치)
-            foundItem = menuItems.find(item =>
+            const foundItem = allMenuItems.find(item =>
                 item.menuName.toLowerCase().includes(menuName.toLowerCase()) ||
                 menuName.toLowerCase().includes(item.menuName.toLowerCase())
             );
 
             if (foundItem) {
-                // 찾은 메뉴 quantity만큼 장바구니에 추가
-                for (let i = 0; i < quantity; i++) {
-                    handleAddToCart(foundItem);
+                // 해당 카테고리로 이동 (선택적)
+                const itemCategoryIndex = categories.findIndex(
+                    cat => cat.id === foundItem.categoryId
+                );
+                if (itemCategoryIndex !== -1 && selectedCategory !== itemCategoryIndex) {
+                    setSelectedCategory(itemCategoryIndex);
                 }
+
+                // 찾은 메뉴 quantity만큼 장바구니에 추가
+                const existingItem = cart.find(cartItem => cartItem.menuId === foundItem.menuId);
+
+                if (existingItem) {
+                    // 이미 장바구니에 있는 메뉴라면 수량만 증가
+                    setCart(cart.map(cartItem =>
+                        cartItem.menuId === foundItem.menuId
+                            ? { ...cartItem, quantity: cartItem.quantity + quantity }
+                            : cartItem
+                    ));
+                } else {
+                    // 새 메뉴라면 추가
+                    setCart([...cart, { ...foundItem, quantity }]);
+                }
+
+                console.log(`장바구니에 추가됨: ${foundItem.menuName} ${quantity}개`);
+            } else {
+                console.log(`메뉴를 찾을 수 없음: ${menuName}`);
+            }
+        };
+
+        // 장바구니에서 특정 메뉴 제거 이벤트 처리 추가
+        const handleVoiceRemoveItem = (event) => {
+            const { itemName, quantity } = event.detail;
+            console.log(`음성 명령으로 장바구니에서 제거: ${itemName} ${quantity || '전체'}개`);
+
+            // 부분 일치하는 메뉴 찾기
+            const matchingItems = cart.filter(
+                item => item.menuName.toLowerCase().includes(itemName.toLowerCase()) ||
+                    itemName.toLowerCase().includes(item.menuName.toLowerCase())
+            );
+
+            if (matchingItems.length > 0) {
+                if (quantity === 0) {
+                    // 수량을 지정하지 않았으면 해당 메뉴를 모두 제거
+                    setCart(cart.filter(item => !matchingItems.some(match => match.menuId === item.menuId)));
+                    console.log(`${itemName} 메뉴 전체 제거됨`);
+                } else {
+                    // 지정된 수량만큼 제거
+                    const updatedCart = [...cart];
+                    const targetItem = matchingItems[0]; // 첫 번째 일치 항목 사용
+                    const targetIndex = cart.findIndex(item => item.menuId === targetItem.menuId);
+
+                    if (targetIndex !== -1) {
+                        if (cart[targetIndex].quantity <= quantity) {
+                            // 수량이 같거나 작으면 항목 제거
+                            updatedCart.splice(targetIndex, 1);
+                        } else {
+                            // 수량이 더 크면 차감
+                            updatedCart[targetIndex] = {
+                                ...updatedCart[targetIndex],
+                                quantity: updatedCart[targetIndex].quantity - quantity
+                            };
+                        }
+                        setCart(updatedCart);
+                        console.log(`${itemName} ${quantity}개 제거됨`);
+                    }
+                }
+            } else {
+                console.log(`장바구니에서 ${itemName} 메뉴를 찾을 수 없음`);
             }
         };
 
@@ -146,17 +229,21 @@ const MenuPage = () => {
         };
 
         // 이벤트 리스너 등록
+        window.addEventListener('voice-category-change', handleVoiceCategoryChange);
         window.addEventListener('voice-order-menu', handleVoiceOrderMenu);
+        window.addEventListener('voice-remove-item', handleVoiceRemoveItem);
         window.addEventListener('voice-clear-cart', handleVoiceClearCart);
         window.addEventListener('voice-checkout', handleVoiceCheckout);
 
         // 정리 함수
         return () => {
+            window.removeEventListener('voice-category-change', handleVoiceCategoryChange);
             window.removeEventListener('voice-order-menu', handleVoiceOrderMenu);
+            window.removeEventListener('voice-remove-item', handleVoiceRemoveItem);
             window.removeEventListener('voice-clear-cart', handleVoiceClearCart);
             window.removeEventListener('voice-checkout', handleVoiceCheckout);
         };
-    }, [selectedCategory]); // selectedCategory 의존성 추가
+    }, [cart, selectedCategory]);
 
     return (
         <animated.div style={pageEntrance}>

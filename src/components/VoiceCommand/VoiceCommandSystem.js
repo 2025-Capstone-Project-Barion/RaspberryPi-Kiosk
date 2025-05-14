@@ -43,6 +43,7 @@ const VoiceCommandSystem = () => {
     } = useVoiceCommand();
 
     // 상태 관리
+    // eslint-disable-next-line no-unused-vars
     const [wakewordDetected, setWakewordDetected] = useState(false);
     const [error, setError] = useState(null);
 
@@ -340,6 +341,7 @@ const VoiceCommandSystem = () => {
         const pathname = location.pathname;
 
         console.log(`현재 경로: ${pathname}, 명령 인텐트: ${intent}`);
+        console.log('명령 슬롯:', slots); // 슬롯 정보 출력 추가
 
         // 첫 화면에서의 명령 처리
         if (pathname === '/' || pathname === '/index.html') {
@@ -375,8 +377,9 @@ const VoiceCommandSystem = () => {
 
                 case '카테고리이동':
                     if (slots && slots.카테고리) {
-                        // 직접 이벤트 발생
-                        window.dispatchEvent(new CustomEvent('voice-change-category', {
+                        console.log(`카테고리 이동: ${slots.카테고리}`);
+                        // 카테고리 이동 이벤트 발생
+                        window.dispatchEvent(new CustomEvent('voice-category-change', {
                             detail: { category: slots.카테고리 }
                         }));
                     }
@@ -386,62 +389,82 @@ const VoiceCommandSystem = () => {
                 case '논커피주문':
                 case '디저트주문':
                 case '베이커리주문':
-                    // 커피 주문 처리 - 이벤트 기반으로 변경
-                    const categoryType = intent.replace('주문', '');
-                    const menuName = slots[categoryType];
+                    // 메뉴 주문 이벤트 발생
+                    const menuType = intent.replace('주문', '');
+                    const menuName = slots[menuType] || '';
                     const quantity = slots.수량 ? convertKoreanNumberToDigit(slots.수량) : 1;
 
                     if (menuName) {
-                        // 메뉴 아이템 찾기 및 주문 처리를 위한 사용자 정의 이벤트 발생
+                        console.log(`메뉴 주문: ${menuName}, 수량: ${quantity}`);
                         window.dispatchEvent(new CustomEvent('voice-order-menu', {
                             detail: {
-                                categoryType,
-                                menuName,
-                                quantity
+                                categoryType: menuType,
+                                menuName: menuName,
+                                quantity: quantity
                             }
                         }));
                     }
                     break;
 
+                case '구매요청':
+                    // 장바구니 확인 다이얼로그 표시
+                    window.dispatchEvent(new CustomEvent('voice-checkout'));
+                    break;
+
                 case '장바구니비우기':
-                    // 장바구니 비우기 - 이벤트 기반으로 변경
+                    // 장바구니 비우기
                     window.dispatchEvent(new CustomEvent('voice-clear-cart'));
                     break;
 
-                case '구매요청':
-                case '결제요청':
-                    // 구매하기/결제하기 - 이벤트 기반으로 변경
-                    window.dispatchEvent(new CustomEvent('voice-checkout'));
+                case '장바구니제거':
+                    // 특정 메뉴 제거 이벤트
+                    const itemToRemove = slots.커피 || slots.논커피 || slots.디저트 || slots.베이커리;
+                    const removeQuantity = slots.수량 ? convertKoreanNumberToDigit(slots.수량) : 0;
+
+                    if (itemToRemove) {
+                        console.log(`장바구니 항목 제거: ${itemToRemove}, 수량: ${removeQuantity || '전체'}`);
+                        window.dispatchEvent(new CustomEvent('voice-remove-item', {
+                            detail: {
+                                itemName: itemToRemove,
+                                quantity: removeQuantity
+                            }
+                        }));
+                    }
+                    break;
+
+                default:
                     break;
             }
         }
+        // 주문 확인 다이얼로그가 열린 상태에서의 명령 처리
+        else if (document.querySelector('.order-dialog-container')) {
+            console.log('주문 확인 다이얼로그에서 명령 처리:', intent);
 
+            if (intent === '토글닫기') {
+                // 돌아가기 버튼 찾기
+                const closeButton = findButtonByText(['돌아가기', '닫기', '취소']);
+                if (closeButton) {
+                    console.log('다이얼로그 닫기 버튼 클릭');
+                    createClickFeedback(closeButton);
+                }
+            }
+            else if (intent === '결제요청') {
+                // 결제하기 버튼 찾기
+                const payButton = findButtonByText(['결제하기', '결제', '주문하기']);
+                if (payButton) {
+                    console.log('결제하기 버튼 클릭');
+                    createClickFeedback(payButton);
+                }
+            }
+        }
         // 결제 화면에서의 명령 처리
-        else if (pathname === '/payment') {
-            if (intent === '결제요청') {
-                // 결제 진행 이벤트 발생
-                window.dispatchEvent(new CustomEvent('voice-process-payment'));
-            }
-            else if (intent === '토글닫기') {
-                // 뒤로가기 이벤트 발생
-                navigate(-1);
-            }
+        else if (pathname === '/PaymentPage' || pathname.includes('/payment')) {
+            // 결제 화면 관련 명령 처리
         }
+    }, [commandResult, navigate, location.pathname]);
 
-        // 결제 성공 화면에서의 명령 처리
-        else if (pathname === '/payment/success') {
-            if (intent === '메뉴화면이동') {
-                // 메인으로 돌아가기
-                navigate('/');
-            }
-        }
-
-    }, [commandResult, location.pathname, navigate, voiceFeedbackEnabled]);
-
-    // 한국어 숫자를 아라비아 숫자로 변환하는 함수
+    // 한글 숫자를 숫자로 변환하는 헬퍼 함수 추가
     const convertKoreanNumberToDigit = (koreanNumber) => {
-        if (!koreanNumber) return 1;
-
         const numberMap = {
             '한': 1, '하나': 1,
             '두': 2, '둘': 2,

@@ -209,18 +209,20 @@ const OrderCheck = ({ cartItems, onClose }) => {
             {/* 하단 버튼 영역 */}
             <OrderFooter>
                 {/* 돌아가기 버튼 */}
-                <BackButton onClick={onClose} sx={{
-                    padding: '16px 24px',
-                    fontSize: '1.05rem',
-                    fontWeight: 600,
-                    borderRadius: '14px',
-                    border: '1px solid #ddd',
-                    '&:active': {
-                        transform: 'scale(0.97)',
-                        backgroundColor: '#f5f5f5',
-                        transition: 'transform 0.1s ease'
-                    }
-                }}>
+                <BackButton onClick={onClose}
+                    className="dialog-close-button"
+                    sx={{
+                        padding: '16px 24px',
+                        fontSize: '1.05rem',
+                        fontWeight: 600,
+                        borderRadius: '14px',
+                        border: '1px solid #ddd',
+                        '&:active': {
+                            transform: 'scale(0.97)',
+                            backgroundColor: '#f5f5f5',
+                            transition: 'transform 0.1s ease'
+                        }
+                    }}>
                     돌아가기
                 </BackButton>
 
@@ -236,19 +238,21 @@ const OrderCheck = ({ cartItems, onClose }) => {
                     onClose && onClose(); // 다이얼로그 닫기
                     // 결제 페이지로 이동
                     window.location.href = '/payment';
-                }} sx={{
-                    padding: '16px 32px',
-                    fontSize: '1.1rem',
-                    fontWeight: 700,
-                    borderRadius: '14px',
-                    boxShadow: '0 4px 12px rgba(33, 66, 255, 0.25)',
-                    backgroundColor: '#2142FF',
-                    '&:active': {
-                        transform: 'scale(0.97)',
-                        boxShadow: '0 2px 8px rgba(33, 66, 255, 0.2)',
-                        transition: 'all 0.1s ease'
-                    }
-                }}>
+                }}
+                    className="dialog-payment-button"
+                    sx={{
+                        padding: '16px 32px',
+                        fontSize: '1.1rem',
+                        fontWeight: 700,
+                        borderRadius: '14px',
+                        boxShadow: '0 4px 12px rgba(33, 66, 255, 0.25)',
+                        backgroundColor: '#2142FF',
+                        '&:active': {
+                            transform: 'scale(0.97)',
+                            boxShadow: '0 2px 8px rgba(33, 66, 255, 0.2)',
+                            transition: 'all 0.1s ease'
+                        }
+                    }}>
                     결제하기
                 </PaymentButton>
             </OrderFooter>
