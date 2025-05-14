@@ -295,13 +295,14 @@ const VoiceCommandSystem = () => {
 
     // 시각적 피드백 생성 함수 (이벤트에 대한 피드백용으로 유지)
     // 시각적 피드백 생성 함수 - 미니멀한 버전
+    // 시각적 피드백 생성 함수 - 미니멀한 버전 (지속 시간 증가)
     const createVisualFeedback = () => {
         if (!voiceFeedbackEnabled) return;
 
         // 화면 중앙 좌표 계산
         const centerX = window.innerWidth / 2;
         const centerY = window.innerHeight / 2;
-        const size = Math.min(window.innerWidth, window.innerHeight) * 0.25; // 크기 약간 축소
+        const size = Math.min(window.innerWidth, window.innerHeight) * 0.25;
 
         setClickFeedback({
             x: centerX,
@@ -310,8 +311,8 @@ const VoiceCommandSystem = () => {
             id: Date.now() // 고유 ID
         });
 
-        // 1초 후 피드백 제거 (시간 단축)
-        setTimeout(() => setClickFeedback(null), 1000);
+        // 지속 시간 1초 -> 1.8초로 증가
+        setTimeout(() => setClickFeedback(null), 1800);
     };
 
     // 10. 음성 명령에 반응하여 이벤트 발생 처리
@@ -569,16 +570,16 @@ const VoiceCommandSystem = () => {
                 )}
             </AnimatePresence>
 
-            {/* 클릭 피드백 효과 - 미니멀 버전 */}
+            {/* 클릭 피드백 효과 - 미니멀 버전 (색상 강화) */}
             {clickFeedback && (
                 <motion.div
                     key={`click-feedback-${clickFeedback.id}`}
                     className="voice-click-feedback"
-                    initial={{ scale: 0, opacity: 0.8 }}
+                    initial={{ scale: 0, opacity: 0.9 }}
                     animate={{ scale: 1, opacity: 0 }}
                     transition={{
-                        duration: 0.8,
-                        ease: [0.4, 0, 0.2, 1] // Material Design 기본 이징
+                        duration: 1.3,
+                        ease: [0.4, 0, 0.2, 1]
                     }}
                     style={{
                         position: 'fixed',
@@ -587,8 +588,12 @@ const VoiceCommandSystem = () => {
                         width: clickFeedback.size,
                         height: clickFeedback.size,
                         borderRadius: '50%',
-                        background: 'radial-gradient(circle, rgba(33,66,255,0.2) 0%, rgba(77,171,247,0.1) 70%, transparent 100%)',
-                        boxShadow: '0 0 60px rgba(33, 66, 255, 0.4)',
+                        /* 색상 및 그라디언트 진하게 수정 */
+                        background: 'radial-gradient(circle, rgba(33,66,255,0.35) 0%, rgba(77,171,247,0.25) 50%, rgba(100,200,255,0.15) 70%, transparent 100%)',
+                        /* 그림자 효과 강화 */
+                        boxShadow: '0 0 80px rgba(33, 66, 255, 0.65), 0 0 40px rgba(33, 66, 255, 0.45) inset',
+                        /* 약간의 테두리 추가로 가시성 향상 */
+                        border: '1px solid rgba(77, 171, 247, 0.3)',
                         pointerEvents: 'none',
                         zIndex: 10000
                     }}
