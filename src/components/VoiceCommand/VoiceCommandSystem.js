@@ -1,5 +1,5 @@
 // 오디오 관련 코드 주석 처리 및 querySelector 수정
-
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from 'react';
 import { usePorcupine } from '@picovoice/porcupine-react';
 import { useRhino } from '@picovoice/rhino-react';
@@ -50,7 +50,7 @@ const VoiceCommandSystem = () => {
     // 초기화 중복 방지 플래그
     const isInitialized = useRef(false);
 
-    // 클릭 피드백 상태
+    // 클릭 피드백 상태 (시각적 피드백용)
     const [clickFeedback, setClickFeedback] = useState(null);
 
     // 타이머 레퍼런스
@@ -293,30 +293,16 @@ const VoiceCommandSystem = () => {
         }
     };
 
-    // 8. 텍스트 내용으로 버튼을 찾는 헬퍼 함수
-    const findButtonByText = (textOptions) => {
-        const buttons = Array.from(document.querySelectorAll('button'));
-        return buttons.find(button => {
-            if (!button || !button.textContent) return false;
+    // 시각적 피드백 생성 함수 (이벤트에 대한 피드백용으로 유지)
+    // 시각적 피드백 생성 함수 - 미니멀한 버전
+    const createVisualFeedback = () => {
+        if (!voiceFeedbackEnabled) return;
 
-            const buttonText = button.textContent.toLowerCase();
-            return textOptions.some(text => buttonText.includes(text.toLowerCase()));
-        });
-    };
+        // 화면 중앙 좌표 계산
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+        const size = Math.min(window.innerWidth, window.innerHeight) * 0.25; // 크기 약간 축소
 
-    // 9. 시각적 클릭 피드백 생성 함수
-    const createClickFeedback = (element) => {
-        if (!element || !voiceFeedbackEnabled) return;
-
-        // 요소의 위치와 크기 정보 가져오기
-        const rect = element.getBoundingClientRect();
-
-        // 요소 중앙 위치 계산
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        const size = Math.max(rect.width, rect.height) * 1.5;
-
-        // 클릭 피드백 정보 설정
         setClickFeedback({
             x: centerX,
             y: centerY,
@@ -324,14 +310,11 @@ const VoiceCommandSystem = () => {
             id: Date.now() // 고유 ID
         });
 
-        // 1초 후 피드백 제거
+        // 1초 후 피드백 제거 (시간 단축)
         setTimeout(() => setClickFeedback(null), 1000);
-
-        // 실제 요소 클릭 이벤트 발생
-        element.click();
     };
 
-    // 10. 음성 명령에 반응하여 UI 요소 클릭 처리
+    // 10. 음성 명령에 반응하여 이벤트 발생 처리
     useEffect(() => {
         if (!commandResult || !commandResult.isUnderstood) return;
 
@@ -346,19 +329,18 @@ const VoiceCommandSystem = () => {
         // 첫 화면에서의 명령 처리
         if (pathname === '/' || pathname === '/index.html') {
             if (intent === '메뉴화면이동') {
-                // "주문하러 가기" 버튼 찾아서 클릭
-                setTimeout(() => {
-                    // 수정된 버튼 찾기 로직
-                    const orderButton = findButtonByText(['주문하러', '주문 시작', '시작하기']);
+                console.log('메뉴 화면으로 이동 이벤트 발생');
+                window.dispatchEvent(new CustomEvent('voice-navigate-menu'));
 
-                    if (orderButton) {
-                        console.log('첫 화면 "주문하러 가기" 버튼 클릭');
-                        createClickFeedback(orderButton);
-                    } else {
-                        console.log('첫 화면에서 주문 버튼을 찾을 수 없음, 직접 페이지 이동');
-                        navigate('/MenuPage');
-                    }
-                }, 500);
+                // 시각적 피드백 제공 (화면 중앙)
+                const centerX = window.innerWidth / 2;
+                const centerY = window.innerHeight / 2;
+                createVisualFeedback();
+
+                // 직접 내비게이션 백업 (일정 시간 후 실행, 이벤트 처리 실패 대비)
+                setTimeout(() => {
+                    navigate('/MenuPage');
+                }, 300);
             }
         }
 
@@ -368,20 +350,30 @@ const VoiceCommandSystem = () => {
                 case '스크롤업':
                     // 직접 이벤트 발생
                     window.dispatchEvent(new CustomEvent('voice-scroll-up'));
+
+                    // 시각적 피드백 (화면 중앙에 통일)
+                    createVisualFeedback();
                     break;
 
                 case '스크롤다운':
                     // 직접 이벤트 발생
                     window.dispatchEvent(new CustomEvent('voice-scroll-down'));
+
+                    // 시각적 피드백 (화면 중앙에 통일)
+                    createVisualFeedback();
                     break;
 
                 case '카테고리이동':
                     if (slots && slots.카테고리) {
                         console.log(`카테고리 이동: ${slots.카테고리}`);
-                        // 카테고리 이동 이벤트 발생
+
+                        // 이벤트 발생만으로 처리 (DOM 조작 제거)
                         window.dispatchEvent(new CustomEvent('voice-category-change', {
                             detail: { category: slots.카테고리 }
                         }));
+
+                        // 시각적 피드백 (화면 중앙에 통일)
+                        createVisualFeedback();
                     }
                     break;
 
@@ -403,17 +395,26 @@ const VoiceCommandSystem = () => {
                                 quantity: quantity
                             }
                         }));
+
+                        // 시각적 피드백 (화면 중앙에 통일)
+                        createVisualFeedback();
                     }
                     break;
 
                 case '구매요청':
                     // 장바구니 확인 다이얼로그 표시
                     window.dispatchEvent(new CustomEvent('voice-checkout'));
+
+                    // 시각적 피드백 (화면 중앙에 통일)
+                    createVisualFeedback();
                     break;
 
                 case '장바구니비우기':
                     // 장바구니 비우기
                     window.dispatchEvent(new CustomEvent('voice-clear-cart'));
+
+                    // 시각적 피드백 (화면 중앙에 통일)
+                    createVisualFeedback();
                     break;
 
                 case '장바구니제거':
@@ -429,6 +430,9 @@ const VoiceCommandSystem = () => {
                                 quantity: removeQuantity
                             }
                         }));
+
+                        // 시각적 피드백 (화면 중앙에 통일)
+                        createVisualFeedback();
                     }
                     break;
 
@@ -437,29 +441,31 @@ const VoiceCommandSystem = () => {
             }
         }
         // 주문 확인 다이얼로그가 열린 상태에서의 명령 처리
-        else if (document.querySelector('.order-dialog-container')) {
+        else if (document.querySelector('.MuiDialog-root, [role="dialog"]')) {
             console.log('주문 확인 다이얼로그에서 명령 처리:', intent);
 
             if (intent === '토글닫기') {
-                // 돌아가기 버튼 찾기
-                const closeButton = findButtonByText(['돌아가기', '닫기', '취소']);
-                if (closeButton) {
-                    console.log('다이얼로그 닫기 버튼 클릭');
-                    createClickFeedback(closeButton);
-                }
+                console.log('다이얼로그 닫기 이벤트 발생');
+                window.dispatchEvent(new CustomEvent('voice-dialog-close'));
+
+                // 시각적 피드백 (화면 중앙에 통일)
+                createVisualFeedback();
             }
             else if (intent === '결제요청') {
-                // 결제하기 버튼 찾기
-                const payButton = findButtonByText(['결제하기', '결제', '주문하기']);
-                if (payButton) {
-                    console.log('결제하기 버튼 클릭');
-                    createClickFeedback(payButton);
-                }
+                console.log('결제하기 이벤트 발생');
+                window.dispatchEvent(new CustomEvent('voice-payment-request'));
+
+                // 시각적 피드백 (화면 중앙에 통일)
+                createVisualFeedback();
             }
         }
         // 결제 화면에서의 명령 처리
         else if (pathname === '/PaymentPage' || pathname.includes('/payment')) {
             // 결제 화면 관련 명령 처리
+            if (intent === '뒤로가기') {
+                window.dispatchEvent(new CustomEvent('voice-payment-back'));
+                createVisualFeedback();
+            }
         }
     }, [commandResult, navigate, location.pathname]);
 
@@ -563,19 +569,28 @@ const VoiceCommandSystem = () => {
                 )}
             </AnimatePresence>
 
-            {/* 클릭 피드백 효과 */}
+            {/* 클릭 피드백 효과 - 미니멀 버전 */}
             {clickFeedback && (
                 <motion.div
                     key={`click-feedback-${clickFeedback.id}`}
                     className="voice-click-feedback"
-                    initial={{ scale: 0, opacity: 0.7 }}
+                    initial={{ scale: 0, opacity: 0.8 }}
                     animate={{ scale: 1, opacity: 0 }}
-                    transition={{ duration: 0.8 }}
+                    transition={{
+                        duration: 0.8,
+                        ease: [0.4, 0, 0.2, 1] // Material Design 기본 이징
+                    }}
                     style={{
+                        position: 'fixed',
                         left: clickFeedback.x - clickFeedback.size / 2,
                         top: clickFeedback.y - clickFeedback.size / 2,
                         width: clickFeedback.size,
-                        height: clickFeedback.size
+                        height: clickFeedback.size,
+                        borderRadius: '50%',
+                        background: 'radial-gradient(circle, rgba(33,66,255,0.2) 0%, rgba(77,171,247,0.1) 70%, transparent 100%)',
+                        boxShadow: '0 0 60px rgba(33, 66, 255, 0.4)',
+                        pointerEvents: 'none',
+                        zIndex: 10000
                     }}
                 />
             )}

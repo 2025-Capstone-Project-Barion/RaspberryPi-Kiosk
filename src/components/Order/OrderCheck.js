@@ -58,6 +58,42 @@ const OrderCheck = ({ cartItems, onClose }) => {
         };
     }, []);
 
+    // 음성 명령 이벤트 리스너 추가
+    useEffect(() => {
+        // 닫기/돌아가기 명령 처리
+        const handleDialogClose = () => {
+            console.log('음성 명령: 다이얼로그 닫기');
+            onClose && onClose();
+        };
+
+        // 결제 명령 처리
+        const handlePaymentRequest = () => {
+            console.log('음성 명령: 결제 요청');
+
+            // 주문 ID 생성
+            const newTossId = uuidv4();
+
+            // 로컬 스토리지에 주문 정보 저장
+            localStorage.setItem('orderItems', JSON.stringify(cartItems));
+            localStorage.setItem('totalPrice', totalPrice.toString());
+            localStorage.setItem('tossId', newTossId);
+
+            onClose && onClose(); // 다이얼로그 닫기
+            // 결제 페이지로 이동
+            window.location.href = '/payment';
+        };
+
+        // 이벤트 리스너 등록
+        window.addEventListener('voice-dialog-close', handleDialogClose);
+        window.addEventListener('voice-payment-request', handlePaymentRequest);
+
+        // 클린업 함수
+        return () => {
+            window.removeEventListener('voice-dialog-close', handleDialogClose);
+            window.removeEventListener('voice-payment-request', handlePaymentRequest);
+        };
+    }, [onClose, cartItems]); // totalPrice 의존성 추가 필요
+
     // 총 주문 수량 계산
     const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 

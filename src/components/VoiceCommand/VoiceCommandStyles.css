@@ -163,13 +163,30 @@
 }
 
 /* 음성 명령 피드백 시각화 - 버튼 클릭 표시용 */
+/* 피드백 효과 스타일 수정 */
+/* 피드백 효과 스타일 수정 */
 .voice-click-feedback {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(0, 136, 255, 0.4) 0%, rgba(0, 136, 255, 0) 70%);
+  position: fixed;
   pointer-events: none;
-  z-index: 1999;
-  animation: voice-click-animation 0.8s ease-out forwards;
+  border-radius: 50%;
+  z-index: 9999;
+  box-shadow: 0 0 80px rgba(33, 66, 255, 0.3);
+  background: radial-gradient(circle, rgba(33, 66, 255, 0.1) 0%, rgba(33, 66, 255, 0.05) 70%, transparent 100%);
+}
+
+@keyframes pulse-ripple {
+  0% {
+    transform: scale(0.1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
 }
 
 @keyframes voice-click-animation {

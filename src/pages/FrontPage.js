@@ -198,6 +198,19 @@ const FrontPage = () => {
         }
     };
 
+    // 컴포넌트 내부 useEffect에 추가
+    useEffect(() => {
+        const handleNavigateToMenu = () => {
+            handleStartOrder();
+        };
+
+        window.addEventListener('voice-navigate-menu', handleNavigateToMenu);
+
+        return () => {
+            window.removeEventListener('voice-navigate-menu', handleNavigateToMenu);
+        };
+    }, [handleStartOrder]);
+
     return (
         <animated.div style={pageTransition} className={styles.container}>
             <animated.div className={styles.overlay} style={overlaySpring} />
