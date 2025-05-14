@@ -537,7 +537,7 @@ const VoiceCommandSystem = () => {
                                 <span></span>
                                 <span></span>
                             </div>
-                            <span className="listening-text">듣고 있어요...</span>
+                            <span className="listening-text">Listening...</span>
                         </motion.div>
 
                         {/* 화면 가장자리 펄스 효과 */}
