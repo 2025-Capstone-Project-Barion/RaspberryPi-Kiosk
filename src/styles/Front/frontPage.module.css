@@ -308,7 +308,7 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
   letter-spacing: 0.5px;
 }
 
-/* 개선된 화살표 아이콘 */
+/* 개선된 화살표 아이콘 - CSS 애니메이션 추가 */
 .arrowIcon {
   display: flex;
   align-items: center;
@@ -317,6 +317,18 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  animation: arrowMove 2s infinite ease-in-out; /* CSS 애니메이션 추가 */
+}
+
+/* 화살표 이동 애니메이션 키프레임 */
+@keyframes arrowMove {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(12px);
+  }
 }
 
 .nextIcon {

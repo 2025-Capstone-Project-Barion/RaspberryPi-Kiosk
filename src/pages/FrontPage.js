@@ -170,6 +170,7 @@ const FrontPage = () => {
     });
 
     // 화살표 애니메이션 (더 큰 움직임)
+    /*
     const arrowSpring = useSpring({
         from: { transform: 'translateX(0)' },
         to: async (next) => {
@@ -179,6 +180,7 @@ const FrontPage = () => {
             }
         },
     });
+    */
 
     const handleStartOrder = () => {
         setIsLeaving(true);
@@ -279,9 +281,12 @@ const FrontPage = () => {
                             onClick={handleStartOrder}
                         >
                             <span className={styles.buttonText}>주문하러 가기</span>
-                            <animated.div className={styles.arrowIcon} style={arrowSpring}>
+                            {/*<animated.div className={styles.arrowIcon} style={arrowSpring}>
                                 <NavigateNextIcon className={styles.nextIcon} />
-                            </animated.div>
+                            </animated.div>*/}
+                            <div className={styles.arrowIcon}>
+                                <NavigateNextIcon className={styles.nextIcon} />
+                            </div>
                         </animated.button>
                     </animated.div>
                 </div>
