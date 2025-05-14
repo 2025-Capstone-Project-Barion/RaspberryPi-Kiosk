@@ -333,9 +333,6 @@ const VoiceCommandSystem = () => {
                 console.log('메뉴 화면으로 이동 이벤트 발생');
                 window.dispatchEvent(new CustomEvent('voice-navigate-menu'));
 
-                // 시각적 피드백 제공 (화면 중앙)
-                const centerX = window.innerWidth / 2;
-                const centerY = window.innerHeight / 2;
                 createVisualFeedback();
 
                 // 직접 내비게이션 백업 (일정 시간 후 실행, 이벤트 처리 실패 대비)
