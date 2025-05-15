@@ -111,18 +111,32 @@ const MenuPage = () => {
     // 음성 명령 이벤트 리스너
     useEffect(() => {
         // 카테고리 이동 이벤트 처리 추가
+        // 카테고리 이동 이벤트 핸들러 - 단순 매핑 방식
         const handleVoiceCategoryChange = (event) => {
-            const { category } = event.detail;
-            console.log(`음성 명령으로 카테고리 이동: ${category}`);
+            // 이벤트에서 카테고리명 가져오기
+            const categoryName = event.detail?.category;
 
-            // 카테고리명으로 인덱스 찾기
-            const categoryIndex = categories.findIndex(
-                cat => cat.name.toLowerCase().includes(category.toLowerCase())
-            );
+            if (!categoryName) {
+                console.log('카테고리 이름이 없습니다');
+                return;
+            }
 
-            if (categoryIndex !== -1) {
+            // 간단한 매핑 객체로 카테고리명 → 인덱스 변환
+            const categoryMapping = {
+                '커피': 0,
+                '논커피': 1,
+                '디저트': 2,
+                '베이커리': 3
+            };
+
+            // 매핑에서 인덱스 가져오기
+            const categoryIndex = categoryMapping[categoryName];
+
+            if (categoryIndex !== undefined) {
+                console.log(`카테고리 '${categoryName}'(으)로 이동 (인덱스: ${categoryIndex})`);
                 setSelectedCategory(categoryIndex);
-                console.log(`카테고리 변경됨: ${categories[categoryIndex].name}`);
+            } else {
+                console.log(`알 수 없는 카테고리: ${categoryName}`);
             }
         };
 
