@@ -382,6 +382,8 @@ const VoiceCommandSystem = () => {
                     // 메뉴 주문 이벤트 발생
                     const menuType = intent.replace('주문', '');
                     const menuName = slots[menuType] || '';
+                    // 수량 처리 (기본값 1)
+                    // 수량 슬롯이 없으면 기본값 1로 설정(ex."아메리카노 주문해줘"-> 수량 1)
                     const quantity = slots.수량 ? convertKoreanNumberToDigit(slots.수량) : 1;
 
                     if (menuName) {
@@ -459,8 +461,8 @@ const VoiceCommandSystem = () => {
         }
         // 결제 화면에서의 명령 처리
         else if (pathname === '/PaymentPage' || pathname.includes('/payment')) {
-            // 결제 화면 관련 명령 처리
-            if (intent === '뒤로가기') {
+            // 토글닫기 인텐트를 결제화면에서 다시 메뉴화면으로 돌아가는 명령으로 재사용하면 어떨까?
+            if (intent === '토글닫기') {
                 window.dispatchEvent(new CustomEvent('voice-payment-back'));
                 createVisualFeedback();
             }

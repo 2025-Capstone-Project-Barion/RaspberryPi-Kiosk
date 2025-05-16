@@ -161,7 +161,7 @@ const MenuPage = () => {
             if (foundItem) {
                 // 해당 카테고리로 이동 (선택적)
                 const itemCategoryIndex = categories.findIndex(
-                    cat => cat.id === foundItem.categoryId
+                    cat => cat.categoryId === foundItem.category
                 );
                 if (itemCategoryIndex !== -1 && selectedCategory !== itemCategoryIndex) {
                     setSelectedCategory(itemCategoryIndex);
