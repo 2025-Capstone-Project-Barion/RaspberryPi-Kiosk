@@ -286,10 +286,20 @@ const MenuPage = () => {
             setCart([]);
         };
 
-        // 결제하기 이벤트 처리 - 주문 확인 음성 추가
+        // 결제하기 이벤트 처리 함수 수정
         const handleVoiceCheckout = () => {
             console.log('음성 명령으로 결제 진행');
-            // 주문 확인 다이얼로그 열기 함수 호출 (음성 안내 포함)
+
+            // 장바구니 비어있는지 확인
+            if (!cart || cart.length === 0) {
+                console.log('장바구니가 비어있어 주문을 진행할 수 없습니다.');
+                // 안내 음성 재생: 먼저 메뉴를 담아주세요.
+                playAudio('addFirst');
+
+                return; // 함수 종료하여 다이얼로그 표시 방지
+            }
+
+            // 장바구니에 상품이 있으면 주문 확인 다이얼로그 열기
             handleOpenOrderDialog();
         };
 

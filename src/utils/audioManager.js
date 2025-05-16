@@ -64,6 +64,10 @@ const audioMap = {
     recommendedMenu: new Howl({
         src: ['/audio/voices/recommended-menu.mp3'],
         volume: 0.8
+    }),
+    addFirst: new Howl({
+        src: ['/audio/voices/add-first.mp3'],
+        volume: 0.8
     })
 };
 
