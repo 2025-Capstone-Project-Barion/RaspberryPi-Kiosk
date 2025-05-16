@@ -26,9 +26,9 @@ export const VoiceCommandProvider = ({ children }) => {
         setLastCommandTimestamp(new Date().getTime());
 
         // 5초 후에 commandResult 초기화 (중복 처리 방지)
-        setTimeout(() => {
-            setCommandResult(null);
-        }, 5000);
+        // setTimeout(() => {
+        //     setCommandResult(null);
+        // }, 5000);
     }, []);
 
     // 음성 인식 상태 설정 함수
