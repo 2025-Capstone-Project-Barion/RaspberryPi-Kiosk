@@ -19,6 +19,8 @@ export const VoiceCommandProvider = ({ children }) => {
     // 음성 피드백 활성화 상태
     const [voiceFeedbackEnabled, setVoiceFeedbackEnabled] = useState(true);
 
+    const [dialogOpen, setDialogOpen] = useState(false);
+
     // 음성 명령 처리 함수
     const handleVoiceCommand = useCallback((result) => {
         console.log('음성 명령 감지:', result);
@@ -47,6 +49,8 @@ export const VoiceCommandProvider = ({ children }) => {
         isListening,
         lastCommandTimestamp,
         voiceFeedbackEnabled,
+        dialogOpen,
+        setDialogOpen,
         handleVoiceCommand,
         resetVoiceCommand,  // 초기화 함수 추가
         setListeningState,

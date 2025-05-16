@@ -12,6 +12,7 @@ import CartPanel from '../components/Menu/CartPanel';
 
 // 앱 컨테이너 스타일
 import { AppContainer } from '../styles/Menu/AppContainerStyle';
+import { useVoiceCommand } from '../components/VoiceCommand/VoiceCommandContext';
 
 const MenuPage = () => {
     // 디폴트 카테고리는 커피로 설정(메뉴페이지로 들어왔을 때 보이는 카테고리)
@@ -21,6 +22,8 @@ const MenuPage = () => {
     const [orderDialogOpen, setOrderDialogOpen] = useState(false);
     // 입장 애니메이션을 위한 상태 추가
     const [isEntering, setIsEntering] = useState(true);
+
+    const { setDialogOpen } = useVoiceCommand();
 
     // 선택된 카테고리에 따른 메뉴 아이템 가져오기
     const menuItems = getMenuItems(selectedCategory);
@@ -106,6 +109,11 @@ const MenuPage = () => {
         setCart([]);
     };
 
+
+    useEffect(() => {
+        console.log('[MenuPage] 다이얼로그 상태 변경:', orderDialogOpen ? '열림' : '닫힘');
+        setDialogOpen(orderDialogOpen);
+    }, [orderDialogOpen, setDialogOpen]);
     // 기존 useEffect 아래에 추가
 
     // 음성 명령 이벤트 리스너

@@ -40,7 +40,8 @@ const VoiceCommandSystem = () => {
         isListening,
         commandResult,
         voiceFeedbackEnabled,
-        resetVoiceCommand
+        resetVoiceCommand,
+        dialogOpen
     } = useVoiceCommand();
 
     // 상태 관리
@@ -316,6 +317,21 @@ const VoiceCommandSystem = () => {
         setTimeout(() => setClickFeedback(null), 1800);
     };
 
+    // 주문 확인 다이얼로그 감지 함수 추가 (useEffect 밖에 위치)
+    const isOrderDialogOpen = () => {
+        // 여러 방법으로 다이얼로그 존재 여부 확인
+        const byData = document.querySelector('[data-voice-target="order-dialog"]');
+        const byId = document.getElementById('order-check-dialog');
+        const byClass = document.querySelector('.MuiDialog-root, [role="dialog"]');
+
+        const result = !!(byData || byId || byClass);
+        if (result) {
+            console.log('주문 확인 다이얼로그 감지됨');
+        }
+
+        return result;
+    };
+
     // 10. 음성 명령에 반응하여 이벤트 발생 처리
     useEffect(() => {
         if (!commandResult || !commandResult.isUnderstood) return;
@@ -331,8 +347,31 @@ const VoiceCommandSystem = () => {
         console.log(`현재 경로: ${pathname}, 명령 인텐트: ${intent}`);
         console.log('명령 슬롯:', slots); // 슬롯 정보 출력 추가
 
+        // 주문 확인 다이얼로그가 열린 상태에서의 명령 처리
+        // 기존 다이얼로그 체크 코드 교체
+        // 변경 전: else if (document.querySelector('.MuiDialog-root, [role="dialog"]')) {
+        // 변경 후:
+        if (dialogOpen || isOrderDialogOpen()) {  // 둘 중 하나라도 true면 실행
+            console.log('주문 확인 다이얼로그에서 명령 처리:', intent);
+
+            if (intent === '토글닫기') {
+                console.log('다이얼로그 닫기 이벤트 발생');
+                window.dispatchEvent(new CustomEvent('voice-dialog-close'));
+
+                // 시각적 피드백
+                createVisualFeedback();
+            }
+            else if (intent === '결제요청') {
+                console.log('결제하기 이벤트 발생');
+                window.dispatchEvent(new CustomEvent('voice-payment-request'));
+
+                // 시각적 피드백
+                createVisualFeedback();
+            }
+        }
+
         // 첫 화면에서의 명령 처리
-        if (pathname === '/' || pathname === '/index.html') {
+        else if (pathname === '/' || pathname === '/index.html') {
             // 메뉴화면으로 이동할때 "주문할래" 이외에 "구매할래"도 가능하도록처리.
             if (intent === '메뉴화면이동' || intent === '구매요청') {
                 console.log('메뉴 화면으로 이동 이벤트 발생');
@@ -451,25 +490,7 @@ const VoiceCommandSystem = () => {
                     break;
             }
         }
-        // 주문 확인 다이얼로그가 열린 상태에서의 명령 처리
-        else if (document.querySelector('.MuiDialog-root, [role="dialog"]')) {
-            console.log('주문 확인 다이얼로그에서 명령 처리:', intent);
 
-            if (intent === '토글닫기') {
-                console.log('다이얼로그 닫기 이벤트 발생');
-                window.dispatchEvent(new CustomEvent('voice-dialog-close'));
-
-                // 시각적 피드백 (화면 중앙에 통일)
-                createVisualFeedback();
-            }
-            else if (intent === '결제요청') {
-                console.log('결제하기 이벤트 발생');
-                window.dispatchEvent(new CustomEvent('voice-payment-request'));
-
-                // 시각적 피드백 (화면 중앙에 통일)
-                createVisualFeedback();
-            }
-        }
         // 결제 화면에서의 명령 처리
         else if (pathname === '/PaymentPage' || pathname.includes('/payment')) {
             // 토글닫기 인텐트를 결제화면에서 다시 메뉴화면으로 돌아가는 명령으로 재사용하면 어떨까?
