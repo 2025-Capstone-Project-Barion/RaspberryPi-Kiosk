@@ -36,6 +36,11 @@ export const VoiceCommandProvider = ({ children }) => {
         setIsListening(state);
     }, []);
 
+    // 음성 명령 처리 후 초기화 함수 추가
+    const resetVoiceCommand = useCallback(() => {
+        setCommandResult(null);
+    }, []);
+
     // Provider 값
     const value = {
         commandResult,
@@ -43,6 +48,7 @@ export const VoiceCommandProvider = ({ children }) => {
         lastCommandTimestamp,
         voiceFeedbackEnabled,
         handleVoiceCommand,
+        resetVoiceCommand,  // 초기화 함수 추가
         setListeningState,
         setVoiceFeedbackEnabled
     };

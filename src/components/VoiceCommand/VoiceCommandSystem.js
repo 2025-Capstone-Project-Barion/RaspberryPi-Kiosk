@@ -39,7 +39,8 @@ const VoiceCommandSystem = () => {
         setListeningState,
         isListening,
         commandResult,
-        voiceFeedbackEnabled
+        voiceFeedbackEnabled,
+        resetVoiceCommand
     } = useVoiceCommand();
 
     // 상태 관리
@@ -324,16 +325,24 @@ const VoiceCommandSystem = () => {
         // 현재 위치에 따른 명령 처리
         const pathname = location.pathname;
 
+        // 명령 처리 직후 초기화 플래그
+        let shouldResetCommand = true;
+
         console.log(`현재 경로: ${pathname}, 명령 인텐트: ${intent}`);
         console.log('명령 슬롯:', slots); // 슬롯 정보 출력 추가
 
         // 첫 화면에서의 명령 처리
         if (pathname === '/' || pathname === '/index.html') {
-            if (intent === '메뉴화면이동') {
+            // 메뉴화면으로 이동할때 "주문할래" 이외에 "구매할래"도 가능하도록처리.
+            if (intent === '메뉴화면이동' || intent === '구매요청') {
                 console.log('메뉴 화면으로 이동 이벤트 발생');
                 window.dispatchEvent(new CustomEvent('voice-navigate-menu'));
 
                 createVisualFeedback();
+
+                // 페이지 전환 전에 명령 초기화
+                resetVoiceCommand();
+                shouldResetCommand = false; // 이미 초기화했으므로 플래그 끄기
 
                 // 직접 내비게이션 백업 (일정 시간 후 실행, 이벤트 처리 실패 대비)
                 setTimeout(() => {
@@ -402,6 +411,8 @@ const VoiceCommandSystem = () => {
                     break;
 
                 case '구매요청':
+                case '메뉴화면이동':
+                    console.log(`${intent} 명령으로 장바구니 확인 다이얼로그 표시`);
                     // 장바구니 확인 다이얼로그 표시
                     window.dispatchEvent(new CustomEvent('voice-checkout'));
 
@@ -467,7 +478,11 @@ const VoiceCommandSystem = () => {
                 createVisualFeedback();
             }
         }
-    }, [commandResult, navigate, location.pathname]);
+        // 명령 처리 후 초기화 (페이지 전환 경우는 제외)
+        if (shouldResetCommand) {
+            resetVoiceCommand();
+        }
+    }, [commandResult, navigate, location.pathname, resetVoiceCommand]);
 
     // 한글 숫자를 숫자로 변환하는 헬퍼 함수 추가
     const convertKoreanNumberToDigit = (koreanNumber) => {
