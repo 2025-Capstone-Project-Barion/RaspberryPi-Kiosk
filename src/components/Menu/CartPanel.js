@@ -187,28 +187,29 @@ const CartPanel = ({ cart, onQuantityChange, onClearCart, onCheckout, animationS
                                         {(item.price * item.quantity).toLocaleString()}원
                                     </Typography>
                                 </Box>
-
-                                {/* 수량 조절 UI 모던하게 개선 */}
+                                {/* 수량 조절 버튼 - 레이아웃 개선 */}
                                 <Box sx={{
                                     display: 'flex',
                                     alignItems: 'center',
                                     backgroundColor: '#f5f7ff',
-                                    borderRadius: '8px',
-                                    padding: '4px',
+                                    borderRadius: '10px',
+                                    padding: '2px',  // 패딩 축소하여 내부 버튼 공간 확보
                                     border: '1px solid #e8ecfb',
                                 }}>
                                     <IconButton
-                                        size="small"
+                                        size="medium"  // small에서 medium으로 변경
                                         onClick={(e) => onQuantityChange(index, -1, e)}
                                         sx={{
-                                            padding: '4px',
+                                            padding: '8px',  // 패딩 증가 (4px → 8px)
+                                            minWidth: '36px',  // 최소 너비 설정
+                                            minHeight: '36px',  // 최소 높이 설정
                                             '&:active': {
                                                 transform: 'scale(0.9)',
                                                 transition: 'transform 0.1s ease'
                                             }
                                         }}
                                     >
-                                        <Remove fontSize="small" sx={{ color: '#2142FF' }} />
+                                        <Remove sx={{ color: '#2142FF', fontSize: '1.3rem' }} />
                                     </IconButton>
 
                                     <Typography sx={{
@@ -216,42 +217,48 @@ const CartPanel = ({ cart, onQuantityChange, onClearCart, onCheckout, animationS
                                         minWidth: '24px',
                                         textAlign: 'center',
                                         fontWeight: 600,
-                                        fontSize: '1rem'
+                                        fontSize: '1.1rem'  // 폰트 크기 약간 증가
                                     }}>
                                         {item.quantity}
                                     </Typography>
 
                                     <IconButton
-                                        size="small"
+                                        size="medium"  // small에서 medium으로 변경
                                         onClick={(e) => onQuantityChange(index, 1, e)}
                                         sx={{
-                                            padding: '4px',
+                                            padding: '8px',  // 패딩 증가
+                                            minWidth: '36px',
+                                            minHeight: '36px',
                                             '&:active': {
                                                 transform: 'scale(0.9)',
                                                 transition: 'transform 0.1s ease'
                                             }
                                         }}
                                     >
-                                        <Add fontSize="small" sx={{ color: '#2142FF' }} />
+                                        <Add sx={{ color: '#2142FF', fontSize: '1.3rem' }} />
                                     </IconButton>
                                 </Box>
 
-                                {/* 삭제 버튼 - 터치 최적화 디자인 */}
+                                {/* 삭제 버튼 - 터치 최적화 개선 */}
                                 <IconButton
-                                    size="small"
+                                    size="medium"  // small에서 medium으로 변경
                                     onClick={(e) => onQuantityChange(index, -item.quantity, e)}
                                     sx={{
-                                        ml: 1.5,
+                                        ml: 1,  // 좌측 여백 축소 (1.5 → 1)
                                         color: '#5d6b82',
-                                        padding: '10px',  // 터치 영역 확대
-                                        backgroundColor: 'rgba(232, 236, 245, 0.9)',  // 배경색 추가로 터치 영역 시각화
-                                        borderRadius: '12px',  // 모서리 둥글게
+                                        padding: '10px',
+                                        minWidth: '42px',  // 최소 너비 설정
+                                        minHeight: '42px',  // 최소 높이 설정
+                                        backgroundColor: 'rgba(232, 236, 245, 0.9)',
+                                        borderRadius: '12px',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center'
                                     }}
                                 >
                                     <Delete
-                                        fontSize="small"
                                         sx={{
-                                            // 아이콘 자체에도 터치 효과 추가
+                                            fontSize: '1.3rem',  // 아이콘 크기 증가
                                             '&:active': {
                                                 color: '#2142FF'
                                             }
