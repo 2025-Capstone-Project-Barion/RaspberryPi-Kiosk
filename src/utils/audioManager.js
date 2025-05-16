@@ -2,7 +2,7 @@
 import { Howl } from 'howler';
 
 // 현재 재생 중인 오디오 트래킹
-let currentSound = null;
+//let currentSound = null;
 
 // 오디오 맵 객체 (Howl 인스턴스)
 const audioMap = {
@@ -41,8 +41,6 @@ const audioMap = {
         src: ['/audio/voices/try-again.mp3'],
         volume: 0.8
     }),
-
-    // 추가된 음성 안내
     orderCheck: new Howl({
         src: ['/audio/voices/order-check.mp3'],
         volume: 0.8
@@ -62,10 +60,24 @@ const audioMap = {
     moveToBakery: new Howl({
         src: ['/audio/voices/move-to-bakery.mp3'],
         volume: 0.8
+    }),
+    recommendedMenu: new Howl({
+        src: ['/audio/voices/recommended-menu.mp3'],
+        volume: 0.8
     })
 };
 
-// 오디오 재생 함수
+// 오디오 재생 함수<간단한 버전>
+export const playAudio = (key) => {
+    const sound = audioMap[key];
+    if (sound) {
+        sound.stop(); // 중복 방지
+        sound.play();
+    }
+};
+
+/*
+// 오디오 재생 함수<상세한 버전>
 export const playAudio = (key, interruptCurrent = true) => {
     return new Promise((resolve, reject) => {
         const sound = audioMap[key];
@@ -107,11 +119,12 @@ export const playAudio = (key, interruptCurrent = true) => {
         }
     });
 };
+*/
 
-// 모든 오디오 중지
-export const stopAllAudio = () => {
-    if (currentSound) {
-        currentSound.stop();
-        currentSound = null;
-    }
-};
+// // 모든 오디오 중지
+// export const stopAllAudio = () => {
+//     if (currentSound) {
+//         currentSound.stop();
+//         currentSound = null;
+//     }
+// };

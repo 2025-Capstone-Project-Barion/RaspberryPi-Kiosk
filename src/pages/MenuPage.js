@@ -119,22 +119,33 @@ const MenuPage = () => {
         playAudio('orderCheck');
     };
 
-    // 카테고리 선택 처리 함수에 음성 안내 추가
-    const handleCategorySelect = (categoryId) => {
+    // 카테고리 선택 처리 함수에서 음성 안내를 선택적으로 사용하도록 수정
+    const handleCategorySelect = (categoryId, playVoice = false) => {
         setSelectedCategory(categoryId);
 
-        // 카테고리별 음성 안내
-        const categoryAudioMap = {
-            0: 'moveToCoffee',    // 커피 카테고리
-            1: 'moveToNonCoffee', // 논커피 카테고리
-            2: 'moveToDessert',   // 디저트 카테고리
-            3: 'moveToBakery'     // 베이커리 카테고리
-        };
+        // playVoice가 true일 때만 음성 안내 재생 (음성 명령으로 카테고리 이동 시에만)
+        if (playVoice) {
+            // 카테고리별 음성 안내
+            const categoryAudioMap = {
+                0: 'moveToCoffee',    // 커피 카테고리
+                1: 'moveToNonCoffee', // 논커피 카테고리
+                2: 'moveToDessert',   // 디저트 카테고리
+                3: 'moveToBakery'     // 베이커리 카테고리
+            };
 
-        // 해당 카테고리 음성 재생
-        if (categoryAudioMap[categoryId]) {
-            playAudio(categoryAudioMap[categoryId]);
+            // 해당 카테고리 음성 재생
+            if (categoryAudioMap[categoryId]) {
+                playAudio(categoryAudioMap[categoryId]);
+            }
         }
+    };
+
+    // 추천 메뉴 조회 핸들러 추가
+    const handleRecommendedMenu = () => {
+        // 추천 메뉴 표시 로직
+        console.log('추천 메뉴 조회 요청됨');
+        // 추천 메뉴 음성 안내 재생
+        playAudio('recommendedMenu');
     };
 
     useEffect(() => {
@@ -170,7 +181,7 @@ const MenuPage = () => {
                 console.log(`카테고리 '${categoryName}'(으)로 이동 (인덱스: ${categoryIndex})`);
 
                 // 카테고리 변경 처리 함수 호출로 변경 (음성 안내 포함)
-                handleCategorySelect(categoryIndex);
+                handleCategorySelect(categoryIndex, true);
             } else {
                 console.log(`알 수 없는 카테고리: ${categoryName}`);
             }
@@ -282,12 +293,19 @@ const MenuPage = () => {
             handleOpenOrderDialog();
         };
 
+        // 추천 메뉴 조회 이벤트 처리
+        const handleVoiceRecommendMenu = () => {
+            console.log('음성 명령으로 추천 메뉴 조회');
+            handleRecommendedMenu();
+        };
+
         // 이벤트 리스너 등록
         window.addEventListener('voice-category-change', handleVoiceCategoryChange);
         window.addEventListener('voice-order-menu', handleVoiceOrderMenu);
         window.addEventListener('voice-remove-item', handleVoiceRemoveItem);
         window.addEventListener('voice-clear-cart', handleVoiceClearCart);
         window.addEventListener('voice-checkout', handleVoiceCheckout);
+        window.addEventListener('voice-recommended-menu', handleVoiceRecommendMenu);
 
         // 정리 함수
         return () => {
@@ -296,6 +314,7 @@ const MenuPage = () => {
             window.removeEventListener('voice-remove-item', handleVoiceRemoveItem);
             window.removeEventListener('voice-clear-cart', handleVoiceClearCart);
             window.removeEventListener('voice-checkout', handleVoiceCheckout);
+            window.removeEventListener('voice-recommended-menu', handleVoiceRecommendMenu); // 추가
         };
     }, [cart, selectedCategory]);
 

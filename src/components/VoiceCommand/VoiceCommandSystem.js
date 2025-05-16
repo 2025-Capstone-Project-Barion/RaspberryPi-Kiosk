@@ -401,6 +401,12 @@ const VoiceCommandSystem = () => {
                     createVisualFeedback();
                     break;
 
+                case '추천메뉴조회':
+                    console.log('추천 메뉴 조회 요청');
+                    window.dispatchEvent(new CustomEvent('voice-recommended-menu'));
+                    createVisualFeedback('추천 메뉴를 조회합니다');
+                    break;
+
                 case '카테고리이동':
                     if (slots && slots.카테고리) {
                         console.log(`카테고리 이동: ${slots.카테고리}`);
