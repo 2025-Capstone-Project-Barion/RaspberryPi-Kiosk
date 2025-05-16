@@ -492,10 +492,15 @@ const VoiceCommandSystem = () => {
         }
 
         // 결제 화면에서의 명령 처리
-        else if (pathname === '/PaymentPage' || pathname.includes('/payment')) {
+        else if (pathname === '/payment') {
             // 토글닫기 인텐트를 결제화면에서 다시 메뉴화면으로 돌아가는 명령으로 재사용하면 어떨까?
             if (intent === '토글닫기') {
                 window.dispatchEvent(new CustomEvent('voice-payment-back'));
+                createVisualFeedback();
+            }
+            // 결제요청 인텐트로 결제 진행 추가
+            else if (intent === '결제요청') {
+                window.dispatchEvent(new CustomEvent('voice-payment-proceed'));
                 createVisualFeedback();
             }
         }
@@ -530,7 +535,7 @@ const VoiceCommandSystem = () => {
         return (
             <VoiceCommandPortal>
                 <div className="voice-loading-indicator">
-                    음성 인식 시스템 로딩 중...
+                    음성AI 준비중...
                 </div>
             </VoiceCommandPortal>
         );

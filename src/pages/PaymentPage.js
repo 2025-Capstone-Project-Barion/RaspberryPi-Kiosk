@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { loadTossPayments, ANONYMOUS } from "@tosspayments/tosspayments-sdk";
 import {
     PaymentContainer,
@@ -13,6 +13,8 @@ import {
 } from '../styles/Payment/PaymentPageStyle';
 import PaymentIcon from '@mui/icons-material/Payment';
 import CircularProgress from '@mui/material/CircularProgress';
+import Button from '@mui/material/Button';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const PaymentPage = () => {
     const [ready, setReady] = useState(false);
@@ -72,7 +74,8 @@ const PaymentPage = () => {
     }, [widgets, totalPrice, loading]);
 
     // 결제 요청 처리 함수
-    const handlePaymentRequest = async () => {
+    // 결제 요청 처리 함수를 useCallback으로 메모이제이션
+    const handlePaymentRequest = useCallback(async () => {
         if (!widgets || !ready) return;
 
         try {
@@ -89,7 +92,37 @@ const PaymentPage = () => {
         } catch (error) {
             console.error('결제 요청 에러:', error);
         }
-    };
+    }, [widgets, ready, orderItems, tossId]);
+
+    // 음성 명령 이벤트 리스너 추가
+    useEffect(() => {
+        // 음성 명령으로 결제 진행
+        const handleVoicePayment = () => {
+            console.log('음성 명령: 결제 진행');
+            if (ready) {
+                handlePaymentRequest();
+            } else {
+                console.log('결제 준비가 완료되지 않았습니다.');
+            }
+        };
+
+        // 음성 명령으로 뒤로 가기
+        const handleVoiceBack = () => {
+            console.log('음성 명령: 뒤로 가기');
+            // window.history.back() 대신 명시적인 경로로 이동
+            window.location.href = '/MenuPage';
+        };
+
+        // 이벤트 리스너 등록
+        window.addEventListener('voice-payment-proceed', handleVoicePayment);
+        window.addEventListener('voice-payment-back', handleVoiceBack);
+
+        // 컴포넌트 언마운트 시 이벤트 리스너 제거
+        return () => {
+            window.removeEventListener('voice-payment-proceed', handleVoicePayment);
+            window.removeEventListener('voice-payment-back', handleVoiceBack);
+        };
+    }, [ready, handlePaymentRequest]);
 
     // 주문 항목 수 계산
     const totalItems = orderItems.reduce((sum, item) => sum + item.quantity, 0);
@@ -105,9 +138,26 @@ const PaymentPage = () => {
         <PaymentContainer>
             <PaymentHeader>
                 <HeaderTitle>
-                    <PaymentIcon />
+                    <PaymentIcon sx={{ marginRight: '8px' }} />
                     결제하기
                 </HeaderTitle>
+                <Button
+                    onClick={() => window.location.href = '/MenuPage'}
+                    startIcon={<ArrowBackIcon />} // 왼쪽 화살표 아이콘 추가
+                    sx={{
+                        color: '#2142FF', // 앱 테마 색상 텍스트
+                        backgroundColor: 'rgba(33, 66, 255, 0.15)', // 더 진한 배경색 (8% → 15%)
+                        border: 'none',
+                        borderRadius: '8px',
+                        padding: '6px 12px',
+                        fontSize: '13px',
+                        fontWeight: 500,
+                        textTransform: 'none',
+                        minWidth: 'auto'
+                    }}
+                >
+                    메뉴로 돌아가기
+                </Button>
             </PaymentHeader>
 
             <OrderSummary>
