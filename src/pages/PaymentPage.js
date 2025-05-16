@@ -15,6 +15,7 @@ import PaymentIcon from '@mui/icons-material/Payment';
 import CircularProgress from '@mui/material/CircularProgress';
 import Button from '@mui/material/Button';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { playAudio } from '../utils/audioManager';
 
 const PaymentPage = () => {
     const [ready, setReady] = useState(false);
@@ -28,6 +29,9 @@ const PaymentPage = () => {
 
     // 결제위젯 초기화
     useEffect(() => {
+        // 결제 안내 음성 재생
+        playAudio('selectPayment');
+
         async function fetchPaymentWidgets() {
             try {
                 const clientKey = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm';

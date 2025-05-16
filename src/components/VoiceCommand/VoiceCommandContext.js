@@ -16,9 +16,6 @@ export const VoiceCommandProvider = ({ children }) => {
     // 마지막 음성 명령 타임스탬프
     const [lastCommandTimestamp, setLastCommandTimestamp] = useState(null);
 
-    // 음성 피드백 활성화 상태
-    const [voiceFeedbackEnabled, setVoiceFeedbackEnabled] = useState(true);
-
     const [dialogOpen, setDialogOpen] = useState(false);
 
     // 음성 명령 처리 함수
@@ -48,13 +45,11 @@ export const VoiceCommandProvider = ({ children }) => {
         commandResult,
         isListening,
         lastCommandTimestamp,
-        voiceFeedbackEnabled,
         dialogOpen,
         setDialogOpen,
         handleVoiceCommand,
         resetVoiceCommand,  // 초기화 함수 추가
-        setListeningState,
-        setVoiceFeedbackEnabled
+        setListeningState
     };
 
     return (

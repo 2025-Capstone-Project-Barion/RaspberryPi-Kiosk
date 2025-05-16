@@ -8,7 +8,7 @@ import logoImage from '../assets/Image/Logo/logo.png';
 import MicIcon from '@mui/icons-material/Mic';
 import TouchAppIcon from '@mui/icons-material/TouchApp';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-
+import { playAudio } from '../utils/audioManager';
 // // 배경 애니메이션 파티클 데이터
 // const PARTICLES = 35;
 // const generateParticles = () => {
@@ -31,7 +31,10 @@ const FrontPage = () => {
         // 결제 관련 데이터 초기화
         localStorage.removeItem('orderItems');
         localStorage.removeItem('totalPrice');
-        localStorage.removeItem('tossId'); // 이 부분 추가 필요
+        localStorage.removeItem('tossId');
+
+        // 페이지 입장 시 환영 음성 재생
+        playAudio('welcome');
     }, []);
 
     // // 이미지 사전 로드 (메뉴 페이지 이미지)

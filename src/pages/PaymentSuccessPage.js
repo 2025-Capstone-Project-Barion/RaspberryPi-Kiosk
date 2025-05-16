@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import { motion } from 'framer-motion';
+import { playAudio } from '../utils/audioManager';
 
 const PaymentSuccessPage = () => {
     const navigate = useNavigate();
@@ -101,6 +102,14 @@ const PaymentSuccessPage = () => {
         }, 1000);
 
         return () => clearInterval(timer);
+    }, [loading]);
+
+    // 결제 성공 감사 음성 재생 (별도의 useEffect로 분리)
+    useEffect(() => {
+        if (!loading) {
+            // 결제 성공 감사 음성 재생
+            playAudio('thankYou');
+        }
     }, [loading]);
 
     // 화면 이동 처리 부분 수정

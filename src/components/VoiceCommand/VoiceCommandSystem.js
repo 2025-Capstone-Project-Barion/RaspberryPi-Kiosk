@@ -8,6 +8,8 @@ import ReactDOM from 'react-dom';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useVoiceCommand } from './VoiceCommandContext';
 import './VoiceCommandStyles.css';
+// 오디오 관리자 임포트 추가
+import { playAudio } from '../../utils/audioManager';
 
 /**
  * 음성 명령 UI를 Portal로 표시하는 컴포넌트
@@ -39,7 +41,6 @@ const VoiceCommandSystem = () => {
         setListeningState,
         isListening,
         commandResult,
-        voiceFeedbackEnabled,
         resetVoiceCommand,
         dialogOpen
     } = useVoiceCommand();
@@ -58,10 +59,6 @@ const VoiceCommandSystem = () => {
     // 타이머 레퍼런스
     const commandTimeoutRef = useRef(null);
     const wakewordTimeoutRef = useRef(null);
-
-    // 오디오 피드백용 레퍼런스 (주석 처리하지 않고 유지)
-    const wakeAudioRef = useRef(null);
-    const successAudioRef = useRef(null);
 
     // Porcupine 설정 (웨이크워드 감지)
     const porcupineKeyword = {
@@ -184,21 +181,17 @@ const VoiceCommandSystem = () => {
         };
     }, []);
 
-    // 3. 웨이크워드 감지 처리
+    // 3. 웨이크워드 감지 처리 - 효과음 추가
     useEffect(() => {
         if (keywordDetection !== null) {
             console.log(`웨이크워드 '${keywordDetection.label}' 감지됨!`);
             setWakewordDetected(true);
 
-            // 오디오 피드백 재생 코드 주석 처리
-            /* 
-            if (wakeAudioRef.current && voiceFeedbackEnabled) {
-              wakeAudioRef.current.play().catch(e => console.error('오디오 재생 실패:', e));
-            }
-            */
-
             // 이미 진행 중인 타이머가 있으면 취소
             clearTimeouts();
+
+            // 웨이크워드 감지 효과음 재생
+            playAudio('wakeSound');
 
             // 음성 명령 인식 모드로 전환
             startCommandMode();
@@ -210,29 +203,27 @@ const VoiceCommandSystem = () => {
                 }
             }, 10000); // 10초 타임아웃
         }
-    }, [keywordDetection, voiceFeedbackEnabled]);
+    }, [keywordDetection]);
 
-    // 4. 음성 명령 결과 처리
+    // 4. 음성 명령 결과 처리 - 인식 실패 시 안내음 추가
     useEffect(() => {
         if (internalCommandResult !== null) {
             console.log('음성 명령 인식 결과:', internalCommandResult);
 
+            // 명령 인식 실패 시 안내 음성 재생
+            if (internalCommandResult.isFinalized && !internalCommandResult.isUnderstood) {
+                playAudio('tryAgain');
+            }
+
             // 부모 컴포넌트로 결과 전달
             handleVoiceCommand(internalCommandResult);
-
-            // 성공 오디오 피드백 코드 주석 처리
-            /*
-            if (successAudioRef.current && internalCommandResult.isUnderstood && voiceFeedbackEnabled) {
-              successAudioRef.current.play().catch(e => console.error('오디오 재생 실패:', e));
-            }
-            */
 
             // 인식 완료 후 웨이크워드 감지 모드로 복귀 (약간 지연)
             setTimeout(() => {
                 resetToWakewordMode();
             }, 500); // 0.5초 지연
         }
-    }, [internalCommandResult, handleVoiceCommand, voiceFeedbackEnabled]);
+    }, [internalCommandResult, handleVoiceCommand]);
 
     // 5. 타임아웃 클리어 함수
     const clearTimeouts = () => {
@@ -299,8 +290,6 @@ const VoiceCommandSystem = () => {
     // 시각적 피드백 생성 함수 - 미니멀한 버전
     // 시각적 피드백 생성 함수 - 미니멀한 버전 (지속 시간 증가)
     const createVisualFeedback = () => {
-        if (!voiceFeedbackEnabled) return;
-
         // 화면 중앙 좌표 계산
         const centerX = window.innerWidth / 2;
         const centerY = window.innerHeight / 2;
@@ -332,7 +321,7 @@ const VoiceCommandSystem = () => {
         return result;
     };
 
-    // 10. 음성 명령에 반응하여 이벤트 발생 처리
+    // 10. 음성 명령에 반응하여 이벤트 발생 처리 - 각 상황별 음성 안내 추가
     useEffect(() => {
         if (!commandResult || !commandResult.isUnderstood) return;
 
@@ -347,13 +336,14 @@ const VoiceCommandSystem = () => {
         console.log(`현재 경로: ${pathname}, 명령 인텐트: ${intent}`);
         console.log('명령 슬롯:', slots); // 슬롯 정보 출력 추가
 
+        // 현재 페이지에 적절하지 않은 명령인지 확인하는 변수
+        let isInvalidCommand = false;
+
         // 주문 확인 다이얼로그가 열린 상태에서의 명령 처리
-        // 기존 다이얼로그 체크 코드 교체
-        // 변경 전: else if (document.querySelector('.MuiDialog-root, [role="dialog"]')) {
-        // 변경 후:
         if (dialogOpen || isOrderDialogOpen()) {  // 둘 중 하나라도 true면 실행
             console.log('주문 확인 다이얼로그에서 명령 처리:', intent);
 
+            // 다이얼로그에서 허용된 명령만 처리
             if (intent === '토글닫기') {
                 console.log('다이얼로그 닫기 이벤트 발생');
                 window.dispatchEvent(new CustomEvent('voice-dialog-close'));
@@ -367,6 +357,9 @@ const VoiceCommandSystem = () => {
 
                 // 시각적 피드백
                 createVisualFeedback();
+            } else {
+                // 다이얼로그에서 허용되지 않은 명령
+                isInvalidCommand = true;
             }
         }
 
@@ -387,6 +380,9 @@ const VoiceCommandSystem = () => {
                 setTimeout(() => {
                     navigate('/MenuPage');
                 }, 300);
+            } else {
+                // 첫 화면에서 허용되지 않은 명령
+                isInvalidCommand = true;
             }
         }
 
@@ -396,29 +392,21 @@ const VoiceCommandSystem = () => {
                 case '스크롤업':
                     // 직접 이벤트 발생
                     window.dispatchEvent(new CustomEvent('voice-scroll-up'));
-
-                    // 시각적 피드백 (화면 중앙에 통일)
                     createVisualFeedback();
                     break;
 
                 case '스크롤다운':
                     // 직접 이벤트 발생
                     window.dispatchEvent(new CustomEvent('voice-scroll-down'));
-
-                    // 시각적 피드백 (화면 중앙에 통일)
                     createVisualFeedback();
                     break;
 
                 case '카테고리이동':
                     if (slots && slots.카테고리) {
                         console.log(`카테고리 이동: ${slots.카테고리}`);
-
-                        // 이벤트 발생만으로 처리 (DOM 조작 제거)
                         window.dispatchEvent(new CustomEvent('voice-category-change', {
                             detail: { category: slots.카테고리 }
                         }));
-
-                        // 시각적 피드백 (화면 중앙에 통일)
                         createVisualFeedback();
                     }
                     break;
@@ -430,8 +418,6 @@ const VoiceCommandSystem = () => {
                     // 메뉴 주문 이벤트 발생
                     const menuType = intent.replace('주문', '');
                     const menuName = slots[menuType] || '';
-                    // 수량 처리 (기본값 1)
-                    // 수량 슬롯이 없으면 기본값 1로 설정(ex."아메리카노 주문해줘"-> 수량 1)
                     const quantity = slots.수량 ? convertKoreanNumberToDigit(slots.수량) : 1;
 
                     if (menuName) {
@@ -444,7 +430,8 @@ const VoiceCommandSystem = () => {
                             }
                         }));
 
-                        // 시각적 피드백 (화면 중앙에 통일)
+                        // 메뉴 추가 시 음성 안내
+                        playAudio('menuAdded');
                         createVisualFeedback();
                     }
                     break;
@@ -454,16 +441,14 @@ const VoiceCommandSystem = () => {
                     console.log(`${intent} 명령으로 장바구니 확인 다이얼로그 표시`);
                     // 장바구니 확인 다이얼로그 표시
                     window.dispatchEvent(new CustomEvent('voice-checkout'));
-
-                    // 시각적 피드백 (화면 중앙에 통일)
                     createVisualFeedback();
                     break;
 
                 case '장바구니비우기':
                     // 장바구니 비우기
                     window.dispatchEvent(new CustomEvent('voice-clear-cart'));
-
-                    // 시각적 피드백 (화면 중앙에 통일)
+                    // 장바구니 비우기 시 음성 안내
+                    playAudio('cartCleared');
                     createVisualFeedback();
                     break;
 
@@ -481,12 +466,14 @@ const VoiceCommandSystem = () => {
                             }
                         }));
 
-                        // 시각적 피드백 (화면 중앙에 통일)
+                        // 메뉴 제거 시 음성 안내
+                        playAudio('menuRemoved');
                         createVisualFeedback();
                     }
                     break;
 
                 default:
+                    isInvalidCommand = true;
                     break;
             }
         }
@@ -502,8 +489,23 @@ const VoiceCommandSystem = () => {
             else if (intent === '결제요청') {
                 window.dispatchEvent(new CustomEvent('voice-payment-proceed'));
                 createVisualFeedback();
+            } else {
+                isInvalidCommand = true;
             }
+        } else if (pathname === '/payment/success') {
+            // 결제 성공 페이지에서는 모든 명령 무시
+            isInvalidCommand = true;
+        } else if (pathname === '/payment/fail') {
+            // 결제 실패 페이지에서는 모든 명령 무시
+            isInvalidCommand = true;
         }
+
+        // 해당 페이지에서 처리할 수 없는 명령이 입력된 경우
+        if (isInvalidCommand) {
+            console.log('현재 페이지에서 지원하지 않는 명령:', intent);
+            playAudio('tryAgain');
+        }
+
         // 명령 처리 후 초기화 (페이지 전환 경우는 제외)
         if (shouldResetCommand) {
             resetVoiceCommand();
@@ -554,10 +556,6 @@ const VoiceCommandSystem = () => {
 
     return (
         <VoiceCommandPortal>
-            {/* 오디오 참조는 유지하되 소스는 비워두기 */}
-            <audio ref={wakeAudioRef} preload="none" />
-            <audio ref={successAudioRef} preload="none" />
-
             {/* 음성 인식 시각화 */}
             <AnimatePresence>
                 {isListening && (
