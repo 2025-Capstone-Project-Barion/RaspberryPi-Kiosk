@@ -1,87 +1,117 @@
-/**
- * 키오스크 음성 안내 및 효과음 관리 유틸리티
- * 모든 음성 안내와 효과음을 한 곳에서 관리하고 재생합니다.
- */
+// Howler.js를 이용한 오디오 관리 유틸리티
+import { Howl } from 'howler';
 
-// 현재 재생 중인 오디오 트래킹 (중복 재생 방지용)
-let currentlyPlaying = null;
+// 현재 재생 중인 오디오 트래킹
+let currentSound = null;
 
-// 오디오 사전 로드 및 관리를 위한 맵 객체
+// 오디오 맵 객체 (Howl 인스턴스)
 const audioMap = {
     // 효과음
-    wakeSound: new Audio('/audio/effects/wake-sound.mp3'),
+    wakeSound: new Howl({
+        src: ['/audio/effects/wake-sound.mp3'],
+        volume: 0.8
+    }),
 
     // 안내 음성
-    welcome: new Audio('/audio/voices/welcome.mp3'),
-    menuAdded: new Audio('/audio/voices/menu-added.mp3'),
-    menuRemoved: new Audio('/audio/voices/menu-removed.mp3'),
-    cartCleared: new Audio('/audio/voices/cart-cleared.mp3'),
-    selectPayment: new Audio('/audio/voices/select-payment.mp3'),
-    thankYou: new Audio('/audio/voices/thank-you.mp3'),
-    tryAgain: new Audio('/audio/voices/try-again.mp3')
+    welcome: new Howl({
+        src: ['/audio/voices/welcome.mp3'],
+        volume: 0.8
+    }),
+    menuAdded: new Howl({
+        src: ['/audio/voices/menu-added.mp3'],
+        volume: 0.8
+    }),
+    menuRemoved: new Howl({
+        src: ['/audio/voices/menu-removed.mp3'],
+        volume: 0.8
+    }),
+    cartCleared: new Howl({
+        src: ['/audio/voices/cart-cleared.mp3'],
+        volume: 0.8
+    }),
+    selectPayment: new Howl({
+        src: ['/audio/voices/select-payment.mp3'],
+        volume: 0.8
+    }),
+    thankYou: new Howl({
+        src: ['/audio/voices/thank-you.mp3'],
+        volume: 0.8
+    }),
+    tryAgain: new Howl({
+        src: ['/audio/voices/try-again.mp3'],
+        volume: 0.8
+    }),
+
+    // 추가된 음성 안내
+    orderCheck: new Howl({
+        src: ['/audio/voices/order-check.mp3'],
+        volume: 0.8
+    }),
+    moveToCoffee: new Howl({
+        src: ['/audio/voices/move-to-coffee.mp3'],
+        volume: 0.8
+    }),
+    moveToNonCoffee: new Howl({
+        src: ['/audio/voices/move-to-noncoffee.mp3'],
+        volume: 0.8
+    }),
+    moveToDessert: new Howl({
+        src: ['/audio/voices/move-to-dessert.mp3'],
+        volume: 0.8
+    }),
+    moveToBakery: new Howl({
+        src: ['/audio/voices/move-to-bakery.mp3'],
+        volume: 0.8
+    })
 };
 
-// 오디오 볼륨 기본 설정
-Object.values(audioMap).forEach(audio => {
-    audio.volume = 0.8; // 80% 볼륨으로 설정
-});
-
-// 효과음은 볼륨을 약간 낮게 설정
-audioMap.wakeSound.volume = 0.6;
-
-/**
- * 지정된 오디오를 재생합니다.
- * @param {string} key - 재생할 오디오 키
- * @param {boolean} [interruptCurrent=true] - 현재 재생 중인 오디오를 중단하고 재생할지 여부
- * @returns {Promise} - 오디오 재생 완료 시 resolve되는 Promise
- */
+// 오디오 재생 함수
 export const playAudio = (key, interruptCurrent = true) => {
     return new Promise((resolve, reject) => {
-        const audio = audioMap[key];
+        const sound = audioMap[key];
 
-        if (!audio) {
+        if (!sound) {
             console.warn(`정의되지 않은 오디오 키: ${key}`);
             reject(new Error(`정의되지 않은 오디오 키: ${key}`));
             return;
         }
 
         // 현재 재생 중인 오디오가 있고, 중단 옵션이 켜져 있을 경우
-        if (currentlyPlaying && interruptCurrent) {
-            currentlyPlaying.pause();
-            currentlyPlaying.currentTime = 0;
+        if (currentSound && interruptCurrent && currentSound.playing()) {
+            currentSound.stop();
         }
 
         // 오디오 재생 완료 이벤트 설정
-        const handleEnded = () => {
-            audio.removeEventListener('ended', handleEnded);
-            currentlyPlaying = null;
+        sound.once('end', () => {
             resolve();
-        };
+        });
 
-        // 재생 완료 감지를 위한 이벤트 리스너 등록
-        audio.addEventListener('ended', handleEnded);
+        // 오류 처리
+        sound.once('loaderror', (id, err) => {
+            console.warn(`오디오 (${key}) 로드 실패:`, err);
+            reject(err);
+        });
 
-        // 항상 처음부터 재생하기 위해 시간 초기화
-        audio.currentTime = 0;
-
-        // 오디오 재생 및 예외 처리
-        audio.play().catch(err => {
+        sound.once('playerror', (id, err) => {
             console.warn(`오디오 (${key}) 재생 실패:`, err);
             reject(err);
         });
 
-        // 현재 재생 중인 오디오 설정
-        currentlyPlaying = audio;
+        // 재생
+        try {
+            sound.play();
+            currentSound = sound;
+        } catch (err) {
+            console.warn(`오디오 (${key}) 재생 시도 중 오류:`, err);
+            reject(err);
+        }
     });
 };
 
-/**
- * 현재 재생 중인 모든 오디오를 중지합니다.
- */
+// 모든 오디오 중지
 export const stopAllAudio = () => {
-    if (currentlyPlaying) {
-        currentlyPlaying.pause();
-        currentlyPlaying.currentTime = 0;
-        currentlyPlaying = null;
+    if (currentSound) {
+        currentSound.stop();
+        currentSound = null;
     }
 };

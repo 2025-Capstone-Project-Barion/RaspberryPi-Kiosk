@@ -1,3 +1,4 @@
+// 기존 imports
 import { useState, useEffect } from 'react';
 import { useSpring, animated } from '@react-spring/web';
 import { Box } from '@mui/material';
@@ -13,6 +14,8 @@ import CartPanel from '../components/Menu/CartPanel';
 // 앱 컨테이너 스타일
 import { AppContainer } from '../styles/Menu/AppContainerStyle';
 import { useVoiceCommand } from '../components/VoiceCommand/VoiceCommandContext';
+// audioManager import 추가
+import { playAudio } from '../utils/audioManager';
 
 const MenuPage = () => {
     // 디폴트 카테고리는 커피로 설정(메뉴페이지로 들어왔을 때 보이는 카테고리)
@@ -109,12 +112,35 @@ const MenuPage = () => {
         setCart([]);
     };
 
+    // 다이얼로그 열 때 음성 안내 추가
+    const handleOpenOrderDialog = () => {
+        setOrderDialogOpen(true);
+        // 주문 확인 음성 안내 재생
+        playAudio('orderCheck');
+    };
+
+    // 카테고리 선택 처리 함수에 음성 안내 추가
+    const handleCategorySelect = (categoryId) => {
+        setSelectedCategory(categoryId);
+
+        // 카테고리별 음성 안내
+        const categoryAudioMap = {
+            0: 'moveToCoffee',    // 커피 카테고리
+            1: 'moveToNonCoffee', // 논커피 카테고리
+            2: 'moveToDessert',   // 디저트 카테고리
+            3: 'moveToBakery'     // 베이커리 카테고리
+        };
+
+        // 해당 카테고리 음성 재생
+        if (categoryAudioMap[categoryId]) {
+            playAudio(categoryAudioMap[categoryId]);
+        }
+    };
 
     useEffect(() => {
         console.log('[MenuPage] 다이얼로그 상태 변경:', orderDialogOpen ? '열림' : '닫힘');
         setDialogOpen(orderDialogOpen);
     }, [orderDialogOpen, setDialogOpen]);
-    // 기존 useEffect 아래에 추가
 
     // 음성 명령 이벤트 리스너
     useEffect(() => {
@@ -142,7 +168,9 @@ const MenuPage = () => {
 
             if (categoryIndex !== undefined) {
                 console.log(`카테고리 '${categoryName}'(으)로 이동 (인덱스: ${categoryIndex})`);
-                setSelectedCategory(categoryIndex);
+
+                // 카테고리 변경 처리 함수 호출로 변경 (음성 안내 포함)
+                handleCategorySelect(categoryIndex);
             } else {
                 console.log(`알 수 없는 카테고리: ${categoryName}`);
             }
@@ -168,12 +196,15 @@ const MenuPage = () => {
 
             if (foundItem) {
                 // 해당 카테고리로 이동 (선택적)
+                /*
                 const itemCategoryIndex = categories.findIndex(
                     cat => cat.categoryId === foundItem.category
                 );
                 if (itemCategoryIndex !== -1 && selectedCategory !== itemCategoryIndex) {
-                    setSelectedCategory(itemCategoryIndex);
+                    // 카테고리 변경 처리 함수 호출로 변경 (음성 안내 포함)
+                    handleCategorySelect(itemCategoryIndex);
                 }
+                */
 
                 // 찾은 메뉴 quantity만큼 장바구니에 추가
                 const existingItem = cart.find(cartItem => cartItem.menuId === foundItem.menuId);
@@ -244,10 +275,11 @@ const MenuPage = () => {
             setCart([]);
         };
 
-        // 결제하기 이벤트 처리
+        // 결제하기 이벤트 처리 - 주문 확인 음성 추가
         const handleVoiceCheckout = () => {
             console.log('음성 명령으로 결제 진행');
-            setOrderDialogOpen(true);
+            // 주문 확인 다이얼로그 열기 함수 호출 (음성 안내 포함)
+            handleOpenOrderDialog();
         };
 
         // 이벤트 리스너 등록
@@ -288,7 +320,7 @@ const MenuPage = () => {
                         <CategoryBar
                             categories={categories}
                             selectedCategory={selectedCategory}
-                            onSelectCategory={(categoryId) => setSelectedCategory(categoryId)}
+                            onSelectCategory={handleCategorySelect} // 음성 안내 추가된 함수로 변경
                             logoSrc={logo}
                         />
 
@@ -305,7 +337,7 @@ const MenuPage = () => {
                         cart={cart}
                         onQuantityChange={handleQuantityChange}
                         onClearCart={() => setCart([])}
-                        onCheckout={() => setOrderDialogOpen(true)}
+                        onCheckout={handleOpenOrderDialog} // 음성 안내 추가된 함수로 변경
                         animationStyle={cartAnimation}
                     />
                 </Box>
