@@ -437,7 +437,7 @@ const VoiceCommandSystem = () => {
                         }));
 
                         // 메뉴 추가 시 음성 안내
-                        playAudio('menuAdded');
+                        //playAudio('menuAdded');
                         createVisualFeedback();
                     }
                     break;

@@ -233,8 +233,12 @@ const MenuPage = () => {
                 }
 
                 console.log(`장바구니에 추가됨: ${foundItem.menuName} ${quantity}개`);
+                // 메뉴 추가 시 음성 안내
+                playAudio('menuAdded');
             } else {
                 console.log(`메뉴를 찾을 수 없음: ${menuName}`);
+                // 메뉴를 찾을 수 없을 때 오디오 피드백 추가
+                playAudio('menuNotFound');
             }
         };
 

@@ -84,8 +84,8 @@ const PaymentPage = () => {
 
         try {
             const orderName = orderItems.length > 1
-                ? `${orderItems[0].name} 외 ${orderItems.length - 1}건`
-                : orderItems[0].name;
+                ? `${orderItems[0].menuName} 외 ${orderItems.length - 1}건`  // name → menuName
+                : orderItems[0].menuName;  // name → menuName
 
             await widgets.requestPayment({
                 orderId: tossId,

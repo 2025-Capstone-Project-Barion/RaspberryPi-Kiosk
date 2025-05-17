@@ -334,6 +334,7 @@ const MenuGrid = ({ menuItems, onAddToCart, isEntering }) => {
             window.removeEventListener('voice-scroll-up', handleVoiceScrollUp);
             window.removeEventListener('voice-scroll-down', handleVoiceScrollDown);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);  // 컴포넌트 마운트/언마운트 시에만 실행
 
     return (
