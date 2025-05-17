@@ -58,6 +58,9 @@ const OrderCheckDialog = ({ open, cartItems, onClose, onPayment }) => {
             onClose={onClose}
             fullWidth={false}
             aria-labelledby="order-check-dialog"
+            // 음성 명령 인식을 위한 고유 식별자 추가
+            id="order-check-dialog"
+            data-voice-target="order-dialog"
             // 어두운 배경 클릭 시 닫기 - 터치 환경 고려
             closeAfterTransition
         >

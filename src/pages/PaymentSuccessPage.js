@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import { motion } from 'framer-motion';
+import { playAudio } from '../utils/audioManager';
 
 const PaymentSuccessPage = () => {
     const navigate = useNavigate();
@@ -49,7 +50,7 @@ const PaymentSuccessPage = () => {
             // 백엔드로 주문 정보 전송하는 코드 (주석처리)
 
             // 백엔드 서버 API 엔드포인트 설정
-            const API_ENDPOINT = 'https://webhook.site/1c4a8c10-7a98-44b6-ae2c-3810122202c7'; // 실제 스프링부트 서버 주소로 변경
+            const API_ENDPOINT = 'https://webhook.site/8f669a53-182a-4a2f-907e-a014099aa6f5'; // 실제 스프링부트 서버 주소로 변경
 
             // 전송할 데이터 구성 부분 수정
             const orderPayload = {
@@ -101,6 +102,14 @@ const PaymentSuccessPage = () => {
         }, 1000);
 
         return () => clearInterval(timer);
+    }, [loading]);
+
+    // 결제 성공 감사 음성 재생 (별도의 useEffect로 분리)
+    useEffect(() => {
+        if (!loading) {
+            // 결제 성공 감사 음성 재생
+            playAudio('thankYou');
+        }
     }, [loading]);
 
     // 화면 이동 처리 부분 수정

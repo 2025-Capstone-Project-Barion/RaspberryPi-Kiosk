@@ -313,6 +313,30 @@ const MenuGrid = ({ menuItems, onAddToCart, isEntering }) => {
         };
     }, [updateScrollButtonStates]); // updateScrollButtonStates 추가
 
+    // 음성 명령 스크롤 이벤트 리스너 추가
+    useEffect(() => {
+        // 음성 명령으로 스크롤 업 처리
+        const handleVoiceScrollUp = () => {
+            handleScrollUp();
+        };
+
+        // 음성 명령으로 스크롤 다운 처리
+        const handleVoiceScrollDown = () => {
+            handleScrollDown();
+        };
+
+        // 이벤트 리스너 등록
+        window.addEventListener('voice-scroll-up', handleVoiceScrollUp);
+        window.addEventListener('voice-scroll-down', handleVoiceScrollDown);
+
+        // 정리 함수
+        return () => {
+            window.removeEventListener('voice-scroll-up', handleVoiceScrollUp);
+            window.removeEventListener('voice-scroll-down', handleVoiceScrollDown);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);  // 컴포넌트 마운트/언마운트 시에만 실행
+
     return (
         <MenuGridWrapper>
             <MenuGridContainer

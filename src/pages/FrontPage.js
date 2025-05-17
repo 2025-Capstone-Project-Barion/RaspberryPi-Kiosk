@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSpring, useSprings, animated, easings } from '@react-spring/web';
 import styles from '../styles/Front/frontPage.module.css';
@@ -8,30 +8,33 @@ import logoImage from '../assets/Image/Logo/logo.png';
 import MicIcon from '@mui/icons-material/Mic';
 import TouchAppIcon from '@mui/icons-material/TouchApp';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-
-// 배경 애니메이션 파티클 데이터
-const PARTICLES = 35;
-const generateParticles = () => {
-    return Array.from({ length: PARTICLES }, () => ({
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        size: 3 + Math.random() * 8,
-        opacity: 0.15 + Math.random() * 0.3,
-    }));
-};
+import { playAudio } from '../utils/audioManager';
+// // 배경 애니메이션 파티클 데이터
+// const PARTICLES = 35;
+// const generateParticles = () => {
+//     return Array.from({ length: PARTICLES }, () => ({
+//         x: Math.random() * 100,
+//         y: Math.random() * 100,
+//         size: 3 + Math.random() * 8,
+//         opacity: 0.15 + Math.random() * 0.3,
+//     }));
+// };
 
 const FrontPage = () => {
     const navigate = useNavigate();
     const [isLeaving, setIsLeaving] = useState(false);
     const [activeTouch, setActiveTouch] = useState(null);
-    const particles = generateParticles();
+    //const particles = generateParticles();
 
     // 첫 화면에서 로컬스토리지 초기화 로직 추가
     useEffect(() => {
         // 결제 관련 데이터 초기화
         localStorage.removeItem('orderItems');
         localStorage.removeItem('totalPrice');
-        localStorage.removeItem('tossId'); // 이 부분 추가 필요
+        localStorage.removeItem('tossId');
+
+        // 페이지 입장 시 환영 음성 재생
+        playAudio('welcome');
     }, []);
 
     // // 이미지 사전 로드 (메뉴 페이지 이미지)
@@ -50,36 +53,36 @@ const FrontPage = () => {
     // }, []);
 
     // 파티클 애니메이션
-    const particleSprings = useSprings(
-        PARTICLES,
-        particles.map(particle => ({
-            from: {
-                x: particle.x,
-                y: particle.y,
-                opacity: 0,
-                scale: 0.3,
-            },
-            to: async (next) => {
-                // 초기 페이드인
-                await next({
-                    opacity: particle.opacity,
-                    scale: 1,
-                    config: { tension: 80, friction: 10 }
-                });
+    // const particleSprings = useSprings(
+    //     PARTICLES,
+    //     particles.map(particle => ({
+    //         from: {
+    //             x: particle.x,
+    //             y: particle.y,
+    //             opacity: 0,
+    //             scale: 0.3,
+    //         },
+    //         to: async (next) => {
+    //             // 초기 페이드인
+    //             await next({
+    //                 opacity: particle.opacity,
+    //                 scale: 1,
+    //                 config: { tension: 80, friction: 10 }
+    //             });
 
-                // 계속 움직이는 애니메이션 - 성능 최적화
-                while (true) {
-                    await next({
-                        x: particle.x + (Math.random() * 15 - 7.5),
-                        y: particle.y + (Math.random() * 15 - 7.5),
-                        opacity: 0.1 + Math.random() * 0.4,
-                        scale: 0.8 + Math.random() * 0.4,
-                        config: { duration: 6000 + Math.random() * 4000 }
-                    });
-                }
-            },
-        }))
-    );
+    //             // 계속 움직이는 애니메이션 - 성능 최적화
+    //             while (true) {
+    //                 await next({
+    //                     x: particle.x + (Math.random() * 15 - 7.5),
+    //                     y: particle.y + (Math.random() * 15 - 7.5),
+    //                     opacity: 0.1 + Math.random() * 0.4,
+    //                     scale: 0.8 + Math.random() * 0.4,
+    //                     config: { duration: 6000 + Math.random() * 4000 }
+    //                 });
+    //             }
+    //         },
+    //     }))
+    // );
 
     // 페이지 전환 애니메이션 (좌우 방향으로 변경)
     const pageTransition = useSpring({
@@ -170,6 +173,7 @@ const FrontPage = () => {
     });
 
     // 화살표 애니메이션 (더 큰 움직임)
+    /*
     const arrowSpring = useSpring({
         from: { transform: 'translateX(0)' },
         to: async (next) => {
@@ -179,10 +183,11 @@ const FrontPage = () => {
             }
         },
     });
+    */
 
-    const handleStartOrder = () => {
+    const handleStartOrder = useCallback(() => {
         setIsLeaving(true);
-    };
+    }, []);
 
     // 터치 이벤트 핸들러
     const handleTouchStart = (id) => {
@@ -196,10 +201,23 @@ const FrontPage = () => {
         }
     };
 
+    // 컴포넌트 내부 useEffect에 추가
+    useEffect(() => {
+        const handleNavigateToMenu = () => {
+            handleStartOrder();
+        };
+
+        window.addEventListener('voice-navigate-menu', handleNavigateToMenu);
+
+        return () => {
+            window.removeEventListener('voice-navigate-menu', handleNavigateToMenu);
+        };
+    }, [handleStartOrder]);
+
     return (
         <animated.div style={pageTransition} className={styles.container}>
             <animated.div className={styles.overlay} style={overlaySpring} />
-            {/* 배경 파티클 */}
+            {/* 배경 파티클 
             {particleSprings.map((props, i) => (
                 <animated.div
                     key={i}
@@ -213,7 +231,7 @@ const FrontPage = () => {
                         height: `${particles[i].size}px`,
                     }}
                 />
-            ))}
+            ))}*/}
 
             <div className={styles.content}>
                 {/* 좌측 브랜드 섹션 */}
@@ -279,9 +297,12 @@ const FrontPage = () => {
                             onClick={handleStartOrder}
                         >
                             <span className={styles.buttonText}>주문하러 가기</span>
-                            <animated.div className={styles.arrowIcon} style={arrowSpring}>
+                            {/*<animated.div className={styles.arrowIcon} style={arrowSpring}>
                                 <NavigateNextIcon className={styles.nextIcon} />
-                            </animated.div>
+                            </animated.div>*/}
+                            <div className={styles.arrowIcon}>
+                                <NavigateNextIcon className={styles.nextIcon} />
+                            </div>
                         </animated.button>
                     </animated.div>
                 </div>

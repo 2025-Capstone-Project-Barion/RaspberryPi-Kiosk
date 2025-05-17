@@ -1,4 +1,6 @@
 import Router from './routes/Router';
+import { VoiceCommandProvider } from './components/VoiceCommand/VoiceCommandContext';
+import VoiceCommandSystem from './components/VoiceCommand/VoiceCommandSystem';
 import { GlobalStyles } from './styles/GlobalStyles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 // MUI v5부터는 기본 스타일링 엔진을 Emotion으로 지정하였기에, styled component가 아닌 Emotion을 사용하여 스타일링을 해줘야한다. 현 프로젝트의 css 프레임워크를 styled-components에서 Emotion으로 migration하고자한다.
@@ -18,8 +20,13 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <GlobalStyles />
-      <Router />
+      {/* 음성 명령 시스템 전역 상태 관리를 위한 Provider */}
+      <VoiceCommandProvider>
+        <GlobalStyles />
+        <Router />
+        {/* 음성 명령 시스템 - 전체 앱에서 활성화 */}
+        <VoiceCommandSystem />
+      </VoiceCommandProvider>
     </ThemeProvider>
   );
 }

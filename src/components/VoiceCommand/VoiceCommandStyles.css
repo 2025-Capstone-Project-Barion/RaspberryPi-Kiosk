@@ -1,0 +1,207 @@
+/* 음성 명령 시스템 스타일 */
+
+/* 상단 중앙 리스닝 인디케이터 - 개선 */
+.voice-top-indicator {
+  position: fixed;
+  top: 30px; /* 약간 더 아래로 위치 조정 */
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: max-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 24px; /* 패딩 증가로 크기 키움 */
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.65)); /* 그라데이션 추가 */
+  border-radius: 28px; /* 더 둥글게 */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.3); /* 그림자 강화 */
+  z-index: 2001;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.18); /* 테두리 미세 조정 */
+  backdrop-filter: blur(10px); /* 블러 효과 강화 */
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* 사운드 웨이브 아이콘 - 크기 및 간격 개선 */
+.sound-wave-icon {
+  display: flex;
+  align-items: flex-end;
+  height: 18px; /* 약간 키움 */
+  margin-right: 12px; /* 간격 증가 */
+}
+
+.sound-wave-icon span {
+  display: inline-block;
+  width: 4px; /* 두께 증가 */
+  margin: 0 2px; /* 간격 증가 */
+  background-color: white;
+  border-radius: 2px;
+  animation: sound-wave-animation 1.2s infinite ease-in-out;
+}
+
+.sound-wave-icon span:nth-child(1) {
+  height: 40%;
+  animation-delay: 0s;
+}
+.sound-wave-icon span:nth-child(2) {
+  height: 70%;
+  animation-delay: 0.2s;
+}
+.sound-wave-icon span:nth-child(3) {
+  height: 100%;
+  animation-delay: 0.4s;
+}
+.sound-wave-icon span:nth-child(4) {
+  height: 70%;
+  animation-delay: 0.6s;
+}
+.sound-wave-icon span:nth-child(5) {
+  height: 40%;
+  animation-delay: 0.8s;
+}
+
+@keyframes sound-wave-animation {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+/* 텍스트 스타일 개선 */
+.listening-text {
+  font-size: 16px; /* 폰트 크기 증가 */
+  font-weight: 500;
+  letter-spacing: 0.7px; /* 자간 증가 */
+  color: rgba(255, 255, 255, 1);
+}
+
+/* 화면 가장자리 펄스 효과 */
+.pulsating-border-effect {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1995;
+  animation: pulse-glow-animation 1.8s infinite alternate ease-in-out;
+}
+
+@keyframes pulse-glow-animation {
+  0% {
+    box-shadow: inset 0 0 30px 15px rgba(0, 150, 255, 0.3), 0 0 30px 15px rgba(0, 150, 255, 0.3);
+  }
+  50% {
+    box-shadow: inset 0 0 50px 25px rgba(0, 160, 255, 0.55), 0 0 50px 25px rgba(0, 160, 255, 0.55);
+  }
+  100% {
+    box-shadow: inset 0 0 70px 35px rgba(0, 170, 255, 0.75), 0 0 70px 35px rgba(0, 170, 255, 0.75);
+  }
+}
+
+/* 음성 인식 상태 카드 - 개선 */
+.voice-status-card {
+  position: fixed;
+  bottom: 30px; /* 더 안쪽으로 이동 */
+  left: 30px; /* 더 안쪽으로 이동 */
+  padding: 18px 24px; /* 패딩 증가 */
+  border-radius: 16px; /* 더 둥글게 */
+  color: white;
+  font-size: 14px;
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2); /* 그림자 강화 */
+  z-index: 2000;
+  backdrop-filter: blur(15px); /* 블러 강화 */
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  min-width: 200px; /* 너비 증가 */
+}
+
+/* 음성 인식 상태 카드 - 검은색 배경에 깊이감 추가 */
+.voice-status-card.listening {
+  background: linear-gradient(145deg, rgba(0, 0, 0, 0.75), rgba(30, 30, 30, 0.65)); /* 그라데이션으로 깊이감 */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 10px rgba(0, 0, 0, 0.3); /* 그림자 강화 */
+  border: 1px solid rgba(255, 255, 255, 0.18); /* 테두리 개선 */
+}
+
+/* 카드 내용 스타일 개선 */
+.card-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-title {
+  font-weight: 600;
+  margin-bottom: 8px; /* 간격 증가 */
+  font-size: 16px; /* 크기 증가 */
+  letter-spacing: 0.5px; /* 자간 추가 */
+}
+
+.card-subtitle {
+  font-size: 13px; /* 크기 증가 */
+  opacity: 0.85; /* 약간 더 진하게 */
+  letter-spacing: 0.3px; /* 자간 추가 */
+}
+
+/* 로딩/에러 표시 */
+.voice-loading-indicator,
+.voice-error-indicator {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 14px;
+  z-index: 2000;
+}
+
+.voice-loading-indicator {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+}
+
+.voice-error-indicator {
+  background-color: rgba(255, 0, 0, 0.8);
+  color: white;
+}
+
+/* 음성 명령 피드백 시각화 - 버튼 클릭 표시용 */
+/* 피드백 효과 스타일 수정 */
+/* 피드백 효과 스타일 수정 */
+.voice-click-feedback {
+  position: fixed;
+  pointer-events: none;
+  border-radius: 50%;
+  z-index: 9999;
+  box-shadow: 0 0 80px rgba(33, 66, 255, 0.3);
+  background: radial-gradient(circle, rgba(33, 66, 255, 0.1) 0%, rgba(33, 66, 255, 0.05) 70%, transparent 100%);
+}
+
+@keyframes pulse-ripple {
+  0% {
+    transform: scale(0.1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
+@keyframes voice-click-animation {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
