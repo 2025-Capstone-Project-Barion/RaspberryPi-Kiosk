@@ -60,23 +60,23 @@ const VoiceCommandSystem = () => {
     const commandTimeoutRef = useRef(null);
     const wakewordTimeoutRef = useRef(null);
 
-    // Porcupine 설정 (웨이크워드 감지)
+    // Porcupine 설정 (Wake-Word 감지)
     const porcupineKeyword = {
-        publicPath: "/picovoice/porcupine/keywords/hey-barry-on_en_wasm_v3_0_0.ppn",
+        publicPath: "/picovoice/Porcupine/keyword/Hey-Barry-on_en_wasm_v3_0_0.ppn",
         label: 'Hey-Barry-on'
     };
 
     const porcupineModel = {
-        publicPath: "/picovoice/porcupine/models/porcupine_params.pv",
+        publicPath: "/picovoice/Porcupine/model/porcupine_params.pv",
     };
 
-    // Rhino 설정 (음성 명령 인식)
+    // Rhino 설정 (Speech-To-Intent)
     const rhinoContext = {
-        publicPath: "/picovoice/rhino/contexts/rhino_ko_wasm_v3_0_0.rhn",
+        publicPath: "/picovoice/Rhino/context/rhino_ko_wasm_v3_0_0.rhn",
     };
 
     const rhinoModel = {
-        publicPath: "/picovoice/rhino/models/rhino_params_ko.pv",
+        publicPath: "/picovoice/Rhino/model/rhino_params_ko.pv",
     };
 
     // Porcupine Hook (웨이크워드 감지)
