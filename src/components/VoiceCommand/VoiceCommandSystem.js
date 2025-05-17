@@ -473,7 +473,7 @@ const VoiceCommandSystem = () => {
                         }));
 
                         // 메뉴 제거 시 음성 안내
-                        playAudio('menuRemoved');
+                        //playAudio('menuRemoved');
                         createVisualFeedback();
                     }
                     break;

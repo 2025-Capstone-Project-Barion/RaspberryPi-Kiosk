@@ -279,8 +279,12 @@ const MenuPage = () => {
                         console.log(`${itemName} ${quantity}개 제거됨`);
                     }
                 }
+                // 성공적으로 메뉴가 제거되었을 때만 menuRemoved 재생
+                playAudio('menuRemoved');
             } else {
                 console.log(`장바구니에서 ${itemName} 메뉴를 찾을 수 없음`);
+                // 메뉴를 찾을 수 없을 때 tryAgain 재생
+                playAudio('tryAgain');
             }
         };
 
