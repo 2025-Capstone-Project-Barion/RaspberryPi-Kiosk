@@ -531,8 +531,8 @@ const VoiceCommandSystem = () => {
             '여덟': 8, '여덜': 8,
             '아홉': 9,
             '열': 10,
-            '스무': 20,
-            '서른': 30
+            //'스무': 20,
+            //'서른': 30
         };
 
         return numberMap[koreanNumber] || 1;
