@@ -27,7 +27,7 @@ REACT_APP_PICOVOICE_API_KEY="여기에 발급받은 키 입력"
 
 ## 2. 디렉토리 구조 및 파일 설명
 
-프로젝트 내 Picovoice 관련 파일은 다음과 같이 구성되어 있습니다:
+프로젝트 내 Picovoice 관련 파일은 다음과 같이 구성되어 있다:
 
 ```
 /public/picovoice/
