@@ -1,6 +1,6 @@
 ## 🛠 기술 스택
 
-### 🖥 Frontend
+### 🖥 Frontend: Kiosk Application
 |Category|Technology|
 |-|-|
 |<div align="center">**On-Device AIoT Platform**</div>|<div align="center"><img src="https://img.shields.io/badge/RUBIK Pi 3-3253DC?style=for-the-badge&logo=sequelize&logoColor=white"> ➕ ![Raspberry Pi](https://img.shields.io/badge/-Raspberry_Pi-C51A4A?style=for-the-badge&logo=Raspberry-Pi)<br><sup><strong>Rubik Pi: On-device AI / Raspberry Pi: Kiosk Controller</strong></sup></div>|
