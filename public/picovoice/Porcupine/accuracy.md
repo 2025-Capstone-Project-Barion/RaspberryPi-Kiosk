@@ -1,6 +1,8 @@
 # Picovoice Porcupine 학습 설정
 
 ## ✅ 최종 선택: `"Hey Barry on"` (언어: English)
+![image](https://github.com/user-attachments/assets/5324b2b3-df52-4949-b3a8-4530e5c6a45a)
+
 
 - **선택 언어**는 `English`로 한다.
 - **학습 문장**은 `"Hey Barry on"`으로 설정한다.
