@@ -270,7 +270,7 @@ const PaymentSuccessPage = () => {
                                 fontSize: '1.5rem'
                             }}
                         >
-                            주문해 주셔서 감사합니다
+                            구매해 주셔서 감사합니다
                         </Typography>
 
                         <Typography
