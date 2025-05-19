@@ -72,11 +72,11 @@ const VoiceCommandSystem = () => {
 
     // Rhino 설정 (Speech-To-Intent)
     const rhinoContext = {
-        publicPath: "/picovoice/Rhino/context/Barion_ko_wasm_v3_0_0.rhn",
+        publicPath: "/picovoice/rhino/context/Barion_ko_wasm_v3_0_0.rhn",
     };
 
     const rhinoModel = {
-        publicPath: "/picovoice/Rhino/model/rhino_params_ko.pv",
+        publicPath: "/picovoice/rhino/model/rhino_params_ko.pv",
     };
 
     // Porcupine Hook (웨이크워드 감지)
