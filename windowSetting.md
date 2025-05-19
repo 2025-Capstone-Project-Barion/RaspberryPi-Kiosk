@@ -13,6 +13,7 @@ sudo apt install -y nodejs
 ```
 
 ### npm 최신 버전 업데이트
+
 ```sh
 sudo npm install -g npm@latest
 ```
@@ -182,3 +183,4 @@ npm install --save-dev wait-on
 
 <br>
 <br>
+OFlu2wn/nhR+tYRcI5QFWonPN0zv1eI9cv2GDwLAAro44nKf7Rs2OQ==
