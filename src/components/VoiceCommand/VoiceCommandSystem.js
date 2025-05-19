@@ -72,7 +72,7 @@ const VoiceCommandSystem = () => {
 
     // Rhino 설정 (Speech-To-Intent)
     const rhinoContext = {
-        publicPath: "/picovoice/Rhino/context/rhino_ko_wasm_v3_0_0.rhn",
+        publicPath: "/picovoice/Rhino/context/Barion_ko_wasm_v3_0_0.rhn",
     };
 
     const rhinoModel = {
