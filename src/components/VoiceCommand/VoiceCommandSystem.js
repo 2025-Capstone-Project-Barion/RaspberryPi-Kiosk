@@ -62,21 +62,21 @@ const VoiceCommandSystem = () => {
 
     // Porcupine 설정 (Wake-Word 감지)
     const porcupineKeyword = {
-        publicPath: "/picovoice/porcupine/keyword/Hey-Barry-on_en_wasm_v3_0_0.ppn",
+        publicPath: "/picovoice/Porcupine/keyword/Hey-Barry-on_en_wasm_v3_0_0.ppn",
         label: 'Hey-Barry-on'
     };
 
     const porcupineModel = {
-        publicPath: "/picovoice/porcupine/model/porcupine_params.pv",
+        publicPath: "/picovoice/Porcupine/model/porcupine_params.pv",
     };
 
     // Rhino 설정 (Speech-To-Intent)
     const rhinoContext = {
-        publicPath: "/picovoice/rhino/context/Barion_ko_wasm_v3_0_0.rhn",
+        publicPath: "/picovoice/Rhino/context/Barion_ko_wasm_v3_0_0.rhn",
     };
 
     const rhinoModel = {
-        publicPath: "/picovoice/rhino/model/rhino_params_ko.pv",
+        publicPath: "/picovoice/Rhino/model/rhino_params_ko.pv",
     };
 
     // Porcupine Hook (웨이크워드 감지)
