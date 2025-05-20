@@ -10,6 +10,7 @@ import TouchAppIcon from '@mui/icons-material/TouchApp';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { playAudio } from '../utils/audioManager';
 import { fetchMenuItems } from '../data/menuData'; // 메뉴 데이터 로드 함수 import
+
 // // 배경 애니메이션 파티클 데이터
 // const PARTICLES = 35;
 // const generateParticles = () => {
@@ -27,6 +28,24 @@ const FrontPage = () => {
     const [activeTouch, setActiveTouch] = useState(null);
     //const particles = generateParticles();
 
+    // 메뉴 데이터 로드 및 로컬 스토리지 저장 함수
+    // FrontPage.js에서 사용
+    const loadAndSaveMenuData = async (source = "자동") => {
+        console.log(`${source}: 메뉴 데이터 로드 시도`);
+        try {
+            await fetchMenuItems(); // fetchMenuItems 내부에서 로컬 스토리지 저장 처리
+            console.log(`${source}: 메뉴 데이터 로드 완료`);
+        } catch (error) {
+            console.error(`${source}: 메뉴 데이터 로드 중 오류 발생:`, error);
+        }
+    };
+
+    // 로고 클릭 이벤트 핸들러
+    const handleLogoClick = () => {
+        console.log('로고 클릭됨: 메뉴 데이터 업데이트 시작');
+        loadAndSaveMenuData("로고 클릭");
+    };
+
     // 첫 화면에서 로컬스토리지 초기화 로직 추가
     useEffect(() => {
         // 결제 관련 데이터 초기화
@@ -34,62 +53,12 @@ const FrontPage = () => {
         localStorage.removeItem('totalPrice');
         localStorage.removeItem('tossId');
 
-                // 메뉴 데이터 로드
-        fetchMenuItems()
-            .then(() => console.log('메뉴 데이터 로드 완료'))
-            .catch(error => console.error('메뉴 데이터 로드 오류:', error));
-
+        // 페이지 로드 시 백엔드에서 메뉴 데이터 가져오기
+        loadAndSaveMenuData("페이지 로드");
 
         // 페이지 입장 시 환영 음성 재생
         playAudio('welcome');
     }, []);
-
-    // // 이미지 사전 로드 (메뉴 페이지 이미지)
-    // useEffect(() => {
-    //     const preloadImages = [
-    //         '/static/media/coffee1.jpg',
-    //         '/static/media/coffee2.jpg',
-    //         '/static/media/dessert1.jpg',
-    //         '/static/media/beverage1.jpg',
-    //     ];
-
-    //     preloadImages.forEach(src => {
-    //         const img = new Image();
-    //         img.src = src;
-    //     });
-    // }, []);
-
-    // 파티클 애니메이션
-    // const particleSprings = useSprings(
-    //     PARTICLES,
-    //     particles.map(particle => ({
-    //         from: {
-    //             x: particle.x,
-    //             y: particle.y,
-    //             opacity: 0,
-    //             scale: 0.3,
-    //         },
-    //         to: async (next) => {
-    //             // 초기 페이드인
-    //             await next({
-    //                 opacity: particle.opacity,
-    //                 scale: 1,
-    //                 config: { tension: 80, friction: 10 }
-    //             });
-
-    //             // 계속 움직이는 애니메이션 - 성능 최적화
-    //             while (true) {
-    //                 await next({
-    //                     x: particle.x + (Math.random() * 15 - 7.5),
-    //                     y: particle.y + (Math.random() * 15 - 7.5),
-    //                     opacity: 0.1 + Math.random() * 0.4,
-    //                     scale: 0.8 + Math.random() * 0.4,
-    //                     config: { duration: 6000 + Math.random() * 4000 }
-    //                 });
-    //             }
-    //         },
-    //     }))
-    // );
 
     // 페이지 전환 애니메이션 (좌우 방향으로 변경)
     const pageTransition = useSpring({
@@ -248,6 +217,8 @@ const FrontPage = () => {
                             src={logoImage}
                             alt="Barion 로고"
                             className={styles.logo}
+                            onClick={handleLogoClick} // 로고 클릭 시 데이터 로드
+                            style={{ cursor: 'pointer' }} // 클릭 가능함을 시각적으로 표시
                         />
                     </animated.div>
                     <animated.div style={titleSpring} className={styles.titleContainer}>
@@ -301,7 +272,7 @@ const FrontPage = () => {
                             style={buttonHoverSpring}
                             onTouchStart={() => handleTouchStart('order_button')}
                             onTouchEnd={() => handleTouchEnd('order_button')}
-                            onClick={handleStartOrder}
+                            onClick={handleStartOrder} // 메뉴 페이지로 이동
                         >
                             <span className={styles.buttonText}>주문하러 가기</span>
                             {/*<animated.div className={styles.arrowIcon} style={arrowSpring}>

@@ -18,7 +18,7 @@ const PaymentSuccessPage = () => {
         tossId: '',
         orderItems: []
     });
- const [orderSubmitted, setOrderSubmitted] = useState(false);
+    const [orderSubmitted, setOrderSubmitted] = useState(false);
 
     // 로컬 스토리지에서 데이터 로드
     useEffect(() => {
@@ -32,11 +32,11 @@ const PaymentSuccessPage = () => {
         }
     }, []);
 
-     // 로딩 화면 처리 및 백엔드로 주문 정보 전송
+    // 로딩 화면 처리 및 백엔드로 주문 정보 전송
     useEffect(() => {
         const loadingTimer = setTimeout(() => {
             setLoading(false);
-            
+
             // 백엔드로 주문 정보 전송
             if (!orderSubmitted && orderData.orderItems.length > 0) {
                 submitOrder();
@@ -44,6 +44,7 @@ const PaymentSuccessPage = () => {
         }, 3000);
 
         return () => clearTimeout(loadingTimer);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [orderData]);
 
     // 주문 정보 백엔드로 전송하는 함수
@@ -65,7 +66,7 @@ const PaymentSuccessPage = () => {
 
         try {
             console.log('주문 데이터 전송:', orderPayload);
-            
+
             // 백엔드로 주문 데이터 전송
             const response = await fetch(`${API_BASE_URL}/api/orders`, {
                 method: 'POST',
