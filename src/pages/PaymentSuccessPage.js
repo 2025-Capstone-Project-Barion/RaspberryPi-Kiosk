@@ -6,6 +6,9 @@ import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import { motion } from 'framer-motion';
 import { playAudio } from '../utils/audioManager';
 
+// API 기본 URL
+const API_BASE_URL = "http://13.209.99.95:8080";
+
 const PaymentSuccessPage = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
@@ -15,6 +18,7 @@ const PaymentSuccessPage = () => {
         tossId: '',
         orderItems: []
     });
+ const [orderSubmitted, setOrderSubmitted] = useState(false);
 
     // 로컬 스토리지에서 데이터 로드
     useEffect(() => {
@@ -28,70 +32,61 @@ const PaymentSuccessPage = () => {
         }
     }, []);
 
-    // 로딩 화면 처리
+     // 로딩 화면 처리 및 백엔드로 주문 정보 전송
     useEffect(() => {
         const loadingTimer = setTimeout(() => {
             setLoading(false);
+            
+            // 백엔드로 주문 정보 전송
+            if (!orderSubmitted && orderData.orderItems.length > 0) {
+                submitOrder();
+            }
+        }, 3000);
 
-            // 주문 정보 콘솔에 출력 (백엔드로 전송할 데이터)
-            console.log('백엔드로 전송할 주문 데이터:', {
-                storeId: 0,
-                orderDate: new Date().toISOString(),
-                totalAmount: orderData.totalPrice,
-                items: orderData.orderItems.map(item => ({
-                    menuId: item.menuId,
-                    menuName: item.menuName,
-                    quantity: item.quantity,
-                    unitPrice: item.price,
-                    totalPrice: item.price * item.quantity
-                }))
-            });
+        return () => clearTimeout(loadingTimer);
+    }, [orderData]);
 
-            // 백엔드로 주문 정보 전송하는 코드 (주석처리)
+    // 주문 정보 백엔드로 전송하는 함수
+    const submitOrder = async () => {
+        // 전송할 데이터 구성
+        const orderPayload = {
+            storeId: 0,
+            orderDate: new Date().toISOString(),
+            orderStatus: "COMPLETED", // 주문 상태 추가
+            totalAmount: orderData.totalPrice,
+            items: orderData.orderItems.map(item => ({
+                menuId: item.menuId,
+                menuName: item.menuName,
+                quantity: item.quantity,
+                unitPrice: item.price,
+                totalPrice: item.price * item.quantity
+            }))
+        };
 
-            // 백엔드 서버 API 엔드포인트 설정
-            const API_ENDPOINT = 'https://webhook.site/8f669a53-182a-4a2f-907e-a014099aa6f5'; // 실제 스프링부트 서버 주소로 변경
-
-            // 전송할 데이터 구성 부분 수정
-            const orderPayload = {
-                storeId: 0,
-                orderDate: new Date().toISOString(),
-                totalAmount: orderData.totalPrice,
-                items: orderData.orderItems.map(item => ({
-                    menuId: item.menuId,
-                    menuName: item.menuName,
-                    quantity: item.quantity,
-                    unitPrice: item.price,
-                    totalPrice: item.price * item.quantity
-                }))
-            };
-
-            // fetch API를 사용하여 백엔드로 데이터 전송
-            fetch(API_ENDPOINT, {
+        try {
+            console.log('주문 데이터 전송:', orderPayload);
+            
+            // 백엔드로 주문 데이터 전송
+            const response = await fetch(`${API_BASE_URL}/api/orders`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(orderPayload)
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    // JSON 파싱 없이, 상태 코드만 확인
-                    console.log('주문 정보 전송 성공, status:', response.status);
-                    // 만약 응답 텍스트를 보고 싶다면:
-                    // return response.text();
-                })
-                // .then(text => console.log('응답 본문:', text))
-                .catch(error => {
-                    console.error('주문 정보 전송 실패:', error);
-                });
+            });
 
-        }, 3000);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
 
-        return () => clearTimeout(loadingTimer);
-    }, [orderData]);
+            const responseData = await response.json();
+            console.log('주문 전송 성공:', responseData);
+            setOrderSubmitted(true);
+        } catch (error) {
+            console.error('주문 정보 전송 실패:', error);
+            // 실패해도 사용자 경험 유지를 위해 화면은 계속 진행
+        }
+    };
 
     // 카운트다운 처리
     useEffect(() => {

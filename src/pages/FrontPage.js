@@ -9,6 +9,7 @@ import MicIcon from '@mui/icons-material/Mic';
 import TouchAppIcon from '@mui/icons-material/TouchApp';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { playAudio } from '../utils/audioManager';
+import { fetchMenuItems } from '../data/menuData'; // 메뉴 데이터 로드 함수 import
 // // 배경 애니메이션 파티클 데이터
 // const PARTICLES = 35;
 // const generateParticles = () => {
@@ -32,6 +33,12 @@ const FrontPage = () => {
         localStorage.removeItem('orderItems');
         localStorage.removeItem('totalPrice');
         localStorage.removeItem('tossId');
+
+                // 메뉴 데이터 로드
+        fetchMenuItems()
+            .then(() => console.log('메뉴 데이터 로드 완료'))
+            .catch(error => console.error('메뉴 데이터 로드 오류:', error));
+
 
         // 페이지 입장 시 환영 음성 재생
         playAudio('welcome');
