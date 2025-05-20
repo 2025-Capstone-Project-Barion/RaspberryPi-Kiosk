@@ -1,3 +1,71 @@
+
+// API 기본 URL
+const API_BASE_URL = "http://13.209.99.95:8080";
+
+// 카테고리 데이터
+export const categories = [
+    {
+        categoryId: 0,
+        categoryName: 'Coffee'
+    },
+    {
+        categoryId: 1,
+        categoryName: 'Non Coffee'
+    },
+    {
+        categoryId: 2,
+        categoryName: 'Dessert'
+    },
+    {
+        categoryId: 3,
+        categoryName: 'Bakery'
+    }
+];
+
+// 초기 상태 - 나중에 API 데이터로 교체됨
+export let menuItems = {
+    content: []
+};
+
+// 백엔드 API에서 메뉴 데이터를 가져오는 함수
+export const fetchMenuItems = async () => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/menus`);
+
+        if (!response.ok) {
+            throw new Error(`API 요청 실패: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // API 응답 구조가 원래 구조와 호환되도록 필요한 필드 매핑
+        data.content = data.content.map(item => ({
+            ...item,
+            description: item.menuPresent // menuPresent를 description으로 매핑
+        }));
+
+        // 전역 메뉴 데이터 업데이트
+        menuItems = data;
+
+        console.log("메뉴 데이터 로드 완료:", menuItems.content.length);
+        return data;
+    } catch (error) {
+        console.error("메뉴 데이터 로드 실패:", error);
+        // 로드 실패 시 빈 배열 반환하거나 예외 처리
+        return { content: [] };
+    }
+};
+
+// 카테고리별 메뉴 아이템 가져오기
+export const getMenuItems = (categoryId) => {
+    return menuItems.content.filter(item => item.category === categoryId);
+};
+
+// 전체 카테고리 가져오기
+export const getAllCategories = () => {
+    return categories;
+};
+
 // // 이미지 import (WebP 형식)
 // import 아메리카노Img from '../assets/Image/MenuImages/coffee/아메리카노.jpg';
 // import 에스프레소Img from '../assets/Image/MenuImages/coffee/에스프레소.jpg';
@@ -674,70 +742,3 @@
 // export const getAllCategories = () => {
 //     return categories;
 // };
-
-// API 기본 URL
-const API_BASE_URL = "http://13.209.99.95:8080";
-
-// 카테고리 데이터
-export const categories = [
-    {
-        categoryId: 0,
-        categoryName: 'Coffee'
-    },
-    {
-        categoryId: 1,
-        categoryName: 'Non Coffee'
-    },
-    {
-        categoryId: 2,
-        categoryName: 'Dessert'
-    },
-    {
-        categoryId: 3,
-        categoryName: 'Bakery'
-    }
-];
-
-// 초기 상태 - 나중에 API 데이터로 교체됨
-export let menuItems = {
-    content: []
-};
-
-// 백엔드 API에서 메뉴 데이터를 가져오는 함수
-export const fetchMenuItems = async () => {
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/menus`);
-        
-        if (!response.ok) {
-            throw new Error(`API 요청 실패: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        
-        // API 응답 구조가 원래 구조와 호환되도록 필요한 필드 매핑
-        data.content = data.content.map(item => ({
-            ...item,
-            description: item.menuPresent // menuPresent를 description으로 매핑
-        }));
-        
-        // 전역 메뉴 데이터 업데이트
-        menuItems = data;
-        
-        console.log("메뉴 데이터 로드 완료:", menuItems.content.length);
-        return data;
-    } catch (error) {
-        console.error("메뉴 데이터 로드 실패:", error);
-        // 로드 실패 시 빈 배열 반환하거나 예외 처리
-        return { content: [] };
-    }
-};
-
-// 카테고리별 메뉴 아이템 가져오기
-export const getMenuItems = (categoryId) => {
-    return menuItems.content.filter(item => item.category === categoryId);
-};
-
-// 전체 카테고리 가져오기
-export const getAllCategories = () => {
-    return categories;
-};
