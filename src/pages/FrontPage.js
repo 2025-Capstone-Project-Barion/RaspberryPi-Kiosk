@@ -44,6 +44,7 @@ const FrontPage = () => {
     const handleLogoClick = () => {
         console.log('로고 클릭됨: 메뉴 데이터 업데이트 시작');
         loadAndSaveMenuData("로고 클릭");
+
     };
 
     // 첫 화면에서 로컬스토리지 초기화 로직 추가
@@ -212,13 +213,11 @@ const FrontPage = () => {
             <div className={styles.content}>
                 {/* 좌측 브랜드 섹션 */}
                 <div className={styles.brandSection}>
-                    <animated.div style={logoSpring} className={styles.logoContainer}>
+                    <animated.div style={logoSpring} className={styles.logoContainer} onClick={handleLogoClick} >
                         <img
                             src={logoImage}
                             alt="Barion 로고"
                             className={styles.logo}
-                            onClick={handleLogoClick} // 로고 클릭 시 데이터 로드
-                            style={{ cursor: 'pointer' }} // 클릭 가능함을 시각적으로 표시
                         />
                     </animated.div>
                     <animated.div style={titleSpring} className={styles.titleContainer}>

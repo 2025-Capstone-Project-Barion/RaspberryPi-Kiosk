@@ -54,12 +54,51 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
   margin-bottom: 2.5rem;
   position: relative;
   z-index: 2;
+  cursor: pointer;
 }
 
 .logo {
   width: 260px;
   height: auto;
   filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+/* 로고 클릭 시 이스터에그 애니메이션 효과 */
+.logoContainer:active .logo {
+  animation: logo-secret 1.2s ease;
+  filter: drop-shadow(0 15px 35px rgba(65, 71, 219, 0.6)) hue-rotate(20deg) brightness(1.1);
+}
+
+/* 시크릿 로고 애니메이션 */
+@keyframes logo-secret {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  10% {
+    transform: rotate(-5deg) scale(0.95);
+    filter: hue-rotate(20deg) brightness(1.1) drop-shadow(0 10px 30px rgba(97, 35, 255, 0.6));
+  }
+  30% {
+    transform: rotate(5deg) scale(1.1);
+    filter: hue-rotate(40deg) brightness(1.3) drop-shadow(0 15px 30px rgba(111, 22, 240, 0.7));
+  }
+  50% {
+    transform: rotate(-3deg) scale(1.05);
+    filter: hue-rotate(60deg) brightness(1.2) drop-shadow(0 12px 30px rgba(133, 19, 228, 0.6));
+  }
+  70% {
+    transform: rotate(2deg) scale(1.02);
+    filter: hue-rotate(40deg) brightness(1.15) drop-shadow(0 10px 30px rgba(97, 35, 255, 0.5));
+  }
+  90% {
+    transform: rotate(-1deg) scale(1);
+    filter: hue-rotate(20deg) brightness(1.05) drop-shadow(0 10px 30px rgba(65, 71, 219, 0.4));
+  }
+  100% {
+    transform: rotate(0) scale(1);
+  }
 }
 
 .titleContainer {
