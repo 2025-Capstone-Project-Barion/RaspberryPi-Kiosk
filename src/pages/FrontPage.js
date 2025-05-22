@@ -10,7 +10,7 @@ import TouchAppIcon from '@mui/icons-material/TouchApp';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { playAudio } from '../utils/audioManager';
 import { fetchMenuItems } from '../data/menuData'; // 메뉴 데이터 로드 함수 import
-
+import { useMqtt, TOPICS } from '../context/MqttContext';
 // // 배경 애니메이션 파티클 데이터
 // const PARTICLES = 35;
 // const generateParticles = () => {
@@ -27,7 +27,7 @@ const FrontPage = () => {
     const [isLeaving, setIsLeaving] = useState(false);
     const [activeTouch, setActiveTouch] = useState(null);
     //const particles = generateParticles();
-
+    const { publish } = useMqtt(); // MQTT 훅 추가
     // 메뉴 데이터 로드 및 로컬 스토리지 저장 함수
     // FrontPage.js에서 사용
     const loadAndSaveMenuData = async (source = "자동") => {
@@ -76,6 +76,9 @@ const FrontPage = () => {
         },
         onRest: () => {
             if (isLeaving) {
+                // MQTT로 루빅파이에 사용자가 메뉴로 이동했으므로 감지 종료 알림
+                publish(TOPICS.CLOSE_DETECTION, "close");
+                console.log('MQTT: 메뉴 페이지로 이동 신호 전송');
                 navigate('/MenuPage');
             }
         },
@@ -190,6 +193,27 @@ const FrontPage = () => {
             window.removeEventListener('voice-navigate-menu', handleNavigateToMenu);
         };
     }, [handleStartOrder]);
+
+    // MQTT 메시지 수신 처리
+    useEffect(() => {
+        // 휠체어 감지 메시지 수신 시 자동으로 메뉴로 이동
+        const handleMqttMessage = (event) => {
+            const { topic, message } = event.detail;
+
+            if (topic === TOPICS.DETECTED && message === "wheelchair") {
+                console.log("휠체어 사용자 감지: 음성 안내 재생");
+
+                // 휠체어 감지 음성 재생
+                playAudio('wheelchairDetected');
+            }
+        };
+
+        window.addEventListener('mqtt-message', handleMqttMessage);
+
+        return () => {
+            window.removeEventListener('mqtt-message', handleMqttMessage);
+        };
+    }, []);
 
     return (
         <animated.div style={pageTransition} className={styles.container}>

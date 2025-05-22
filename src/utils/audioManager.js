@@ -72,7 +72,13 @@ const audioMap = {
     menuNotFound: new Howl({
         src: ['/audio/voices/menuNotFound.mp3'],
         volume: 0.8
-    })
+    }),
+
+    // 휠체어 감지 시 안내 음성 추가
+    wheelchairDetected: new Howl({
+        src: ['/audio/voices/wheelchair-detected.mp3'],
+        volume: 0.8
+    }),
 };
 
 // 오디오 재생 함수<간단한 버전>

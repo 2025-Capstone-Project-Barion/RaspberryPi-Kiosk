@@ -5,7 +5,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import { motion } from 'framer-motion';
 import { playAudio } from '../utils/audioManager';
-
+import { useMqtt, TOPICS } from '../context/MqttContext'; // MQTT Context 추가
 // API 기본 URL
 const API_BASE_URL = "http://13.209.99.95:8080";
 
@@ -19,6 +19,7 @@ const PaymentSuccessPage = () => {
         orderItems: []
     });
     const [orderSubmitted, setOrderSubmitted] = useState(false);
+    const { publish } = useMqtt(); // MQTT 훅 추가
 
     // 로컬 스토리지에서 데이터 로드
     useEffect(() => {
@@ -46,6 +47,15 @@ const PaymentSuccessPage = () => {
         return () => clearTimeout(loadingTimer);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [orderData]);
+
+    // 로딩 완료 후 결제 성공 메시지 전송
+    useEffect(() => {
+        if (!loading && !orderSubmitted) {
+            // 결제 성공 신호를 루빅파이로 전송 (리니어 액추에이터 올리기 위함)
+            publish(TOPICS.PAYMENT_FINISH, "complete");
+            console.log('MQTT: 결제 완료 신호 전송');
+        }
+    }, [loading, orderSubmitted, publish]);
 
     // 주문 정보 백엔드로 전송하는 함수
     const submitOrder = async () => {

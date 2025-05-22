@@ -10,6 +10,7 @@ import { useVoiceCommand } from './VoiceCommandContext';
 import './VoiceCommandStyles.css';
 // 오디오 관리자 임포트 추가
 import { playAudio } from '../../utils/audioManager';
+import { useMqtt, TOPICS } from '../../context/MqttContext'; // MQTT Context 추가
 
 /**
  * 음성 명령 UI를 Portal로 표시하는 컴포넌트
@@ -34,7 +35,7 @@ const VoiceCommandPortal = ({ children }) => {
 const VoiceCommandSystem = () => {
     const navigate = useNavigate();
     const location = useLocation();
-
+    const { publish } = useMqtt(); // MQTT 훅 추가
     // 음성 명령 Context
     const {
         handleVoiceCommand,
@@ -181,7 +182,7 @@ const VoiceCommandSystem = () => {
         };
     }, []);
 
-    // 3. 웨이크워드 감지 처리 - 효과음 추가
+    // 3. 웨이크워드 감지 처리에 MQTT 메시지 발행 추가
     useEffect(() => {
         if (keywordDetection !== null) {
             console.log(`웨이크워드 '${keywordDetection.label}' 감지됨!`);
@@ -193,6 +194,14 @@ const VoiceCommandSystem = () => {
             // 웨이크워드 감지 효과음 재생
             playAudio('wakeSound');
 
+            // FrontPage에서만 MQTT 메시지 발행
+            const pathname = location.pathname;
+            if (pathname === '/' || pathname === '/index.html') {
+                // MQTT로 루빅파이에 감지 시작 신호 보내기
+                publish(TOPICS.START, "activate");
+                console.log('MQTT: 루빅파이에 감지 시작 신호 전송');
+            }
+
             // 음성 명령 인식 모드로 전환
             startCommandMode();
 
@@ -203,7 +212,7 @@ const VoiceCommandSystem = () => {
                 }
             }, 10000); // 10초 타임아웃
         }
-    }, [keywordDetection]);
+    }, [keywordDetection, publish]); // 의존성 배열에 publish 추가
 
     // 4. 음성 명령 결과 처리 - 인식 실패 시 안내음 추가
     useEffect(() => {
