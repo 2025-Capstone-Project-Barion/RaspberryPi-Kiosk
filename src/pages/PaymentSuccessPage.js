@@ -48,15 +48,6 @@ const PaymentSuccessPage = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [orderData]);
 
-    // 로딩 완료 후 결제 성공 메시지 전송
-    useEffect(() => {
-        if (!loading && !orderSubmitted) {
-            // 결제 성공 신호를 루빅파이로 전송 (다시 리니어 액추에이터을 원위치로 올리기 위함)
-            publish(TOPICS.PAYMENT_DONE, "complete");
-            console.log('MQTT: 결제 완료 신호 전송');
-        }
-    }, [loading, orderSubmitted, publish]);
-
     // 주문 정보 백엔드로 전송하는 함수
     const submitOrder = async () => {
         // 전송할 데이터 구성
@@ -124,6 +115,10 @@ const PaymentSuccessPage = () => {
 
         // 1.2초 지연 후 네비게이트. 프로그래스바 0초 남기고 정확히 이동하기 위함.
         const timeout = setTimeout(() => {
+            // 결제 성공 신호를 루빅파이로 전송 (리니어 액추에이터 복귀)
+            publish(TOPICS.PAYMENT_DONE, "complete");
+            console.log('MQTT: 10초 카운트다운 후 결제 완료 신호 전송');
+
             localStorage.removeItem('orderItems');
             localStorage.removeItem('totalPrice');
             localStorage.removeItem('tossId');
@@ -131,7 +126,7 @@ const PaymentSuccessPage = () => {
         }, 1200);
 
         return () => clearTimeout(timeout);
-    }, [countdown, navigate]);
+    }, [countdown, navigate, publish]);
 
     // 로딩 화면
     if (loading) {
