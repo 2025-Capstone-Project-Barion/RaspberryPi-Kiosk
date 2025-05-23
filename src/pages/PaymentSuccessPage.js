@@ -51,8 +51,8 @@ const PaymentSuccessPage = () => {
     // 로딩 완료 후 결제 성공 메시지 전송
     useEffect(() => {
         if (!loading && !orderSubmitted) {
-            // 결제 성공 신호를 루빅파이로 전송 (리니어 액추에이터 올리기 위함)
-            publish(TOPICS.PAYMENT_FINISH, "complete");
+            // 결제 성공 신호를 루빅파이로 전송 (다시 리니어 액추에이터을 원위치로 올리기 위함)
+            publish(TOPICS.PAYMENT_DONE, "complete");
             console.log('MQTT: 결제 완료 신호 전송');
         }
     }, [loading, orderSubmitted, publish]);

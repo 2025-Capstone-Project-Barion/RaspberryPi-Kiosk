@@ -76,8 +76,8 @@ const FrontPage = () => {
         },
         onRest: () => {
             if (isLeaving) {
-                // MQTT로 루빅파이에 사용자가 메뉴로 이동했으므로 감지 종료 알림
-                publish(TOPICS.CLOSE_DETECTION, "close");
+                // 사용자가 메뉴로 이동했으므로 MQTT로 루빅파이에게 카메라&yolo구동을 종료할 것을 메시지로 지시
+                publish(TOPICS.CLOSE, "close");
                 console.log('MQTT: 메뉴 페이지로 이동 신호 전송');
                 navigate('/MenuPage');
             }
@@ -194,16 +194,17 @@ const FrontPage = () => {
         };
     }, [handleStartOrder]);
 
-    // MQTT 메시지 수신 처리
+    // MQTT 메시지 수신 처리 부분만 수정
     useEffect(() => {
-        // 휠체어 감지 메시지 수신 시 자동으로 메뉴로 이동
+        // 휠체어 감지 메시지 수신 시 음성 안내만 재생 (메뉴 자동 이동하지 않음)
         const handleMqttMessage = (event) => {
             const { topic, message } = event.detail;
 
-            if (topic === TOPICS.DETECTED && message === "wheelchair") {
-                console.log("휠체어 사용자 감지: 음성 안내 재생");
+            // 새로운 토픽명과 메시지 값으로 처리
+            if (topic === TOPICS.DETECTED && message === "true") {
+                console.log("휠체어+사람 감지: 음성 안내 재생");
 
-                // 휠체어 감지 음성 재생
+                // 휠체어 감지 음성 재생 (메뉴 이동은 하지 않음)
                 playAudio('wheelchairDetected');
             }
         };

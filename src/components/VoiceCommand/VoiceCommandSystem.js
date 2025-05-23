@@ -212,7 +212,7 @@ const VoiceCommandSystem = () => {
                 }
             }, 10000); // 10초 타임아웃
         }
-    }, [keywordDetection, publish]); // 의존성 배열에 publish 추가
+    }, [keywordDetection, publish]);
 
     // 4. 음성 명령 결과 처리 - 인식 실패 시 안내음 추가
     useEffect(() => {

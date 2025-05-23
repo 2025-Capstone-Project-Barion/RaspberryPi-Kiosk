@@ -7,10 +7,10 @@ const CLIENT_ID = `barion_kiosk_${Math.random().toString(16).substr(2, 8)}`;
 
 // MQTT 토픽 정의
 export const TOPICS = {
-    START: "barion/kiosk/start",           // 음성 인식 시작
-    DETECTED: "barion/kiosk/detected",     // 휠체어/사람 감지됨
-    CLOSE_DETECTION: "barion/kiosk/closeDetection",  // 감지 종료
-    PAYMENT_FINISH: "barion/kiosk/paymentFinish"     // 결제 완료
+    START: "kiosk-start",             // 키오스크 시작 (음성명령 시작 시)
+    DETECTED: "chair-person-detected", // 휠체어+사람 감지 시 (새 토픽명)
+    CLOSE: "kiosk-close",             // 감지 종료 (메뉴 진입 시)
+    PAYMENT_DONE: "payment-done"      // 결제 완료 -> 액추에이터 복귀
 };
 
 // MQTT Context 생성
@@ -77,8 +77,9 @@ export const MqttProvider = ({ children }) => {
                     console.log("MQTT 브로커 연결 성공");
                     setConnected(true);
 
-                    // 기본 구독 설정 - 휠체어 감지 토픽
+                    // 기본 구독 설정 - 휠체어 감지 토픽 (새 토픽명)
                     mqttClient.subscribe(TOPICS.DETECTED);
+                    console.log(`'${TOPICS.DETECTED}' 토픽 구독 완료`);
                 },
                 onFailure: (err) => {
                     console.error("MQTT 연결 실패:", err.errorMessage);
@@ -128,7 +129,26 @@ export const MqttProvider = ({ children }) => {
         }
     };
 
+
+    // React의 Context API의 표준 사용법
+    // => 이 흐름은 마치 "데이터의 우산"을 만들어 그 아래에 있는 모든 컴포넌트가 해당 데이터를 사용할 수 있게하는 것과 비슷
+    // => Context API는 React의 전역 상태 관리 방법 중 하나로, 컴포넌트 트리에서 데이터를 공유하는 데 사용.
+    // 1. createContext(null)로 컨텍스트 객체 생성
+    // 2. Provider 컴포넌트에서 {children}을 통해 모든 자식 컴포넌트가 이 데이터에 접근 가능하게 함
+    // 3. Provider 컴포넌트로 감싸서 하위 컴포넌트에서 Context 값 사용 가능
+
+    /*
+        Context 값 정의
+        - client: MQTT 클라이언트 인스턴스
+        - connected: 연결 상태
+        - error: 오류 메시지
+        - lastMessage: 마지막 수신 메시지
+        - publish: 메시지 발행 함수
+    */
     // Context 값 정의
+    // value 객체로 필요한 데이터/함수 묶음
+    // Provider의 value prop으로 전달
+    // value 객체를 통해 하위 컴포넌트에서 필요한 데이터/함수에 접근 가능
     const value = {
         client,
         connected,
@@ -136,7 +156,7 @@ export const MqttProvider = ({ children }) => {
         lastMessage,
         publish
     };
-
+    // {children}을 통해 모든 자식 컴포넌트가 이 데이터에 접근 가능하게 함
     return (
         <MqttContext.Provider value={value}>
             {children}
