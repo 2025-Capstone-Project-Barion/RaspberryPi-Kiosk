@@ -593,14 +593,14 @@ const VoiceCommandSystem = () => {
                             <span className="listening-text">Listening...</span>
                         </motion.div>
 
-                        {/* 화면 가장자리 펄스 효과 */}
+                        {/* 화면 가장자리 펄스 효과 
                         <motion.div
                             className="pulsating-border-effect"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.5 }}
-                        />
+                        />*/}
 
                         {/* 음성 인식 상태 표시 카드 */}
                         <motion.div
