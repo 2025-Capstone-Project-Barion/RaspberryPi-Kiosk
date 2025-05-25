@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSpring, useSprings, animated, easings } from '@react-spring/web';
 import styles from '../styles/Front/frontPage.module.css';
 
 // 로고 및 아이콘
@@ -28,6 +27,7 @@ const FrontPage = () => {
     const [activeTouch, setActiveTouch] = useState(null);
     //const particles = generateParticles();
     const { publish } = useMqtt(); // MQTT 훅 추가
+
     // 메뉴 데이터 로드 및 로컬 스토리지 저장 함수
     // FrontPage.js에서 사용
     const loadAndSaveMenuData = async (source = "자동") => {
@@ -44,7 +44,6 @@ const FrontPage = () => {
     const handleLogoClick = () => {
         console.log('로고 클릭됨: 메뉴 데이터 업데이트 시작');
         loadAndSaveMenuData("로고 클릭");
-
     };
 
     // 첫 화면에서 로컬스토리지 초기화 로직 추가
@@ -61,113 +60,17 @@ const FrontPage = () => {
         playAudio('welcome');
     }, []);
 
-    // 페이지 전환 애니메이션 (좌우 방향으로 변경)
-    const pageTransition = useSpring({
-        opacity: isLeaving ? 0 : 1,
-        // 좌에서 우로 슬라이드되는 효과
-        transform: isLeaving
-            ? 'translateX(3%) scale(0.98)'  // 오른쪽으로 살짝 이동하며 사라짐
-            : 'translateX(0%) scale(1)',
-        config: {
-            easing: easings.easeOutQuint,
-            tension: 120,
-            friction: 14,
-            duration: 450
-        },
-        onRest: () => {
-            if (isLeaving) {
-                // 사용자가 메뉴로 이동했으므로 MQTT로 루빅파이에게 카메라&yolo구동을 종료할 것을 메시지로 지시
-                publish(TOPICS.CLOSE, "close");
-                console.log('MQTT: 메뉴 페이지로 이동 신호 전송');
-                navigate('/MenuPage');
-            }
-        },
-    });
-
-    // 오버레이 애니메이션 개선 - 더 세련된 블러 효과로 변경
-    const overlaySpring = useSpring({
-        opacity: isLeaving ? 1 : 0,
-        backdropFilter: isLeaving ? 'blur(5px)' : 'blur(0px)',
-        backgroundColor: isLeaving ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0)',
-        config: {
-            easing: easings.easeOutQuint,
-            duration: 400
-        },
-    });
-
-
-    // 로고 섹션 애니메이션
-    const logoSpring = useSpring({
-        from: { opacity: 0, transform: 'translateY(-30px)' },
-        to: { opacity: 1, transform: 'translateY(0)' },
-        config: { tension: 120, friction: 14 },
-    });
-
-    // 제목 애니메이션
-    const titleSpring = useSpring({
-        from: { opacity: 0, transform: 'translateY(30px)' },
-        to: { opacity: 1, transform: 'translateY(0)' },
-        delay: 300,
-        config: { tension: 120, friction: 14 },
-    });
-
-    // 설명 텍스트 애니메이션
-    const descriptionSpring = useSpring({
-        from: { opacity: 0, transform: 'translateY(20px)' },
-        to: { opacity: 1, transform: 'translateY(0)' },
-        delay: 500,
-        config: { tension: 100, friction: 14 },
-    });
-
-    // 옵션 카드 애니메이션 - 부드러운 등장 개선
-    const optionSprings = useSprings(
-        2,
-        [0, 1].map(i => ({
-            from: { opacity: 0, transform: 'translateY(30px)' },
-            to: { opacity: 1, transform: 'translateY(0)' },
-            delay: 300 + i * 150,
-            config: {
-                tension: 65,  // 낮은 tension으로 더 부드럽게
-                friction: 12,  // 적당한 마찰력
-                mass: 1.2,    // 더 무거운 질량감
-                easing: easings.easeOutQuart // 자연스러운 감속 이징 적용
-            },
-        }))
-    );
-
-    // 버튼 애니메이션
-    const buttonSpring = useSpring({
-        from: { opacity: 0, scale: 0.9 },
-        to: { opacity: 1, scale: 1 },
-        delay: 600,
-        config: { tension: 120, friction: 14 },
-    });
-
-    // 버튼 터치 애니메이션
-    const buttonHoverSpring = useSpring({
-        scale: activeTouch === 'order_button' ? 0.97 : 1,
-        boxShadow: activeTouch === 'order_button'
-            ? '0 4px 20px rgba(30, 36, 162, 0.7)'
-            : '0 8px 35px rgba(62, 73, 240, 0.5)',
-        config: { tension: 300, friction: 20 },
-    });
-
-    // 화살표 애니메이션 (더 큰 움직임)
-    /*
-    const arrowSpring = useSpring({
-        from: { transform: 'translateX(0)' },
-        to: async (next) => {
-            while (true) {
-                await next({ transform: 'translateX(12px)', config: { duration: 1000, easing: easings.easeInOutQuad } });
-                await next({ transform: 'translateX(0px)', config: { duration: 1000, easing: easings.easeInOutQuad } });
-            }
-        },
-    });
-    */
-
     const handleStartOrder = useCallback(() => {
         setIsLeaving(true);
-    }, []);
+
+        // CSS 애니메이션 종료 후 메뉴 페이지로 이동 (애니메이션 시간과 일치)
+        setTimeout(() => {
+            // 사용자가 메뉴로 이동했으므로 MQTT로 루빅파이에게 카메라&yolo구동을 종료할 것을 메시지로 지시
+            publish(TOPICS.CLOSE, "close");
+            console.log('MQTT: 메뉴 페이지로 이동 신호 전송');
+            navigate('/MenuPage');
+        }, 450); // 애니메이션 시간(450ms)과 동일하게 설정
+    }, [navigate, publish]);
 
     // 터치 이벤트 핸들러
     const handleTouchStart = (id) => {
@@ -217,8 +120,8 @@ const FrontPage = () => {
     }, []);
 
     return (
-        <animated.div style={pageTransition} className={styles.container}>
-            <animated.div className={styles.overlay} style={overlaySpring} />
+        <div className={`${styles.container} ${isLeaving ? styles.leaving : ''}`}>
+            <div className={`${styles.overlay} ${isLeaving ? styles.overlayActive : ''}`} />
             {/* 배경 파티클 
             {particleSprings.map((props, i) => (
                 <animated.div
@@ -238,34 +141,34 @@ const FrontPage = () => {
             <div className={styles.content}>
                 {/* 좌측 브랜드 섹션 */}
                 <div className={styles.brandSection}>
-                    <animated.div style={logoSpring} className={styles.logoContainer} onClick={handleLogoClick} >
+                    <div className={styles.logoContainer} onClick={handleLogoClick}>
                         <img
                             src={logoImage}
                             alt="Barion 로고"
                             className={styles.logo}
                         />
-                    </animated.div>
-                    <animated.div style={titleSpring} className={styles.titleContainer}>
+                    </div>
+                    <div className={styles.titleContainer}>
                         <h1 className={styles.brandName}>Barion</h1>
                         <div className={styles.taglineContainer}>
                             <p className={styles.tagline}>스마트 배리어프리 키오스크</p>
                         </div>
-                    </animated.div>
+                    </div>
 
-                    <animated.div style={descriptionSpring} className={styles.descriptionContainer}>
+                    <div className={styles.descriptionContainer}>
                         <p className={styles.description}>
                             누구나 편리하고 스마트하게 이용할 수 있는<br />
                             <span className={styles.highlightText}>스마트 배리어프리 키오스크</span>를<br />
                             지금 경험해보세요
                         </p>
-                    </animated.div>
+                    </div>
                 </div>
 
                 {/* 우측 주문 섹션 */}
                 <div className={styles.orderSection}>
                     <div className={styles.optionsContainer}>
                         {/* 음성 주문 안내 */}
-                        <animated.div style={optionSprings[0]} className={styles.optionCard}>
+                        <div className={`${styles.optionCard} ${styles.optionCardVoice}`}>
                             <div className={styles.iconWrapper}>
                                 <MicIcon className={styles.optionIcon} />
                             </div>
@@ -274,10 +177,10 @@ const FrontPage = () => {
                                 <p><span className={styles.wakeWord}>"Hey, Barion"</span>으로</p>
                                 <p>Barion AI 비서를 호출하세요</p>
                             </div>
-                        </animated.div>
+                        </div>
 
                         {/* 터치 주문 안내 */}
-                        <animated.div style={optionSprings[1]} className={styles.optionCard}>
+                        <div className={`${styles.optionCard} ${styles.optionCardTouch}`}>
                             <div className={styles.iconWrapper}>
                                 <TouchAppIcon className={styles.optionIcon} />
                             </div>
@@ -286,14 +189,13 @@ const FrontPage = () => {
                                 <p>기존 방식이에요</p>
                                 <p>터치로 간편하게 주문하세요</p>
                             </div>
-                        </animated.div>
+                        </div>
                     </div>
 
                     {/* 주문 버튼 - 개선된 디자인 */}
-                    <animated.div style={buttonSpring} className={styles.buttonContainer}>
-                        <animated.button
-                            className={styles.orderButton}
-                            style={buttonHoverSpring}
+                    <div className={styles.buttonContainer}>
+                        <button
+                            className={`${styles.orderButton} ${activeTouch === 'order_button' ? styles.buttonActive : ''}`}
                             onTouchStart={() => handleTouchStart('order_button')}
                             onTouchEnd={() => handleTouchEnd('order_button')}
                             onClick={handleStartOrder} // 메뉴 페이지로 이동
@@ -305,11 +207,11 @@ const FrontPage = () => {
                             <div className={styles.arrowIcon}>
                                 <NavigateNextIcon className={styles.nextIcon} />
                             </div>
-                        </animated.button>
-                    </animated.div>
+                        </button>
+                    </div>
                 </div>
             </div>
-        </animated.div>
+        </div>
     );
 };
 

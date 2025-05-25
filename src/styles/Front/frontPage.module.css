@@ -25,6 +25,17 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
   overflow: hidden;
   /* 더 고급스러운 그라디언트 */
   background: linear-gradient(135deg, #2c38d1 0%, #5a63f7 100%);
+
+  /* 애니메이션 관련 속성 추가 */
+  opacity: 1;
+  transform: translateX(0%) scale(1);
+  transition: opacity 450ms cubic-bezier(0.22, 1, 0.36, 1), transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 나가는 페이지 애니메이션 */
+.container.leaving {
+  opacity: 0;
+  transform: translateX(3%) scale(0.98);
 }
 
 /* 메인 콘텐츠 레이아웃 */
@@ -55,6 +66,7 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
   position: relative;
   z-index: 2;
   cursor: pointer;
+  animation-delay: 0s;
 }
 
 .logo {
@@ -106,6 +118,7 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
   position: relative;
   z-index: 2;
   margin-bottom: 0.8rem; /* 새로 추가 */
+  animation-delay: 0.3s;
 }
 
 /* 브랜드명 강조 */
@@ -154,6 +167,24 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
   margin-top: 2rem;
   position: relative;
   z-index: 2;
+  animation-delay: 0.5s;
+}
+
+/* 옵션 카드 애니메이션 */
+.optionCardVoice,
+.optionCardTouch {
+  animation-name: fadeInFromBottom;
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.optionCardVoice {
+  animation-delay: 0.3s;
+}
+
+.optionCardTouch {
+  animation-delay: 0.45s;
 }
 
 .description {
@@ -302,6 +333,17 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
   text-align: center;
   position: relative;
   z-index: 2;
+  animation-name: fadeInScale;
+  animation-duration: 0.5s;
+  animation-delay: 0.6s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 버튼 활성화 상태 */
+.buttonActive {
+  transform: scale(0.97) !important;
+  box-shadow: 0 4px 20px rgba(30, 36, 162, 0.7) !important;
 }
 
 /* 주문 버튼 - 개선된 그라데이션과 디자인 */
@@ -470,4 +512,60 @@ props 기반 동적 스타일링이 많음 (예: 품절된 메뉴는 흐리게, 
   background: black; /* 혹은 브랜드 컬러 */
   z-index: 999;
   pointer-events: none;
+  /* 기존 스타일 유지 */
+  opacity: 0;
+  backdrop-filter: blur(0px);
+  background-color: rgba(0, 0, 0, 0);
+  transition: opacity 400ms cubic-bezier(0.22, 1, 0.36, 1), backdrop-filter 400ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.overlayActive {
+  opacity: 1;
+  backdrop-filter: blur(5px);
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+/* 각 요소별 CSS 애니메이션 - 초기에 한 번만 실행 */
+.logoContainer,
+.titleContainer,
+.descriptionContainer {
+  animation-name: fadeInFromTop;
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 애니메이션 키프레임 정의 */
+@keyframes fadeInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
