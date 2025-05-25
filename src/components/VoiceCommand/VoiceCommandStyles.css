@@ -3,7 +3,7 @@
 /* 상단 중앙 리스닝 인디케이터 - 크기 확대 */
 .voice-top-indicator {
   position: fixed;
-  top: 30px;
+  top: 90px;
   left: 0;
   right: 0;
   margin-left: auto;
