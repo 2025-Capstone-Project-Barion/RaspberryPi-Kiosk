@@ -39,23 +39,22 @@ const MenuGrid = ({ menuItems, onAddToCart, isEntering }) => {
     // 스크롤 타이머 ref 추가 (스크롤 이벤트 성능 최적화용)
     const scrollTimer = useRef(null);
 
-    // 선택된 카테고리에 따라 메뉴 아이템 애니메이션
+    // 선택된 카테고리에 따라 메뉴 아이템 애니메이션 (가볍게 최적화)
     const menuTrail = useTrail(menuItems.length, {
         from: {
             opacity: 0,
-            transform: 'translateY(5px)'  // 이동 거리 더 줄임
+            transform: 'translateY(15px)'  // 이동 거리 더 줄임
         },
         to: {
             opacity: 1,
             transform: 'translateY(0)'
         },
         config: {
-            tension: 500,  // 매우 빠른 시작
-            friction: 25,  // 최적화
-            mass: 0.4,     // 매우 가볍게
+            tension: 800,  // 더 빠른 시작
+            friction: 30,  // 최적화
+            mass: 0.6,     // 매우 가볍게
         },
-        delay: 30,   // 딜레이 최소화
-        trail: 5,    // 더 빠르게 연속 등장
+        trail: 3,    // 더 빠르게 연속 등장
     });
 
     // 카드 터치 시작 시 활성화 상태 설정
@@ -112,7 +111,7 @@ const MenuGrid = ({ menuItems, onAddToCart, isEntering }) => {
         return cardHeight + rowGap;
     }, []);
 
-    // 스크롤 위로 버튼 클릭 핸들러 - 정확한 행 단위 이동 보장
+    // 스크롤 위로 버튼 클릭 핸들러 - 성능 최적화
     const handleScrollUp = () => {
         if (!menuGridRef.current) return;
 
@@ -122,19 +121,17 @@ const MenuGrid = ({ menuItems, onAddToCart, isEntering }) => {
         // 현재 스크롤 위치
         const currentScroll = container.scrollTop;
 
-        // 항상 정확히 2행 위로 이동 (음수 방지)
-        const targetScroll = Math.max(0, currentScroll - (rowHeight * 2));
+        // 기존 기능 유지: 2행 위로 이동 (음수 방지)
+        const targetScroll = Math.max(0, currentScroll - rowHeight * 2);
 
-        container.scrollTo({
-            top: targetScroll,
-            behavior: 'smooth'
-        });
+        // 부드러운 스크롤 대신 즉시 이동으로 변경 - 성능 최적화
+        container.scrollTop = targetScroll;
 
-        // 스크롤 후 버튼 상태 업데이트 (애니메이션 완료 후)
-        setTimeout(updateScrollButtonStates, 300);
+        // 스크롤 후 버튼 상태 즉시 업데이트
+        updateScrollButtonStates();
     };
 
-    // 스크롤 아래로 버튼 클릭 핸들러
+    // 스크롤 아래로 버튼 클릭 핸들러 - 성능 최적화
     const handleScrollDown = () => {
         if (!menuGridRef.current) return;
 
@@ -149,22 +146,20 @@ const MenuGrid = ({ menuItems, onAddToCart, isEntering }) => {
         // 컨테이너 높이
         const containerHeight = container.clientHeight;
 
-        // 항상 정확히 2행 아래로 이동 (최대치 초과 방지)
+        // 기존 기능 유지: 2행 아래로 이동 (최대치 초과 방지)
         const targetScroll = Math.min(
             scrollHeight - containerHeight,
-            currentScroll + (rowHeight * 2)
+            currentScroll + rowHeight * 2
         );
 
-        container.scrollTo({
-            top: targetScroll,
-            behavior: 'smooth'
-        });
+        // 부드러운 스크롤 대신 즉시 이동으로 변경 - 성능 최적화
+        container.scrollTop = targetScroll;
 
-        // 스크롤 후 버튼 상태 업데이트 (애니메이션 완료 후)
-        setTimeout(updateScrollButtonStates, 300);
+        // 스크롤 후 버튼 상태 즉시 업데이트
+        updateScrollButtonStates();
     };
 
-    // 스크롤 버튼 상태 업데이트 함수 개선 - useCallback으로 메모이제이션
+    // 스크롤 버튼 상태 업데이트 함수 - 불필요한 계산 제거
     const updateScrollButtonStates = useCallback(() => {
         if (!menuGridRef.current) return;
 
@@ -172,138 +167,109 @@ const MenuGrid = ({ menuItems, onAddToCart, isEntering }) => {
         const scrollTop = container.scrollTop;
         const clientHeight = container.clientHeight;
         const scrollHeight = container.scrollHeight;
-        const rowHeight = calculateRowHeight();
 
-        // 현재 행 위치 (소수점 자리까지 정확히 계산)
-        const currentRowExact = scrollTop / rowHeight;
+        // 더 위로 스크롤 가능한지 여부 - 단순 체크
+        setCanScrollUp(scrollTop > 2);
 
-        // 더 위로 스크롤 가능한지 여부 - 정밀 계산
-        // 현재 스크롤 위치가 아주 약간이라도 0보다 크면 위로 스크롤 가능
-        setCanScrollUp(scrollTop > 2); // 매우 작은 오차 허용 (2px)
+        // 더 아래로 스크롤 가능한지 여부 - 단순 체크
+        const isAtBottom = Math.abs(scrollHeight - scrollTop - clientHeight) < 2;
+        setCanScrollDown(!isAtBottom);
+    }, []);
 
-        // 더 아래로 스크롤 가능한지 여부 개선 - 정확한 바닥 감지
-        // 스크롤 바닥 감지를 위한 정확한 계산
-        const isAtBottom = Math.abs(scrollHeight - scrollTop - clientHeight) < 2; // 작은 오차 허용
-
-        // 첫 번째 검사: 일반적인 행 기반 계산
-        const visibleRows = Math.floor(clientHeight / rowHeight);
-        const totalRows = Math.ceil(scrollHeight / rowHeight);
-        let canScrollMore = currentRowExact + visibleRows < totalRows - 0.1; // 오차 허용
-
-        // 두 번째 검사: 실제로 스크롤 바닥에 도달했는지 확인
-        if (isAtBottom) canScrollMore = false;
-
-        setCanScrollDown(canScrollMore);
-    }, [calculateRowHeight]); // calculateRowHeight를 의존성 배열에 추가
-
-    // 1. 카테고리 변경 시에만 스크롤을 맨 위로 이동하는 useEffect
+    // 카테고리 변경 시 스크롤 맨 위로 이동
     useEffect(() => {
         if (menuGridRef.current) {
             menuGridRef.current.scrollTop = 0;
         }
 
-        // 약간의 지연 후 스크롤 버튼 상태 업데이트
-        setTimeout(updateScrollButtonStates, 100);
+        // 스크롤 버튼 상태 업데이트
+        updateScrollButtonStates();
+    }, [menuItems.length, updateScrollButtonStates]);
 
-        // 이미지 로드 완료 후 다시 체크
-        setTimeout(updateScrollButtonStates, 500);
-    }, [menuItems.length, updateScrollButtonStates]); // menuItems.length만 의존성으로 추가 - 카테고리 변경 시에만 실행
-
-    // 2. 스크롤 이벤트 리스너 설정을 위한 useEffect
+    // 스크롤 이벤트 리스너 최적화
     useEffect(() => {
-        // 현재 ref 값을 변수에 저장
         const currentMenuGrid = menuGridRef.current;
 
-        // 스크롤 이벤트 핸들러 - 성능 개선
+        // 스크롤 이벤트 핸들러 - 더 강력한 쓰로틀링
         const handleScroll = () => {
-            // 쓰로틀링으로 성능 최적화
             if (!scrollTimer.current) {
                 scrollTimer.current = setTimeout(() => {
                     updateScrollButtonStates();
                     scrollTimer.current = null;
-                }, 50);
+                }, 100); // 더 긴 간격으로 쓰로틀링 적용
             }
         };
 
         if (currentMenuGrid) {
             currentMenuGrid.addEventListener('scroll', handleScroll, { passive: true });
-            currentMenuGrid.addEventListener('touchmove', handleScroll, { passive: true });
         }
 
         return () => {
             if (currentMenuGrid) {
                 currentMenuGrid.removeEventListener('scroll', handleScroll);
-                currentMenuGrid.removeEventListener('touchmove', handleScroll);
             }
-            // 타이머 정리
             if (scrollTimer.current) {
                 clearTimeout(scrollTimer.current);
-                scrollTimer.current = null;
             }
         };
-    }, [updateScrollButtonStates]); // updateScrollButtonStates만 의존성으로 추가
+    }, [updateScrollButtonStates]);
 
-    // Hammer.js를 이용한 터치 스크롤 구현
+    // Hammer.js 터치 이벤트 핸들러 최적화
     useEffect(() => {
-        // 기존 Hammer 인스턴스 정리
         if (menuHammerRef.current) {
             menuHammerRef.current.destroy();
         }
 
-        // 메뉴 그리드에 Hammer.js 적용
         if (menuGridRef.current) {
             menuHammerRef.current = new Hammer(menuGridRef.current);
 
-            // 세로 방향 패닝(swipe) 이벤트만 감지하도록 설정
             menuHammerRef.current.get('pan').set({
                 direction: Hammer.DIRECTION_VERTICAL,
-                threshold: 5 // 감도 조정 (낮을수록 민감)
+                threshold: 10 // 감도 낮춤 (높을수록 덜 민감)
             });
 
-            // 패닝 이벤트 핸들러 등록
+            // 터치 이벤트 최적화 - 성능 개선
             menuHammerRef.current.on('panup pandown', (ev) => {
                 if (!menuGridRef.current) return;
 
-                // 스크롤 속도 계수 - 라즈베리파이 환경에 맞게 조정
-                const scrollSpeed = 3.0;
+                // 스크롤 속도 계수 - 성능 최적화
+                const scrollSpeed = 2.0;
 
                 // 이동 거리에 따라 스크롤 조정 (deltaY가 양수면 아래로, 음수면 위로)
                 menuGridRef.current.scrollTop += ev.deltaY * scrollSpeed * -1;
 
-                // 수동 스크롤 위치 변경 후 버튼 상태 업데이트
+                // 터치 이벤트 중에는 버튼 상태 업데이트 빈도 줄이기
                 if (!scrollTimer.current) {
                     scrollTimer.current = setTimeout(() => {
                         updateScrollButtonStates();
                         scrollTimer.current = null;
-                    }, 50);
+                    }, 150); // 더 긴 간격
                 }
             });
         }
 
-        // 클린업 함수
         return () => {
             if (menuHammerRef.current) {
                 menuHammerRef.current.destroy();
                 menuHammerRef.current = null;
             }
         };
-    }, [updateScrollButtonStates]); // updateScrollButtonStates 의존성 추가
+    }, [updateScrollButtonStates]);
 
-    // 컴포넌트 마운트 시 초기 스크롤 상태 설정
+    // 컴포넌트 마운트 시 초기 스크롤 상태 설정 - 리사이즈 이벤트 최적화
     useEffect(() => {
-        // 컴포넌트 마운트 시 초기화
         updateScrollButtonStates();
 
-        // 창 크기 변경 시 다시 계산
+        // 리사이즈 이벤트 핸들러 최적화
         const handleResize = () => {
             if (scrollTimer.current) clearTimeout(scrollTimer.current);
             scrollTimer.current = setTimeout(() => {
                 updateScrollButtonStates();
                 scrollTimer.current = null;
-            }, 100);
+            }, 200); // 더 긴 지연 시간
         };
 
-        window.addEventListener('resize', handleResize);
+        window.addEventListener('resize', handleResize, { passive: true });
 
         return () => {
             window.removeEventListener('resize', handleResize);
@@ -311,38 +277,36 @@ const MenuGrid = ({ menuItems, onAddToCart, isEntering }) => {
                 clearTimeout(scrollTimer.current);
             }
         };
-    }, [updateScrollButtonStates]); // updateScrollButtonStates 추가
+    }, [updateScrollButtonStates]);
 
-    // 음성 명령 스크롤 이벤트 리스너 추가
+    // 음성 명령 스크롤 이벤트 리스너
     useEffect(() => {
-        // 음성 명령으로 스크롤 업 처리
         const handleVoiceScrollUp = () => {
             handleScrollUp();
         };
 
-        // 음성 명령으로 스크롤 다운 처리
         const handleVoiceScrollDown = () => {
             handleScrollDown();
         };
 
-        // 이벤트 리스너 등록
         window.addEventListener('voice-scroll-up', handleVoiceScrollUp);
         window.addEventListener('voice-scroll-down', handleVoiceScrollDown);
 
-        // 정리 함수
         return () => {
             window.removeEventListener('voice-scroll-up', handleVoiceScrollUp);
             window.removeEventListener('voice-scroll-down', handleVoiceScrollDown);
         };
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);  // 컴포넌트 마운트/언마운트 시에만 실행
+
 
     return (
         <MenuGridWrapper>
             <MenuGridContainer
                 ref={menuGridRef}
                 sx={{
-                    touchAction: 'none', // Hammer.js 사용 시 기본 터치 동작 비활성화
+                    touchAction: 'none',
                 }}
             >
                 {menuTrail.map((style, index) => {

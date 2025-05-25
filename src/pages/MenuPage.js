@@ -62,13 +62,13 @@ const MenuPage = () => {
             transform: 'translateX(0) scale(1)'
         },
         config: {
-            tension: 80,
-            friction: 20,
-            mass: 1.2,
-            duration: 500
+            tension: 120,     // 더 빠른 시작을 위해 증가
+            friction: 17,     // 약간 줄여서 더 빠르게
+            mass: 1,          // 가벼운 질량으로 조정
+            duration: 400     // 애니메이션 시간 단축
         },
         // 페이지 애니메이션 후 조금 지연시켜 등장
-        delay: 700
+        delay: 400
     });
 
     // 장바구니에 아이템 추가 함수
