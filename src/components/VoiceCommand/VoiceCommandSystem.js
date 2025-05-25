@@ -205,12 +205,12 @@ const VoiceCommandSystem = () => {
             // 음성 명령 인식 모드로 전환
             startCommandMode();
 
-            // 10초 후 웨이크워드 감지 모드로 복귀
+            // 7초 후 웨이크워드 감지 모드로 복귀
             wakewordTimeoutRef.current = setTimeout(() => {
                 if (rhinoIsListening) { // 여전히 명령 인식 중이라면
                     resetToWakewordMode();
                 }
-            }, 10000); // 10초 타임아웃
+            }, 7000); // 7초 타임아웃
         }
     }, [keywordDetection, publish]);
 
