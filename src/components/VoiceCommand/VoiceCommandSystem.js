@@ -219,9 +219,14 @@ const VoiceCommandSystem = () => {
         if (internalCommandResult !== null) {
             console.log('음성 명령 인식 결과:', internalCommandResult);
 
-            // 명령 인식 실패 시 안내 음성 재생
+            // 명령 인식 실패 시 안내 음성 재생 - Front 페이지에서는 재생 안함
             if (internalCommandResult.isFinalized && !internalCommandResult.isUnderstood) {
-                playAudio('tryAgain');
+                const isOnFrontPage = location.pathname === '/' || location.pathname === '/index.html';
+                if (!isOnFrontPage) {
+                    playAudio('tryAgain');
+                } else {
+                    console.log('Front 페이지에서 인식 실패: 음성 안내 재생 생략');
+                }
             }
 
             // 부모 컴포넌트로 결과 전달
@@ -232,7 +237,7 @@ const VoiceCommandSystem = () => {
                 resetToWakewordMode();
             }, 500); // 0.5초 지연
         }
-    }, [internalCommandResult, handleVoiceCommand]);
+    }, [internalCommandResult, handleVoiceCommand, location.pathname]);
 
     // 5. 타임아웃 클리어 함수
     const clearTimeouts = () => {

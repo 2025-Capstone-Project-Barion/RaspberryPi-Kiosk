@@ -65,10 +65,14 @@ const FrontPage = () => {
 
         // CSS 애니메이션 종료 후 메뉴 페이지로 이동 (애니메이션 시간과 일치)
         setTimeout(() => {
-            // 사용자가 메뉴로 이동했으므로 MQTT로 루빅파이에게 카메라&yolo구동을 종료할 것을 메시지로 지시
-            publish(TOPICS.CLOSE, "close");
-            console.log('MQTT: 메뉴 페이지로 이동 신호 전송');
             navigate('/MenuPage');
+
+            // 10초 지연 후 카메라 앱 종료 메시지 전송
+            setTimeout(() => {
+                publish(TOPICS.CLOSE, "close");
+                console.log('MQTT: 10초 지연 후 카메라 종료 신호 전송');
+            }, 10000); // 10초 지연
+
         }, 450); // 애니메이션 시간(450ms)과 동일하게 설정
     }, [navigate, publish]);
 
@@ -108,7 +112,7 @@ const FrontPage = () => {
                 console.log("휠체어+사람 감지: 음성 안내 재생");
 
                 // 휠체어 감지 음성 재생 (메뉴 이동은 하지 않음)
-                //playAudio('wheelchairDetected');
+                playAudio('wheelchairDetected');
             }
         };
 

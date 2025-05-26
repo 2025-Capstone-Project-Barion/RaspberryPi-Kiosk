@@ -31,6 +31,9 @@ const MenuPage = () => {
     // 선택된 카테고리에 따른 메뉴 아이템 가져오기
     const menuItems = getMenuItems(selectedCategory);
 
+    // MQTT 훅 추가
+    const { publish } = useMqtt();
+
     // 페이지 입장 애니메이션 - 가볍게 최적화
     const pageEntrance = useSpring({
         from: {
@@ -147,6 +150,24 @@ const MenuPage = () => {
         // 추천 메뉴 음성 안내 재생
         playAudio('recommendedMenu');
     };
+
+    // MQTT 메시지 수신 처리 추가
+    useEffect(() => {
+        const handleMqttMessage = (event) => {
+            const { topic, message } = event.detail;
+
+            if (topic === TOPICS.DETECTED && message === "true") {
+                console.log("메뉴 페이지에서 휠체어+사람 감지: 음성 안내 재생");
+                playAudio('wheelchairDetected');
+            }
+        };
+
+        window.addEventListener('mqtt-message', handleMqttMessage);
+
+        return () => {
+            window.removeEventListener('mqtt-message', handleMqttMessage);
+        };
+    }, []);
 
     useEffect(() => {
         console.log('[MenuPage] 다이얼로그 상태 변경:', orderDialogOpen ? '열림' : '닫힘');
