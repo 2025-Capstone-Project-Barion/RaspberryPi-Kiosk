@@ -547,16 +547,16 @@ const VoiceCommandSystem = () => {
         return numberMap[koreanNumber] || 1;
     };
 
-    // 로드 실패 시 일찍 반환
-    if (!wakewordLoaded || !commandLoaded) {
-        return (
-            <VoiceCommandPortal>
-                <div className="voice-loading-indicator">
-                    음성AI 준비중...
-                </div>
-            </VoiceCommandPortal>
-        );
-    }
+    // // 로드 실패 시 일찍 반환
+    // if (!wakewordLoaded || !commandLoaded) {
+    //     return (
+    //         <VoiceCommandPortal>
+    //             <div className="voice-loading-indicator">
+    //                 음성AI 준비중
+    //             </div>
+    //         </VoiceCommandPortal>
+    //     );
+    // }
 
     // 오류 상태일 때 오류 메시지 표시
     if (error) {
