@@ -108,7 +108,7 @@ const FrontPage = () => {
                 console.log("휠체어+사람 감지: 음성 안내 재생");
 
                 // 휠체어 감지 음성 재생 (메뉴 이동은 하지 않음)
-                playAudio('wheelchairDetected');
+                //playAudio('wheelchairDetected');
             }
         };
 
