@@ -155,7 +155,7 @@ const MenuPage = () => {
 
             if (topic === TOPICS.DETECTED && message === "true") {
                 console.log("메뉴 페이지에서 휠체어+사람 감지: 음성 안내 재생");
-                playAudio('wheelchairDetected');
+                //playAudio('wheelchairDetected');
             }
         };
 
