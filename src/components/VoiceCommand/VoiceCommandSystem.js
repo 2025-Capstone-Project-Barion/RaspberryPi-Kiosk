@@ -269,7 +269,7 @@ const VoiceCommandSystem = () => {
                 // 명령 인식 타임아웃 (7초 후 자동 종료)
                 commandTimeoutRef.current = setTimeout(() => {
                     resetToWakewordMode();
-                }, 10000);
+                }, 7000);
             } catch (e) {
                 console.error('음성 명령 인식 시작 실패:', e);
                 resetToWakewordMode();
