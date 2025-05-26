@@ -5,7 +5,7 @@ import { Box } from '@mui/material';
 import { categories, getMenuItems } from '../data/menuData';
 import OrderCheckDialog from '../components/Order/OrderCheckDialog';
 import logo from '../assets/Image/Logo/logo.png'; // 로고 이미지 경로
-
+import { useMqtt, TOPICS } from '../context/MqttContext';
 // 리팩토링된 컴포넌트들 가져오기
 import CategoryBar from '../components/Menu/CategoryBar';
 import MenuGrid from '../components/Menu/MenuGrid';
