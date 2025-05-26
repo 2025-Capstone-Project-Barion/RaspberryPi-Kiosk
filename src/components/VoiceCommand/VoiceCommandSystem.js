@@ -205,12 +205,12 @@ const VoiceCommandSystem = () => {
             // 음성 명령 인식 모드로 전환
             startCommandMode();
 
-            // // 7초 후 웨이크워드 감지 모드로 복귀
-            // wakewordTimeoutRef.current = setTimeout(() => {
-            //     if (rhinoIsListening) { // 여전히 명령 인식 중이라면
-            //         resetToWakewordMode();
-            //     }
-            // }, 7000); // 7초 타임아웃
+            // 7초 후 웨이크워드 감지 모드로 복귀
+            wakewordTimeoutRef.current = setTimeout(() => {
+                if (rhinoIsListening) { // 여전히 명령 인식 중이라면
+                    resetToWakewordMode();
+                }
+            }, 10000); // 7초 타임아웃
         }
     }, [keywordDetection, publish]);
 
@@ -266,10 +266,10 @@ const VoiceCommandSystem = () => {
                 await startCommandRecognition();
                 console.log('음성 명령 인식 시작됨');
 
-                // // 명령 인식 타임아웃 (7초 후 자동 종료)
-                // commandTimeoutRef.current = setTimeout(() => {
-                //     resetToWakewordMode();
-                // }, 7000);
+                // 명령 인식 타임아웃 (7초 후 자동 종료)
+                commandTimeoutRef.current = setTimeout(() => {
+                    resetToWakewordMode();
+                }, 10000);
             } catch (e) {
                 console.error('음성 명령 인식 시작 실패:', e);
                 resetToWakewordMode();
