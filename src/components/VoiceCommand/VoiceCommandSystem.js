@@ -51,6 +51,11 @@ const VoiceCommandSystem = () => {
     const [wakewordDetected, setWakewordDetected] = useState(false);
     const [error, setError] = useState(null);
 
+    // 컴포넌트 상단에 추가
+    const lastDetectionRef = useRef(null);
+    const lastDetectionTimeRef = useRef(0);
+
+
     // 초기화 중복 방지 플래그
     const isInitialized = useRef(false);
 
@@ -182,9 +187,24 @@ const VoiceCommandSystem = () => {
         };
     }, []);
 
-    // 3. 웨이크워드 감지 처리에 MQTT 메시지 발행 추가
+    // 3. 웨이크워드 감지 처리 수정
     useEffect(() => {
         if (keywordDetection !== null) {
+            const now = Date.now();
+
+            // 중복 감지 방지 로직
+            if (
+                lastDetectionRef.current === keywordDetection.label &&
+                now - lastDetectionTimeRef.current < 3000
+            ) {
+                console.log('3초 이내 웨이크워드 중복 감지 무시');
+                return;
+            }
+
+            // 현재 감지 정보 저장
+            lastDetectionRef.current = keywordDetection.label;
+            lastDetectionTimeRef.current = now;
+
             console.log(`웨이크워드 '${keywordDetection.label}' 감지됨!`);
             setWakewordDetected(true);
 
@@ -197,7 +217,6 @@ const VoiceCommandSystem = () => {
             // FrontPage에서만 MQTT 메시지 발행
             const pathname = location.pathname;
             if (pathname === '/' || pathname === '/index.html') {
-                // MQTT로 루빅파이에 감지 시작 신호 보내기
                 publish(TOPICS.START, "activate");
                 console.log('MQTT: 루빅파이에 감지 시작 신호 전송');
             }
@@ -205,14 +224,14 @@ const VoiceCommandSystem = () => {
             // 음성 명령 인식 모드로 전환
             startCommandMode();
 
-            // 7초 후 웨이크워드 감지 모드로 복귀
+            // 10초 후 웨이크워드 감지 모드로 복귀
             wakewordTimeoutRef.current = setTimeout(() => {
-                if (rhinoIsListening) { // 여전히 명령 인식 중이라면
+                if (rhinoIsListening) {
                     resetToWakewordMode();
                 }
-            }, 10000); // 7초 타임아웃
+            }, 10000);
         }
-    }, [keywordDetection, publish]);
+    }, [keywordDetection]);  // publish 의존성 제거
 
     // 4. 음성 명령 결과 처리 - 인식 실패 시 안내음 추가
     useEffect(() => {
