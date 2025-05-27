@@ -109,10 +109,12 @@ const FrontPage = () => {
 
             // 새로운 토픽명과 메시지 값으로 처리
             if (topic === TOPICS.DETECTED && message === "true") {
-                console.log("휠체어+사람 감지: 음성 안내 재생");
+                console.log("휠체어+사람 감지: 2초 후 음성 안내 재생");
 
-                // 휠체어 감지 음성 재생 (메뉴 이동은 하지 않음)
-                //playAudio('wheelchairDetected');
+                // 2초 후에 휠체어 감지 음성 재생
+                setTimeout(() => {
+                    playAudio('wheelchairDetected');
+                }, 2000);
             }
         };
 

@@ -154,8 +154,12 @@ const MenuPage = () => {
             const { topic, message } = event.detail;
 
             if (topic === TOPICS.DETECTED && message === "true") {
-                console.log("메뉴 페이지에서 휠체어+사람 감지: 음성 안내 재생");
-                //playAudio('wheelchairDetected');
+                console.log("메뉴페이지에서 휠체어+사람 감지: 2초 후 음성 안내 재생");
+
+                // 2초 후에 휠체어 감지 음성 재생
+                setTimeout(() => {
+                    playAudio('wheelchairDetected');
+                }, 2000);
             }
         };
 
