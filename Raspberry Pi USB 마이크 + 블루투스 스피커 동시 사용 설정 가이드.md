@@ -123,12 +123,13 @@ pavucontrol
 
 #### -  `마이크 볼륨`은 `100`이 딱 적당하다
 
-![image-20250520043654394](C:\Users\000ju\AppData\Roaming\Typora\typora-user-images\image-20250520043654394.png)
+![image](https://github.com/user-attachments/assets/764f119f-0830-4639-ab16-dcd318d11256)
 
-![image-20250520043744204](C:\Users\000ju\AppData\Roaming\Typora\typora-user-images\image-20250520043744204.png)
+![image](https://github.com/user-attachments/assets/fb7a6751-f336-4225-8414-6232c73153ca)
 
-![image-20250520043756915](C:\Users\000ju\AppData\Roaming\Typora\typora-user-images\image-20250520043756915.png)
+![image](https://github.com/user-attachments/assets/9691a395-1dab-463e-aad7-92d4ca7b8fe3)
 
-![image-20250520043814363](C:\Users\000ju\AppData\Roaming\Typora\typora-user-images\image-20250520043814363.png)
+![image](https://github.com/user-attachments/assets/1a65a28d-61ce-415f-8fd0-8a1c7e9ba6a3)
 
-![image-20250520043850589](C:\Users\000ju\AppData\Roaming\Typora\typora-user-images\image-20250520043850589.png)
+![image](https://github.com/user-attachments/assets/467d506d-e995-44d6-8d86-bb65645e41ca)
+
