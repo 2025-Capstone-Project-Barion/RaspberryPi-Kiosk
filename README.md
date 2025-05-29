@@ -1,21 +1,22 @@
 
-## 🛠 기술 스택
+## 🛠 Tech Stack
 
-### 🖥 Frontend: Kiosk Application
+### 🔹 Kiosk System
+
 |Category|Technology|
 |-|-|
 |<div align="center">**On-Device AIoT Platform**</div>|<div align="center"><img src="https://img.shields.io/badge/RUBIK Pi 3-3253DC?style=for-the-badge&logo=sequelize&logoColor=white"> ➕ ![Raspberry Pi](https://img.shields.io/badge/-Raspberry_Pi-C51A4A?style=for-the-badge&logo=Raspberry-Pi)<br><sup><strong>Rubik Pi: On-device AI / Raspberry Pi: Kiosk Controller</strong></sup></div>|
-|<div align="center">**Voice AI**</div>|<div align="center">![Porcupine](https://img.shields.io/badge/Porcupine-Wake_Word-7727A9?style=for-the-badge&logo=picovoice&logoColor=white)<br>![Rhino](https://img.shields.io/badge/Rhino-SLU-5500AA?style=for-the-badge&logo=picovoice&logoColor=white)</div>|
-|<div align="center">**Object Detection AI**</div>|<div align="center">![YOLOv8](https://img.shields.io/badge/YOLOv8-Quantized-000000?style=for-the-badge&logo=yolo&logoColor=white)</div>|
+|<div align="center">**Voice AI**</div>|<div align="center">![Porcupine](https://img.shields.io/badge/Porcupine-Wake_Word-7727A9?style=for-the-badge&logo=picovoice&logoColor=white) ![Rhino](https://img.shields.io/badge/Rhino-SLU-5500AA?style=for-the-badge&logo=picovoice&logoColor=white)</div>|
+|<div align="center">**Object Detection AI**</div>|<div align="center">![YOLOv8](https://img.shields.io/badge/YOLOv8-Quantized-111F68?style=for-the-badge&logo=yolo&logoColor=white)</div>|
 |<div align="center">**Hardware Controller**</div>|<div align="center">![Arduino](https://img.shields.io/badge/-Arduino-00979D?style=for-the-badge&logo=Arduino&logoColor=white)</div>|  
 |<div align="center">**Hardware**</div>|<div align="center">**🖥️ Touch Display / ⚙️ Linear Actuator**<br> **📷 Pi Camera Module 2 (IMX219)** </div>|  
-|<div align="center">**IoT Communication**</div>|<div align="center">![Mosquitto](https://img.shields.io/badge/Mosquitto-MQTT_Broker-FF9900?style=for-the-badge&logo=eclipse&logoColor=white)</div>|
-|<div align="center">**Frontend Framework**</div>|<div align="center">![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)</div>|
-|<div align="center">**UI Framework**</div>|<div align="center">![MUI](https://img.shields.io/badge/MUI-%230081CB.svg?style=for-the-badge&logo=mui&logoColor=white)</div>|
-|<div align="center">**Programming Language**</div>|<div align="center">![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)</div>| 
-|<div align="center">**Styling**</div>|<div align="center">![Emotion](https://img.shields.io/badge/Emotion-DB7093?style=for-the-badge&logo=styled-components&logoColor=white) <img src="https://img.shields.io/badge/Spring-000000?style=for-the-badge&logo=spring_creators&logoColor=white"> <img src="https://img.shields.io/badge/Framer-0055FF?style=for-the-badge&logo=framer&logoColor=white"></div>|
+|<div align="center">**IoT Communication**</div>|<div align="center">![MQTT](https://img.shields.io/badge/MQTT-mosquitto-FF9900?style=for-the-badge&logo=mqtt&logoColor=white)</div>|
+|<div align="center">**Frontend Framework**</div>|<div align="center">![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![MUI](https://img.shields.io/badge/MUI-%230081CB.svg?style=for-the-badge&logo=mui&logoColor=white)</div>|
+|<div align="center">**Styling & Animation**</div>|<div align="center">![Emotion](https://img.shields.io/badge/Emotion-DB7093?style=for-the-badge&logo=styled-components&logoColor=white) <img src="https://img.shields.io/badge/Spring-000000?style=for-the-badge&logo=spring_creators&logoColor=white"> <img src="https://img.shields.io/badge/Framer-0055FF?style=for-the-badge&logo=framer&logoColor=white"></div>|
+|<div align="center">**Programming Language**</div>|<div align="center">![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E) ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54) ![C](https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white)</div>|
 
 <br>
+
 
 
 ## 🧩 프로젝트 개요
